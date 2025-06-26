@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
 import { env } from 'process';
+import os  from 'node:os';
 
 const baseFolder =
     env.APPDATA !== undefined && env.APPDATA !== ''
@@ -16,8 +17,31 @@ const certificateName = "lovequiz.client";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-    if (0 !== child_process.spawnSync('dotnet', [
+// if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+//     if (0 !== child_process.spawnSync('dotnet', [
+//         'dev-certs',
+//         'https',
+//         '--export-path',
+//         certFilePath,
+//         '--format',
+//         'Pem',
+//         '--no-password',
+//     ], { stdio: 'inherit', }).status) {
+//         throw new Error("Could not create certificate.");
+//     }
+// }
+
+const dotnetAvailable = (() => {
+    try {
+        child_process.execSync('dotnet --version', { stdio: 'ignore' });
+        return true;
+    } catch {
+        return false;
+    }
+})();
+
+if (dotnetAvailable && (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath))) {
+    child_process.spawnSync('dotnet', [
         'dev-certs',
         'https',
         '--export-path',
@@ -25,9 +49,7 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
         '--format',
         'Pem',
         '--no-password',
-    ], { stdio: 'inherit', }).status) {
-        throw new Error("Could not create certificate.");
-    }
+    ], { stdio: 'inherit' });
 }
 
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
@@ -49,9 +71,15 @@ export default defineConfig({
             }
         },
         port: 5173,
-        https: {
-            key: fs.readFileSync(keyFilePath),
-            cert: fs.readFileSync(certFilePath),
-        }
+        // https: {
+        //     key: fs.readFileSync(keyFilePath),
+        //     cert: fs.readFileSync(certFilePath),
+        // }
+        https: fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)
+            ? {
+                key: fs.readFileSync(keyFilePath),
+                cert: fs.readFileSync(certFilePath),
+            }
+            : false
     }
 })
