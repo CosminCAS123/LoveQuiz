@@ -1,0 +1,6 @@
+@LoveQuiz.Server_HostAddress = http://localhost:5023
+
+GET {{LoveQuiz.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
