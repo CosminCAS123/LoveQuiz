@@ -1,15 +1,263 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LoveQuiz - Double Quiz Page</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f0f2f5 0%, #e0e7ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 40px;
+      padding: 40px 20px;
+      max-width: 1100px;
+      width: 100%;
+    }
+    .quiz-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(60,60,120,0.08);
+      padding: 32px 28px;
+      width: 420px;
+      max-width: 95vw;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      transition: box-shadow 0.2s;
+    }
+    .quiz-container:hover {
+      box-shadow: 0 12px 40px rgba(60,60,120,0.15);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 18px;
+      color: #4CAF50;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #4CAF50 60%, #43e97b 100%);
+      border: none;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(76,175,80,0.08);
+    }
+    button:hover {
+      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+      box-shadow: 0 4px 16px rgba(76,175,80,0.15);
+    }
+    .upside-down {
+      transform: rotate(180deg);
+    }
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+      }
+      .quiz-container {
+        width: 98vw;
+        max-width: 500px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <!-- Top Quiz (Upside Down) -->
+    <section class="quiz-container upside-down" aria-labelledby="quizA-heading">
+      <h2 id="quizA-heading">Quiz A (Top)</h2>
+      <form id="quizA-form" autocomplete="off">
+        <div id="quizA-question"></div>
+        <div class="choices" id="quizA-choices"></div>
+        <button type="button" id="quizA-next">Next</button>
+        <button type="submit" id="quizA-submit" class="hidden">Submit Quiz A</button>
+      </form>
+    </section>
+    <!-- Bottom Quiz -->
+    <section class="quiz-container" aria-labelledby="quizB-heading">
+      <h2 id="quizB-heading">Quiz B (Bottom)</h2>
+      <form id="quizB-form" autocomplete="off">
+        <div id="quizB-question"></div>
+        <div class="choices" id="quizB-choices"></div>
+        <button type="button" id="quizB-next">Next</button>
+        <button type="submit" id="quizB-submit" class="hidden">Submit Quiz B</button>
+      </form>
+    </section>
+  </main>
+  <script>
+    // Quiz data
+    const quizA = [
+      {
+        question: "1. What is the capital of France?",
+        choices: ["Paris", "London", "Berlin", "Madrid", "Rome"]
+      },
+      {
+        question: "2. What is 5 + 7?",
+        choices: ["10", "11", "12", "13", "14"]
+      },
+      {
+        question: "3. What is the boiling point of water in °C?",
+        choices: ["80", "90", "100", "110", "120"]
+      }
+    ];
+    const quizB = [
+      {
+        question: "1. Who wrote 'Hamlet'?",
+        choices: ["Shakespeare", "Dickens", "Austen", "Hemingway", "Tolkien"]
+      },
+      {
+        question: "2. What is the square root of 64?",
+        choices: ["6", "7", "8", "9", "10"]
+      },
+      {
+        question: "3. What gas do plants absorb?",
+        choices: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen", "Helium"]
+      }
+    ];
 
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-    <p> roata a fost inventata in 1812</p>
-  </body>
+    // State
+    let quizAIndex = 0, quizAAnswers = [];
+    let quizBIndex = 0, quizBAnswers = [];
+
+    // Render Quiz A
+    function renderQuizA() {
+      const q = quizA[quizAIndex];
+      document.getElementById('quizA-question').textContent = q.question;
+      const choicesDiv = document.getElementById('quizA-choices');
+      choicesDiv.innerHTML = '';
+      q.choices.forEach((choice, idx) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="quizA-choice" value="${choice}" ${quizAAnswers[quizAIndex] === choice ? 'checked' : ''}> ${choice}`;
+        choicesDiv.appendChild(label);
+      });
+      document.getElementById('quizA-next').classList.toggle('hidden', quizAIndex === quizA.length - 1);
+      document.getElementById('quizA-submit').classList.toggle('hidden', quizAIndex !== quizA.length - 1);
+    }
+
+    // Render Quiz B
+    function renderQuizB() {
+      const q = quizB[quizBIndex];
+      document.getElementById('quizB-question').textContent = q.question;
+      const choicesDiv = document.getElementById('quizB-choices');
+      choicesDiv.innerHTML = '';
+      q.choices.forEach((choice, idx) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="quizB-choice" value="${choice}" ${quizBAnswers[quizBIndex] === choice ? 'checked' : ''}> ${choice}`;
+        choicesDiv.appendChild(label);
+      });
+      document.getElementById('quizB-next').classList.toggle('hidden', quizBIndex === quizB.length - 1);
+      document.getElementById('quizB-submit').classList.toggle('hidden', quizBIndex !== quizB.length - 1);
+    }
+
+    // Next button handlers
+    document.getElementById('quizA-next').onclick = function() {
+      const selected = document.querySelector('input[name="quizA-choice"]:checked');
+      if (!selected) return alert('Please select an answer!');
+      quizAAnswers[quizAIndex] = selected.value;
+      quizAIndex++;
+      renderQuizA();
+    };
+    document.getElementById('quizB-next').onclick = function() {
+      const selected = document.querySelector('input[name="quizB-choice"]:checked');
+      if (!selected) return alert('Please select an answer!');
+      quizBAnswers[quizBIndex] = selected.value;
+      quizBIndex++;
+      renderQuizB();
+    };
+
+    // Helper to get a timestamp for unique Ids
+    function getTimestamp() {
+      return new Date().toISOString();
+    }
+
+    // Submit handlers with API integration
+    document.getElementById('quizA-form').onsubmit = function(e) {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="quizA-choice"]:checked');
+      if (!selected) return alert('Please select an answer!');
+      quizAAnswers[quizAIndex] = selected.value;
+
+      const data = {
+        data: {
+          "Id": "quizA-" + getTimestamp(),
+          "Question 1": quizAAnswers[0] || "",
+          "Question 2": quizAAnswers[1] || "",
+          "Question 3": quizAAnswers[2] || ""
+        }
+      };
+
+      fetch("https://sheetdb.io/api/v1/lmvv32324fqiq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(() => alert("Quiz A submitted successfully!"))
+      .catch(error => {
+        alert("Error submitting Quiz A");
+        console.error(error);
+      });
+    };
+
+    document.getElementById('quizB-form').onsubmit = function(e) {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="quizB-choice"]:checked');
+      if (!selected) return alert('Please select an answer!');
+      quizBAnswers[quizBIndex] = selected.value;
+
+      const data = {
+        data: {
+          "Id": "quizB-" + getTimestamp(),
+          "Question 1": quizBAnswers[0] || "",
+          "Question 2": quizBAnswers[1] || "",
+          "Question 3": quizBAnswers[2] || ""
+        }
+      };
+
+      fetch("https://sheetdb.io/api/v1/lmvv32324fqiq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(() => alert("Quiz B submitted successfully!"))
+      .catch(error => {
+        alert("Error submitting Quiz B");
+        console.error(error);
+      });
+    };
+
+    // Initial render
+    renderQuizA();
+    renderQuizB();
+  </script>
+</body>
 </html>
