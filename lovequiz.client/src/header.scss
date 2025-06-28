@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css?family=Orbitron:400,500,700,900&display=swap');
+
+.header-wrapper {
+    border-bottom: 1px solid #FF8F9F;
+    background: #FF8F9F;
+    box-shadow: 0 6px 16px -4px #FF8F9F;
+}
+
+.header {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+
+    &__logo {
+        display: flex;
+        align-items: center;
+
+        &--image {
+            width: 80px;
+        }
+
+        &::after {
+            content: "Is it me??";
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+        }
+    }
+
+    &__title {
+        font-weight: 700;
+        color: #000;
+        cursor: pointer;
+
+        @media(min-width: 650px) {
+            margin-left: -5rem; //not right, is just for centering
+        }
+    }
+
+    &__login {
+        font-weight: 700;
+        color: #000;
+        cursor: pointer;
+    }
+}
