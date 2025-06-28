@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import './App.css';
+import Header from './Header.jsx'
 
 function App() {
     const handleClick = () => {
@@ -7,9 +8,14 @@ function App() {
     };
 
     return (
-        <div className="container" style={{ padding: '2rem', textAlign: 'center' }}>
-            <button onClick={handleClick}>apasa-ma</button>
+      <>
+        <div className="header-wrapper">
+          <Header />
         </div>
+        {/* <div className="container" style={{ padding: '2rem', textAlign: 'center' }}>
+            <button onClick={handleClick}>apasa-ma</button>
+        </div> */}
+      </>
     );
 }
 
