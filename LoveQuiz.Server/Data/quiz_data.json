@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "question": "Cât de des simți nevoia să verifici telefonul partenerului tău?",
+    "answers": [
+      {
+        "id": "A",
+        "answer": "Niciodată",
+        "points": 0
+      },
+      {
+        "id": "B",
+        "answer": "Din când în când",
+        "points": 1
+      },
+      {
+        "id": "C",
+        "answer": "Destul de des",
+        "points": 2
+      },
+      {
+        "id": "D",
+        "answer": "Mereu",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "question": "Cum reacționezi când partenerul tău vrea să petreacă timp singur sau cu prietenii?",
+    "answers": [
+      {
+        "id": "A",
+        "answer": "Mă bucur pentru el/ea",
+        "points": 0
+      },
+      {
+        "id": "B",
+        "answer": "Îl/o întreb cât va sta",
+        "points": 1
+      },
+      {
+        "id": "C",
+        "answer": "Devine o sursă de îngrijorare",
+        "points": 2
+      },
+      {
+        "id": "D",
+        "answer": "Îl/o suspectez că mă evită",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "question": "Ce simți când partenerul tău nu îți răspunde imediat la mesaj?",
+    "answers": [
+      {
+        "id": "A",
+        "answer": "Nicio problemă, probabil e ocupat(ă)",
+        "points": 0
+      },
+      {
+        "id": "B",
+        "answer": "Încep să devin ușor neliniștit(ă)",
+        "points": 1
+      },
+      {
+        "id": "C",
+        "answer": "Mă gândesc că mă ignoră",
+        "points": 2
+      },
+      {
+        "id": "D",
+        "answer": "Intru în panică și trimit mai multe mesaje",
+        "points": 3
+      }
+    ]
+  }
+]
