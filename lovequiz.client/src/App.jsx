@@ -1,6 +1,8 @@
 ﻿import React from 'react';
 import './App.css';
 import Header from './Header.jsx'
+import MainBlock from './Landing_page.jsx';
+import Footer from './Footer.jsx'
 
 function App() {
     const handleClick = () => {
@@ -9,12 +11,17 @@ function App() {
 
     return (
       <>
-        <div className="header-wrapper">
+        <div className="header-wrapper wrapper">
           <Header />
         </div>
-        {/* <div className="container" style={{ padding: '2rem', textAlign: 'center' }}>
-            <button onClick={handleClick}>apasa-ma</button>
-        </div> */}
+        
+        <div className="main-block-wrapper wrapper">
+          <MainBlock />
+        </div>
+
+        <div className="footer-wrapper">
+          <Footer />
+        </div> 
       </>
     );
 }
