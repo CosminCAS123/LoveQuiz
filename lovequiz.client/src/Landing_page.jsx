@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import './main-block.scss'
 
 function MainBlock() {
+    const navigate = useNavigate();
+
     return(
         <div className="main-block">
             <div className="main-block__title">
@@ -26,7 +29,7 @@ function MainBlock() {
             </div>
 
             <div className="main-block__button-wrapper wrapper">
-                <button className="main-block__button">
+                <button className="main-block__button" onClick={() => navigate('/gender')}>
                     Afla raspunsul acum!
                 </button>
                 <div className="main-block__button--hint">
