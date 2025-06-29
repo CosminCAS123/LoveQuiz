@@ -1,9 +1,25 @@
 import { useNavigate } from 'react-router-dom';
+
+import { useEffect, useState } from 'react';
+
 import React from 'react';
 import './main-block.scss'
 
 function MainBlock() {
     const navigate = useNavigate();
+
+    const [question, setQuestion] = useState(null);   //api stuff
+    const [error,    setError]    = useState(null);
+
+    useEffect(() => {
+        fetch('http://localhost:5023/api/quiz/questions')   // adjust port
+          .then(r => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          })
+          .then(data => setQuestion(data[0]))               // just take first
+          .catch(setError);
+    }, []);
 
     return(
         <div className="main-block">
@@ -23,6 +39,32 @@ function MainBlock() {
                     sau e a mea...?
                 </div>
             </div>
+
+
+            <div className="main-block__quiz">
+                {error && <p className="error">Nu se poate încărca întrebarea.</p>}
+
+                {!error && !question && <p>Se încarcă…</p>}
+
+                {question && (
+                <>
+                    <h2 className="question">{question.question}</h2>
+                    <ul className="answers">
+                    {question.answers.map(ans => (
+                        <li key={ans.id}>
+                        <label>
+                            <input type="radio" name="q1" value={ans.id} />
+                            {ans.answer}
+                        </label>
+                        </li>
+                    ))}
+                    </ul>
+                </>
+                )}
+            </div>
+
+
+
 
             <div className="main-block__image wrapper">
                 <img src="../assets/toxicity.png" className="main-block__image--main"/>
