@@ -34,7 +34,7 @@ html, body {
 }
 
 .wrapper {
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 button {
@@ -65,7 +65,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  display: block;
   min-width: 320px;
   min-height: 100vh;
   background: #FFB3BE;
