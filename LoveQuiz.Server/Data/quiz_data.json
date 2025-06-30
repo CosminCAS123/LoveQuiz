@@ -1,56 +1,58 @@
 [
   {
     "id": 1,
-    "question": "Cât de des simți nevoia să verifici telefonul partenerului tău?",
+    "gender" : "unisex"
+    "question": "Când îi spui partenerului că ceva te-a rănit, cum reacționează de obicei?",
     "answers": [
       {
-        "id": "A",
-        "answer": "Niciodată",
+        "answer": "Te ascultă din plin și încearcă să înțeleagă.",
         "points": 0
       },
       {
-        "id": "B",
-        "answer": "Din când în când",
-        "points": 1
+        "answer": "Se supără, dar rămâne prezent în conversație.",
+        "points": 1,
+        "flag": "avoidance"
       },
       {
-        "id": "C",
-        "answer": "Destul de des",
-        "points": 2
+        "answer": "Îți minimalizează trăirea („nu e mare lucru”, „exagerezi”).",
+        "points": 2,
+        "flag": "minimization"
       },
       {
-        "id": "D",
-        "answer": "Mereu",
-        "points": 3
+        "answer": "Îți întoarce complet vina și te face să te simți prost că ai adus subiectul în discuție.",
+        "points": 3,
+        "flag": "gaslight"
       }
     ]
-  },
+  }
+
+,
   {
-    "id": 2,
-    "question": "Cum reacționezi când partenerul tău vrea să petreacă timp singur sau cu prietenii?",
+    "id": 14,
+    "gender": "female",
+    "question": "Ce simți când iubitul tău merge la fotbal cu băieții și nu te invită?",
     "answers": [
       {
-        "id": "A",
-        "answer": "Mă bucur pentru el/ea",
+        "answer": "Mă bucur că are timp cu prietenii lui",
         "points": 0
       },
       {
-        "id": "B",
-        "answer": "Îl/o întreb cât va sta",
+        "answer": "Aș fi preferat să mă invite și pe mine",
         "points": 1
       },
       {
-        "id": "C",
-        "answer": "Devine o sursă de îngrijorare",
-        "points": 2
+        "answer": "Mă simt exclusă sau ignorată",
+        "points": 2,
+        "flag": "insecurity"
       },
       {
-        "id": "D",
-        "answer": "Îl/o suspectez că mă evită",
-        "points": 3
+        "answer": "Devine un motiv de ceartă de fiecare dată",
+        "points": 3,
+        "flag": "control"
       }
     ]
-  },
+  }
+,
   {
     "id": 3,
     "question": "Ce simți când partenerul tău nu îți răspunde imediat la mesaj?",
@@ -72,7 +74,7 @@
       },
       {
         "id": "D",
-        "answer": "Intru în panică și trimit mai multe mesaje",
+        "answer": "Intru în panică și trimit mai multe mesaje", 
         "points": 3
       }
     ]
