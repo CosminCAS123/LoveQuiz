@@ -3,6 +3,7 @@ import './App.css';
 import './GenderBlock.scss';
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
+import './tailwind.css';
 
 function GenderBlock() {
     const handleClick = () => {
@@ -16,7 +17,7 @@ function GenderBlock() {
         </div>
 
         <div className="gender-block-wrapper wrapper ccontainer">
-            <div className="gender-block">
+            <div className="gender-block flex">
                 <div className="gender-block__title">
                     Alege-ti genul:
                 </div>

@@ -1,0 +1,51 @@
+/* lovequiz.client/src/tailwind.css (or any entry CSS file) */
+@import "tailwindcss";      /* that’s it – no @tailwind rules */
+
+@layer utilities {
+    @keyframes slide-up {
+      0% {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  
+    .animate-slide-up {
+      animation: slide-up 0.6s ease-out forwards;
+    }
+
+    @keyframes slide-down {
+        0% {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    
+      .animate-slide-down {
+        animation: slide-down 0.6s ease-out forwards;
+      }
+
+
+      @keyframes grow {
+        0% {
+          scale: 0;  
+          opacity: 0;
+        }
+        100% {
+          scale: 1;
+          opacity: 1;
+        }
+      }
+    
+      .animate-grow {
+        animation: grow 0.6s ease-out forwards;
+      }
+  }
+
