@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import React from 'react';
-import './main-block.scss'
+import './main-block.scss';
+import './tailwind.css';
+
 
 function MainBlock() {
     const navigate = useNavigate();
+    
 
     const [question, setQuestion] = useState(null);   //api stuff
     const [error,    setError]    = useState(null);
@@ -17,15 +20,15 @@ function MainBlock() {
             if (!r.ok) throw new Error('HTTP ' + r.status);
             return r.json();
           })
-          .then(data => setQuestion(data[0]))               // just take first
+          .then(data => setQuestion(data[1]))               // just take first
           .catch(setError);
     }, []);
 
     return(
         <div className="main-block">
-            <div className="main-block__title">
+            <div className="animate-slide-down main-block__title">
                 <div className="main-block__title--curved">
-                    <svg width="100%" viewBox="0 0 1000 160">
+                    <svg className="mx-auto" width="100%" viewBox="0 0 1000 160">
                         <defs>
                             <path id="curve" d="M 100 200 A 400 100 0 0 1 900 200" />
                         </defs>
@@ -41,7 +44,7 @@ function MainBlock() {
             </div>
 
 
-            <div className="main-block__quiz">
+            {/* <div className="main-block__quiz">
                 {error && <p className="error">Nu se poate încărca întrebarea.</p>}
 
                 {!error && !question && <p>Se încarcă…</p>}
@@ -61,16 +64,16 @@ function MainBlock() {
                     </ul>
                 </>
                 )}
-            </div>
+            </div> */}
 
 
 
 
-            <div className="main-block__image wrapper">
+            <div className="animate-grow main-block__image wrapper">
                 <img src="../assets/toxicity.png" className="main-block__image--main"/>
             </div>
 
-            <div className="main-block__button-wrapper wrapper">
+            <div className="animate-slide-up main-block__button-wrapper wrapper">
                 <button className="main-block__button" onClick={() => navigate('/gender')}>
                     Afla raspunsul acum!
                 </button>
