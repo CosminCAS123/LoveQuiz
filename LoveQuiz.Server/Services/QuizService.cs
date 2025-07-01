@@ -1,6 +1,5 @@
 ﻿using LoveQuiz.Server.Models;
 using System.Text.Json;
-
 namespace LoveQuiz.Server.Services
 {
     public class QuizService
@@ -8,7 +7,7 @@ namespace LoveQuiz.Server.Services
         private const string jsonPath = "Data/quiz_data.json";
 
 
-        public async Task<IEnumerable<QuestionDto>> GetQuestionsAsync()
+        public async Task<IEnumerable<PublicQuestionDto>> GetQuestionsAsync(string gender)
         {
             var filePath = Path.Combine(AppContext.BaseDirectory, jsonPath);
 
@@ -22,9 +21,25 @@ namespace LoveQuiz.Server.Services
                 PropertyNameCaseInsensitive = true
             };
 
-            var questions = JsonSerializer.Deserialize<IEnumerable<QuestionDto>>(json, options);
+           var allQuestions = JsonSerializer.Deserialize<IEnumerable<QuestionDto>>(json, options);
+            if (allQuestions == null)
+                throw new JsonException("Failed to deserialize JSON data.");
 
-            return questions ?? Enumerable.Empty<QuestionDto>();
+           var filtered = allQuestions
+                     .Where(q => q.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase))
+                     .Select(q => new PublicQuestionDto
+                     {
+                         Id = q.Id,
+                         Question = q.Question,
+                         Answers = q.Answers.Select(a => new PublicAnswerDto
+                          {
+                            Answer = a.Answer
+                           }).ToList()
+                      });
+
+            return filtered;
+
+
         }
     }
 }
