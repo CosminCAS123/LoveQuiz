@@ -4,6 +4,7 @@ using System.Text.Json;
 using LoveQuiz.Server.Services;
 
 
+
 namespace LoveQuiz.Server.Controllers
 
 {
@@ -18,15 +19,16 @@ namespace LoveQuiz.Server.Controllers
         }
 
         [HttpGet("questions")]
-        public async Task<ActionResult<IEnumerable<QuestionDto>>> GetQuestions()
+        public async Task<ActionResult<IEnumerable<QuestionDto>>> GetQuestions([FromQuery] string gender)
         {
             try
             {
-                var questions = await _quizService.GetQuestionsAsync();
+                var questions = await _quizService.GetQuestionsAsync(gender);
 
                 if (!questions.Any())
                     return NoContent();
 
+                
                 return Ok(questions);
             }
             catch (FileNotFoundException ex)
