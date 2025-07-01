@@ -18,11 +18,11 @@ function GenderBlock() {
 
         <div className="gender-block-wrapper wrapper ccontainer">
             <div className="gender-block flex">
-                <div className="gender-block__title">
+                <div className="gender-block__title animate-fade-in">
                     Alege-ti genul:
                 </div>
 
-                <div className="gender-block__genders">
+                <div className="gender-block__genders animate-grow">
                     <button className="gender-block__genders-box">
                         <img src="../assets/man-3.png" className="gender-block__genders--male-image"/>
 

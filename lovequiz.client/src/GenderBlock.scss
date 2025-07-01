@@ -2,11 +2,12 @@
 
 .gender-block-wrapper{
     width: 100%;
-    margin-top: 5rem;
+    padding-top: 5rem;
     flex: 1;
+    background-color: #F6E4E7;
 
     @media (max-width: 600px) {
-        margin-top: 10rem;
+        padding-top: 10rem;
     }
 }
 
@@ -19,7 +20,7 @@
     &__title {
         font-size: 5rem;
         font-weight: 600;
-        color: #E94A5A;
+        color: #A86A7A;
         -webkit-text-stroke: 3px #000;
 
         @media (max-width: 600px) {
@@ -45,10 +46,15 @@
             align-items: center;
             gap: 30px;
             width: 150px;
-            background: #FF8F9F;
+            background: #fc828c;
             padding: 1rem 0.5rem;
             border-radius: 30px;
             border: none;
+            transition: background-color 0.2s ease;
+
+            &:hover{
+                background-color: #fb6471;
+            }
         }
 
         &--male {

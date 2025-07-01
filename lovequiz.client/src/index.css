@@ -1,11 +1,11 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #FF8F9F;
+  background-color: #A86A7A;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,7 +16,7 @@
 #root {        
   min-height: 100vh;      
   width: 100%;
-  background: #FFB3BE;
+  background: #A86A7A;
   display: flex;
   flex-direction: column;
 }
@@ -24,43 +24,32 @@
 html, body {
   height: 100%;
   margin: 0;
-  background-color: #FFB3BE;
+  background-color: #A86A7A;
 }
 
-.ccontainer {
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-}
 
 .wrapper {
   padding-bottom: 0.5rem;
 }
 
 button {
-  background-color: #FF8F9F;    
+  background-color: #fc828c;    
   color: #000;
   border: 1px solid #000;
   border-radius: 18px;
   font-size: 1rem;
   padding: 0.85rem 1.4rem;
   min-width: 150px;
-  align-self: center;
-  justify-self: center;
+  max-width: 200px;
   transition: background-color 0.2s ease;
+
+  span {
+    font-size: 0.75rem;
+  }
 }
 
 button:hover {
-  background-color: #F97389;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  background-color: #fb6471;
 }
 
 body {
@@ -68,7 +57,7 @@ body {
   display: block;
   min-width: 320px;
   min-height: 100vh;
-  background: #FFB3BE;
+  background: #A86A7A;
 }
 
 h1 {
