@@ -44,6 +44,7 @@ namespace LoveQuiz.Server.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        /*
         [HttpPost("submit")]
         public async Task<ActionResult> SubmitQuiz([FromBody] QuizSubmissionDto submission)
         {
@@ -63,7 +64,7 @@ namespace LoveQuiz.Server.Controllers
             }
         }   
 
-          
+          */
 
     }
 }

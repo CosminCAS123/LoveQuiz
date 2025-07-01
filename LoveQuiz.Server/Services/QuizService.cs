@@ -33,11 +33,12 @@ namespace LoveQuiz.Server.Services
                          Question = q.Question,
                          Answers = q.Answers.Select(a => new PublicAnswerDto
                           {
+                            Id = a.Id,
                             Answer = a.Answer
                            }).ToList()
                       });
-
-            return filtered;
+            var random = new Random();
+            return filtered.OrderBy(_ => random.Next());
 
 
         }
