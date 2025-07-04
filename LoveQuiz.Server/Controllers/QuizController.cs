@@ -23,7 +23,7 @@ namespace LoveQuiz.Server.Controllers
         {
             try
             {
-                var questions = await _quizService.GetQuestionsAsync(gender);
+                var questions =  _quizService.GetAllQuestions(gender);
 
                 if (!questions.Any())
                     return NoContent();
