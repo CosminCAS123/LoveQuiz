@@ -6,7 +6,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<LoveQuiz.Server.Services.QuizService>();
+builder.Services.AddSingleton<LoveQuiz.Server.Services.QuizService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Dev", p => p
