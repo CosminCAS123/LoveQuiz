@@ -44,27 +44,17 @@ namespace LoveQuiz.Server.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        /*
-        [HttpPost("submit")]
-        public async Task<ActionResult> SubmitQuiz([FromBody] QuizSubmissionDto submission)
+
+        [HttpPost("free-report")]
+        public ActionResult<NoPaymentReport>GetFreeReport([FromBody] IEnumerable<QuizSubmissionDto> submissions)
         {
-            if (submission == null)
+            var report = _quizService.GetFreeReport(submissions);
+            if (report == null)
             {
-                return BadRequest("No answers provided.");
+                return NotFound("No report available for the provided submissions.");
             }
-
-            try
-            {
-              //  var result = await _quizService.EvaluateQuizAsync(submission);
-              //  return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }   
-
-          */
+            return Ok(report);
+        }
 
     }
 }
