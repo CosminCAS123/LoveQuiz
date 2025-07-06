@@ -23,8 +23,11 @@ function MainBlock() {
                 </div>
 
                 <div class="block px-4 paragraph-block mb-8 animate-fade-in mt-8 z-10">
-                    <span className="block mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
-                    <span className="block">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+                    <span className="block mb-6">Relațiile toxice nu sunt întotdeauna ușor de recunoscut. Uneori se ascund sub forma "iubirii pasionale", "grijii" sau "dependenței emoționale". Fie că e vorba de manipulare, control, gelozie sau vinovăție constantă – toate lasă urme. Răspunde sincer la întrebări și descoperă ce se ascunde în spatele sentimentelor tale.</span>
+                    <span className="block">Meriți o iubire care te ridică, nu una care te frânge.
+Dacă ai ajuns să te întrebi constant „e vina mea?” sau „de ce nu sunt suficient(ă)?”, e timpul să te oprești și să privești lucrurile cu claritate.
+Acest quiz nu îți va da toate răspunsurile, dar îți poate oferi un punct de plecare.
+Începe acum. Pentru tine.</span>
                 </div>
 
                 <div className="animate-slide-up main-block__button-wrapper wrapper self-start z-10">
