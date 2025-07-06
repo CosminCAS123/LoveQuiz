@@ -27,7 +27,7 @@ function GenderBlock() {
                 </div>
 
                 <div className="gender-block__genders animate-grow z-10">
-                    <button className="gender-block__genders-box">
+                    <button className="gender-block__genders-box" onClick={() => navigate('male')}>
                         <img src="../assets/man-3.png" className="gender-block__genders--male-image"/>
 
                         <span className="gender-block__genders--male-text">Barbat</span>
@@ -48,24 +48,98 @@ function GenderBlock() {
     );
 }
 
-export function FemaleBlock() {
+export function QuizComponent({ gender }) {
+  console.log("QuizComponent gender:", gender);
+  const quizRef  = useRef(null);
+  const navigate = useNavigate();
 
-  const quizRef = useRef(null);  
-  const [questions, setQuestions] = useState([]);   
+  const [questions, setQuestions] = useState([]);
   const [error,     setError]     = useState(null);
+  const [current,   setCurrent]   = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState({}); 
 
   useEffect(() => {
-    fetch('http://localhost:5023/api/quiz/questions?gender=female')
+    fetch(`http://localhost:5023/api/quiz/questions?gender=${encodeURIComponent(gender)}`)
       .then(r => {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
+        if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
       })
-      .then(setQuestions)          
-      .catch(setError);
-  }, []);
+      .then(data => {
+        setQuestions(data);
+        setCurrent(0);
+      })
+      .catch(err => setError(err.message));
+  }, [gender]);
 
-  const [ref1, inView1] = useInView({ triggerOnce: true, threshold: 0.3 });
-  const [ref2, inView2] = useInView({ triggerOnce: true, threshold: 0.3 });
+  if (error)            return <p className="error">Nu se poate incarca intrebarea.</p>;
+  if (questions.length === 0) return <p>Se incarca…</p>;
+
+  const q      = questions[current];
+  const isLast = current === questions.length - 1;
+
+  const handleRadioChange = (idx) =>
+    setSelectedAnswers(prev => ({ ...prev, [q.id]: idx }));
+
+  const handleNext = () => {
+    if (selectedAnswers[q.id] === undefined) {
+      alert("Te rugăm să alegi un răspuns înainte de a continua.");
+      return;                                
+    }
+    isLast ? navigate("/result") : setCurrent(p => p + 1);
+  };
+
+  const handlePrev = () => setCurrent(p => Math.max(p - 1, 0));
+
+  return (
+    <div className="quiz-wrapper pl-12 relative questions-wrapper mt-auto mb-auto animate-grow" ref={quizRef}>
+      <div>
+        <div className="question font-extrabold text-xl mb-6 text-center">{q.question}</div>
+
+        <ul className="answers space-y-4 answers-wrapper">
+          {q.answers.map((ans, i) => (
+            <li key={i} className="answer-row">
+              <input
+                type="radio"
+                id={`q${q.id}-${i}`}
+                name={`q${q.id}`}
+                value={i}
+                checked={selectedAnswers[q.id] === i}
+                onChange={() => handleRadioChange(i)}
+                className="answer-radio"
+              />
+              <label
+                htmlFor={`q${q.id}-${i}`}
+                className="
+                  flex cursor-pointer select-none items-center gap-3 rounded-lg
+                  px-4 py-3 text-md custom-answer-choices answer-label  /* transition removed */
+                "
+              >
+                {ans.answer}
+              </label>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-10 flex gap-4">
+          {current > 0 && (
+            <button onClick={handlePrev} className="quiz-button">
+              Inapoi
+            </button>
+          )}
+
+          <button onClick={handleNext} className="ml-auto quiz-button">
+            {isLast ? "Afla raspunsul" : "Inainte"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+export function FemaleBlock() {
+
+
 
   return(
 
@@ -75,33 +149,38 @@ export function FemaleBlock() {
       <Header />
     </div>
 
-    <div class = "flex bg-color-primary">
+    <div className = "flex bg-color-primary questions-page-height">
       
-      <div className="quiz-wrapper gender-block-wrapper pl-12 relative" ref={quizRef}>
-        {error && <p className="error">Nu se poate încărca întrebarea.</p>}
+      <QuizComponent gender="female"/>
 
-        {!error && questions.length === 0 && <p>Se încarcă…</p>}
+    </div>
 
-        {questions.map((q, idx) => (
-          <div key={idx} className="mb-20 z-10 w-fit">
-            <div className="question font-extrabold text-2xl">{q.question}</div>
-            <ul className="answers space-y-4">
-              {q.answers.map((ans, i) => (
-                <li className="mb-2" key={i}>
-                  <label className="text-color-primary flex items-start gap-3 cursor-pointer text-lg">
-                    <input type="radio" name={`q${q.id}`} value={i} className="text-color-primary mt-1 h-5 w-5" />
-                    {ans.answer}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div> 
+    <div className="footer-wrapper">
+      <Footer />
+    </div> 
 
-      {/* <div className="fixed bottom-0 right-0">
-        <div className="animate-up-left-scroll-root bg-red-600">.</div>
-      </div> */}
+    </>
+                
+  );
+}
+
+
+
+export function MaleBlock() {
+
+
+  return(
+
+    <>
+    <FloatingHearts />
+    <div className="header-wrapper wrapper">
+      <Header />
+    </div>
+
+    <div className = "flex bg-color-primary questions-page-height">
+      
+      <QuizComponent gender="male" />
+
     </div>
 
     <div className="footer-wrapper">

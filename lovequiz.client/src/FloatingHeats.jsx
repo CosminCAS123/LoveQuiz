@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Heart } from "lucide-react";
 
 // How many hearts? Crank it up or down.
-const NUMBER_OF_HEARTS = 25;
+const NUMBER_OF_HEARTS = 10;
 
 /**
  * FloatingHearts (scroll-proof)
