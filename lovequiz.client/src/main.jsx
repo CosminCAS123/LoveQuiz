@@ -4,7 +4,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css'
 import App from './App.jsx'
 import GenderBlock from './GenderPage.jsx'
-import {FemaleBlock} from './GenderPage.jsx'
+import {FemaleBlock, MaleBlock} from './GenderPage.jsx'
+import Results from './Results.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,7 +14,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/"       element={<App />} />
         <Route path="/gender" element={<GenderBlock />} />
         <Route path="/gender/female" element={<FemaleBlock />} />
-        <Route path="/gender/male" element={<FemaleBlock />} />
+        <Route path="/gender/male" element={<MaleBlock />} />
+        <Route path="/result" element={<Results />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
