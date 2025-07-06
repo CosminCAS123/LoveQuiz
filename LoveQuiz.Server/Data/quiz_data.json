@@ -19,13 +19,13 @@
         "id": 3,
         "answer": "Îți minimalizează trăirea („nu e mare lucru”, „exagerezi”).",
         "points": 2,
-        "flag": "minimization"
+        "flag": "manipulation"
       },
       {
         "id": 4,
         "answer": "Îți întoarce complet vina și te face să te simți prost că ai adus subiectul în discuție.",
         "points": 3,
-        "flag": "gaslight"
+        "flag": "manipulation"
       }
     ]
   },
@@ -72,19 +72,19 @@
         "id": 2,
         "answer": "Încep să devin ușor neliniștită",
         "points": 1,
-        "flag": "anxious_attachment"
+        "flag": "dependency"
       },
       {
         "id": 3,
         "answer": "Mă gândesc că mă ignoră",
         "points": 2,
-        "flag": "emotional_insecurity"
+        "flag": "insecurity"
       },
       {
         "id": 4,
         "answer": "Intru în panică și trimit mai multe mesaje",
         "points": 3,
-        "flag": "emotional_dependency"
+        "flag": "dependency"
       }
     ]
   },
@@ -136,18 +136,164 @@
         "id": 3,
         "answer": "Încep să cred că nu mă mai iubește",
         "points": 2,
-        "flag": "emotional_insecurity"
+        "flag": "insecurity"
       },
       {
         "id": 4,
         "answer": "Îl confrunt agresiv și îl învinovățesc",
         "points": 3,
-        "flag": "emotional_dependency"
+        "flag": "dependency"
       }
     ]
   },
+    {
+      "id": 6,
+      "gender": "female",
+      "question": "El îți propune să petreceți weekendul separat: el cu băieții, tu cu fetele — fără să vă scrieți prea mult. Cum îți sună ideea asta?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Sună bine, avem încredere unul în altul.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Mi-e un pic greu, dar încerc să mă obișnuiesc.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Încep să-mi imaginez tot felul de scenarii.",
+          "points": 2,
+          "flag": "insecurity"
+        },
+        {
+          "id": 4,
+          "answer": "Refuz complet ideea, nu e ok să nu ținem legătura.",
+          "points": 3,
+          "flag": "control"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "gender": "female",
+      "question": "Când sunteți împreună, îți spune că ar vrea să stați mai puțin pe telefon și mai mult conectați unul la altul. Ce-ți vine să-i răspunzi?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Are dreptate, și eu simt la fel uneori.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Zic da, dar mă simt puțin atacată.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Îi spun că exagerează și că nu e o problemă reală.",
+          "points": 2,
+          "flag": "avoidance"
+        },
+        {
+          "id": 4,
+          "answer": "Îi răspund ironic că dacă nu-i convine, să stea singur.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "gender": "female",
+      "question": "Face o glumă despre tine în fața prietenilor — nimic rău, dar toată lumea râde. Cum te simți înăuntru?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Zâmbesc, știu că nu a fost cu răutate.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Zâmbesc, dar mă deranjează puțin.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Îmi vine să-i spun mai târziu că m-a rănit.",
+          "points": 2,
+          "flag": "insecurity"
+        },
+        {
+          "id": 4,
+          "answer": "Mă enervez și îi arăt că nu tolerez așa ceva.",
+          "points": 3,
+          "flag": "control"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "gender": "female",
+      "question": "El îți spune că iese în oraș cu o colegă de la muncă, dar „doar ca prieteni”. Ce-ți trece prin cap?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Îl cred pe cuvânt. Dacă zice că e ok, e ok.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Zic că nu e o problemă, dar încep să analizez situația.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Îl întreb direct ce fel de prietenie e asta.",
+          "points": 2,
+          "flag": "insecurity"
+        },
+        {
+          "id": 4,
+          "answer": "Îi spun că nu sunt de acord și îi cer să nu se mai vadă cu ea.",
+          "points": 3,
+          "flag": "control"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "gender": "female",
+      "question": "Vă certați, iar el se închide complet și nu mai zice nimic ore întregi. Cum reacționezi tu?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Îi las spațiu, știu că are nevoie să se calmeze.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Mă simt neliniștită, dar încerc să nu forțez lucrurile.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Încep să-l caut insistent și îl presez să vorbească.",
+          "points": 2,
+          "flag": "dependency"
+        },
+        {
+          "id": 4,
+          "answer": "Îl acuz că mă ignoră intenționat și devin furioasă.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    }
+  ,
   {
-    "id": 6,
+    "id": 11,
     "gender": "male",
     "question": "Prietena ta îți spune că vrea mai multă atenție din partea ta, deși tu simți că deja oferi suficient. Ce faci?",
     "answers": [
@@ -171,14 +317,14 @@
         "id": 4,
         "answer": "O acuz că e prea dependentă emoțional.",
         "points": 3,
-        "flag": "minimization"
+        "flag": "manipulation"
       }
     ]
   },
   {
-    "id": 7,
+    "id": 12,
     "gender": "male",
-    "question": "Ai observat că partenera ta iese des cu un coleg de serviciu, dar îți spune că sunt doar prieteni. Cum reacționezi în interiorul tău?",
+    "question": "Ai observat că partenera ta iese des cu un coleg, dar îți spune că sunt doar prieteni. Cum reacționezi în interiorul tău?",
     "answers": [
       {
         "id": 1,
@@ -205,7 +351,7 @@
     ]
   },
   {
-    "id": 8,
+    "id": 13,
     "gender": "male",
     "question": "Ți-ai surprins iubita citindu-ți mesajele fără să-ți spună. Ce gând îți vine primul în minte?",
     "answers": [
@@ -224,7 +370,7 @@
         "id": 3,
         "answer": "Încep să mă simt puțin neliniștit.",
         "points": 2,
-        "flag": "emotional_insecurity"
+        "flag": "insecurity"
       },
       {
         "id": 4,
@@ -235,7 +381,7 @@
     ]
   },
   {
-    "id": 9,
+    "id": 14,
     "gender": "male",
     "question": "Când iubita ta primește un mesaj de la un băiat necunoscut, cum reacționezi (chiar dacă nu o arăți)?",
     "answers": [
@@ -265,7 +411,7 @@
     ]
   },
   {
-    "id": 10,
+    "id": 15,
     "gender": "male",
     "question": "Iubita ta îți spune că vrea o pauză în relație, fără prea multe explicații. Ce simți în acel moment?",
     "answers": [
@@ -278,20 +424,168 @@
         "id": 2,
         "answer": "Mă simt rănit, dar încerc să înțeleg.",
         "points": 1,
-        "flag": "emotional_insecurity"
+        "flag": "insecurity"
       },
       {
         "id": 3,
         "answer": "Încep să-mi fac tot felul de scenarii și mă neliniștesc.",
         "points": 2,
-        "flag": "anxious_attachment"
+        "flag": "dependency"
       },
       {
         "id": 4,
         "answer": "Mă panichez și insist să nu facem pauza.",
         "points": 3,
-        "flag": "emotional_dependency"
+        "flag": "dependency"
       }
     ]
-  }
+  },
+  
+    {
+      "id": 16,
+      "gender": "male",
+      "question": "Partenera ta primește o promovare importantă și începe să câștige mai bine decât tine. Ce simți în legătură cu asta?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Sunt mândru de ea și o susțin din plin.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "E puțin ciudat, dar mă obișnuiesc.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Simt că nu mai sunt suficient de valoros.",
+          "points": 2,
+          "flag": "insecurity"
+        },
+        {
+          "id": 4,
+          "answer": "Încep să fiu gelos și competitiv cu ea.",
+          "points": 3,
+          "flag": "control"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "gender": "male",
+      "question": "Ea te întreabă dacă ai putea merge la terapie de cuplu, simțind că v-ați îndepărtat. Cum reacționezi?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Accept, dacă simte că avem nevoie.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Ezit, dar promit că mă gândesc.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "O iau ca pe un atac și devin defensiv.",
+          "points": 2,
+          "flag": "avoidance"
+        },
+        {
+          "id": 4,
+          "answer": "Refuz complet și spun că e o prostie.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "gender": "male",
+      "question": "Ea îți spune că se simte neglijată emoțional. Cum interpretezi asta în mintea ta?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Încerc să înțeleg ce îi lipsește.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Simt o ușoară vinovăție, dar nu reacționez imediat.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Cred că exagerează și mă enervează.",
+          "points": 2,
+          "flag": "avoidance"
+        },
+        {
+          "id": 4,
+          "answer": "Îi spun că e prea sensibilă și că dramatizează.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "gender": "male",
+      "question": "Partenera ta postează poze mai îndrăznețe pe social media fără să îți spună. Cum te simți?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Nu mă deranjează, are libertatea să facă ce vrea.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Mă simt puțin nesigur, dar nu o confrunt.",
+          "points": 1,
+          "flag": "insecurity"
+        },
+        {
+          "id": 3,
+          "answer": "Îi cer să le șteargă pentru că mă face să mă simt prost.",
+          "points": 2,
+          "flag": "control"
+        },
+        {
+          "id": 4,
+          "answer": "O acuz că face asta intenționat ca să atragă atenția altora.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "gender": "male",
+      "question": "Ea îți spune calm că a fost rănită pentru că ai uitat aniversarea voastră. Cum reacționezi?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Îmi cer scuze sincer și încerc să repar lucrurile.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Îmi pare rău, dar îi spun că a fost o perioadă stresantă.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Mă apăr spunând că nu e mare lucru.",
+          "points": 2,
+          "flag": "manipulation"
+        },
+        {
+          "id": 4,
+          "answer": "O acuz că face o dramă dintr-un detaliu banal.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    }
+
 ]
