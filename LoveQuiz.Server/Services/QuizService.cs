@@ -71,7 +71,7 @@ namespace LoveQuiz.Server.Services
                     return new NoPaymentReport
                     {
                         Title = "Nicio alarmă majoră deocamdată",
-                        Teaser = "Totuși, ar putea exista nuanțe ascunse. Vrei să afli mai multe?",
+                        Teaser = "Totuși, există nuanțe ascunse. Vrei să afli mai multe?",
                         SeverityLevel = 0
                     };
 
@@ -92,12 +92,30 @@ namespace LoveQuiz.Server.Services
                     .First().Key;
 
                 var level = severityMap.GetValueOrDefault(worstFlag, 0);
+                 var count = flagCounts[worstFlag];
+
+                  
+                if (level == 1 && count >= 3) level = 2; // If insecurity or avoidance is reported 3+ times, treat it as level 2
+                if (level == 2 && count >= 4) level = 3; // If dependency is reported 4+ times, treat it as level 3
+
+
+            worstFlag = worstFlag switch
+            {
+                "insecurity" => "insecuritate",
+                "avoidance" => "evitare (emoțională)",
+                "dependency" => "dependență emoțională",
+                "manipulation" => "manipulare",
+                "control" => "control emoțional",
+                _ => throw new KeyNotFoundException("Didn't get the worst flag correctly")
+            }; 
 
                 return new NoPaymentReport
                 {
                     Title = $"Semne de **{worstFlag}**",
                     Teaser = "Acesta e doar vârful aisbergului. Descoperă întreaga analiză pentru a afla impactul real.",
-                    SeverityLevel = level
+                    SeverityLevel = level //EMOJI/COLOR PALLETE BASED ON LEVEL
+                    // SeverityLevel: 0 = no flags, 1 = minor, 2 = moderate, 3 = severe
+                    
                 };
 
             }
