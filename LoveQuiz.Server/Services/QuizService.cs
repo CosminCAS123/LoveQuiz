@@ -7,6 +7,8 @@ namespace LoveQuiz.Server.Services
     public class QuizService
     {
         private const string jsonPath = "Data/quiz_data.json";
+        private const string freeTeaser = "Acesta e doar vârful aisbergului. Descoperă întreaga analiză pentru a afla impactul real.";
+        private const string edgeFreeTeaser = "Totuși, există nuanțe ascunse. Vrei să afli mai multe?";
         private readonly IEnumerable<QuestionDto>all_questions;
         public QuizService(IWebHostEnvironment env)
         {
@@ -71,7 +73,7 @@ namespace LoveQuiz.Server.Services
                     return new NoPaymentReport
                     {
                         Title = "Nicio alarmă majoră deocamdată",
-                        Teaser = "Totuși, există nuanțe ascunse. Vrei să afli mai multe?",
+                        Teaser = edgeFreeTeaser,
                         SeverityLevel = 0
                     };
 
@@ -112,7 +114,7 @@ namespace LoveQuiz.Server.Services
                 return new NoPaymentReport
                 {
                     Title = $"Semne de **{worstFlag}**",
-                    Teaser = "Acesta e doar vârful aisbergului. Descoperă întreaga analiză pentru a afla impactul real.",
+                    Teaser = freeTeaser,
                     SeverityLevel = level //EMOJI/COLOR PALLETE BASED ON LEVEL
                     // SeverityLevel: 0 = no flags, 1 = minor, 2 = moderate, 3 = severe
                     
