@@ -1,5 +1,6 @@
 ﻿using LoveQuiz.Server.Models;
 using Microsoft.Extensions.Options;
+using Npgsql;
 using System.Reflection;
 using System.Text.Json;
 namespace LoveQuiz.Server.Services
@@ -9,36 +10,19 @@ namespace LoveQuiz.Server.Services
         private const string jsonPath = "Data/quiz_data.json";
         private const string freeTeaser = "Acesta e doar vârful aisbergului. Descoperă întreaga analiză pentru a afla impactul real.";
         private const string edgeFreeTeaser = "Totuși, există nuanțe ascunse. Vrei să afli mai multe?";
-        private readonly IEnumerable<QuestionDto>all_questions;
-        public QuizService(IWebHostEnvironment env)
+        private readonly QuizSessionRepository quiz_repo;
+        private readonly QuizQuestionsCache questions_cache;
+        public QuizService(QuizSessionRepository repo , QuizQuestionsCache cache)
         {
-            var filePath = Path.Combine(env.ContentRootPath, jsonPath);
-
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException($"File {jsonPath} not found.");
-
-            var json = File.ReadAllText(filePath);
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            
-            try
-            {
-                all_questions = JsonSerializer.Deserialize<IEnumerable<QuestionDto>>(json, options);
-            }
-            catch (JsonException ex)
-            {
-                throw new JsonException("Failed to deserialize JSON data.", ex);
-            }
-           
+            this.quiz_repo = repo;
+            this.questions_cache = cache;
         }
-        
-        public  IEnumerable<PublicQuestionDto> GetAllQuestions(string gender)
+       
+    
+    public  IEnumerable<PublicQuestionDto> GetAllQuestions(string gender)
         {
 
-            var filtered = all_questions
+            var filtered = questions_cache.Questions
                    .Where(q => q.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase))
                    .Select(q => new PublicQuestionDto
                    {
@@ -55,13 +39,13 @@ namespace LoveQuiz.Server.Services
 
         }
 
-        public  NoPaymentReport GetFreeReport(IEnumerable<QuizSubmissionDto> submissions)
+    public  NoPaymentReport GetFreeReport(IEnumerable<QuizSubmissionDto> submissions)
         {
             var flagCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var s in submissions)
             {
-                var question = all_questions.FirstOrDefault(q => q.Id == s.QuestionId);
+                var question = questions_cache.Questions.FirstOrDefault(q => q.Id == s.QuestionId);
                 var answer = question?.Answers.FirstOrDefault(a => a.Id == s.AnswerId);
                 if (!string.IsNullOrEmpty(answer?.Flag))
                 {
@@ -121,7 +105,12 @@ namespace LoveQuiz.Server.Services
                 };
 
             }
+
+        public async Task SaveSessionAsync()
+        {
+            await quiz_repo.InsertTestRowAsync();
         }
+    }
 
 
     }
