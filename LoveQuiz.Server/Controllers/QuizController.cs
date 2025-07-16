@@ -64,6 +64,28 @@ namespace LoveQuiz.Server.Controllers
             return Ok("✅ Test row inserted into Supabase.");
         }
 
+        [HttpPost("full-report")]
+        public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] List<QuizSubmissionDto> submissions)
+        {
+            try
+            {
+                var report = await _quizService.GetFullReportAsync(submissions);
+                return Ok(report);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return StatusCode(401, "API key invalid or unauthorized.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal error: {ex.Message}");
+            }
+        }
+
 
 
     }

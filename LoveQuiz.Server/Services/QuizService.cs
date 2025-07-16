@@ -11,15 +11,24 @@ namespace LoveQuiz.Server.Services
         private const string freeTeaser = "Acesta e doar vârful aisbergului. Descoperă întreaga analiză pentru a afla impactul real.";
         private const string edgeFreeTeaser = "Totuși, există nuanțe ascunse. Vrei să afli mai multe?";
         private readonly QuizSessionRepository quiz_repo;
+        private readonly OpenAIReportService openAI_service;
         private readonly QuizQuestionsCache questions_cache;
-        public QuizService(QuizSessionRepository repo , QuizQuestionsCache cache)
+        public QuizService(QuizSessionRepository repo , QuizQuestionsCache cache, OpenAIReportService openAI)
         {
             this.quiz_repo = repo;
             this.questions_cache = cache;
+            this.openAI_service = openAI;
         }
-       
-    
-    public  IEnumerable<PublicQuestionDto> GetAllQuestions(string gender)
+        public async Task<FinalReport> GetFullReportAsync(List<QuizSubmissionDto> submissions)
+        {
+            var textPairs = questions_cache.GetSelectedTextPairs(submissions);
+
+            var prompt = PromptBuilder.BuildPrompt(textPairs); // coming next
+
+            return await openAI_service.GetReportOpenAIAsync(prompt);
+        }
+
+        public  IEnumerable<PublicQuestionDto> GetAllQuestions(string gender)
         {
 
             var filtered = questions_cache.Questions
