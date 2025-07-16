@@ -23,11 +23,18 @@ namespace LoveQuiz.Server.Services;
 
         var requestBody = new
         {
-            model = "gpt-4o", // or "gpt-4o" later
+            model = "gpt-4o-mini", // or "gpt-4o" later
             messages = new[]
            {
-                new { role = "system", content = "You are a relationship psychologist. Return emotionally intelligent relationship reports in Romanian, in JSON format." },
-                new { role = "user", content = prompt }
+new
+{
+    role = "system",
+    content = "Ești un psiholog specializat în relații de cuplu. Răspunsul tău trebuie să fie inteligent emoțional, empatic și scris în limba română. Formatează răspunsul strict ca obiect JSON, fără explicații, markdown sau text suplimentar."
+},                new
+{
+    role = "user",
+    content = prompt
+}
             },
             temperature = 0.8,
             max_tokens = 800
@@ -49,7 +56,7 @@ namespace LoveQuiz.Server.Services;
         {
             throw new InvalidOperationException("Received empty response from OpenAI.");
         }
-        var root = JsonDocument.Parse(json);
+        using var root = JsonDocument.Parse(json);
         var content = root
             .RootElement
             .GetProperty("choices")[0]
@@ -57,12 +64,23 @@ namespace LoveQuiz.Server.Services;
             .GetProperty("content")
             .GetString();
 
-        var report = JsonSerializer.Deserialize<FinalReport>(content!,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var cleanJson = ExtractJson(content!);
+        var report = JsonSerializer.Deserialize<FinalReport>(cleanJson!,
+    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
 
         return report!;
     }
+    private static string ExtractJson(string content)
+    {
+        var start = content.IndexOf('{');
+        var end = content.LastIndexOf('}');
 
-  
+        if (start == -1 || end == -1 || end <= start)
+            throw new FormatException("Could not find valid JSON in OpenAI response.");
+
+        return content.Substring(start, end - start + 1);
+    }
+
 }
 

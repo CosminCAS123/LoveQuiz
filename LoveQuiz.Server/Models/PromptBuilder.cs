@@ -7,10 +7,9 @@ namespace LoveQuiz.Server.Models
     {
         public static string BuildPrompt(List<QuizSubmissionTextDto> submissions)
         {
-            
             var sb = new StringBuilder();
 
-            sb.AppendLine("Bazându-te pe următoarele răspunsuri dintr-un quiz de cuplu, generează o analiză psihologică în format JSON, cu următoarea structură:");
+            sb.AppendLine("Ești un psiholog relațional virtual. Bazându-te pe următoarele răspunsuri dintr-un quiz de cuplu, generează o analiză psihologică în format JSON cu această structură exactă:");
             sb.AppendLine(@"
 {
   ""title"": ""string"",
@@ -21,21 +20,19 @@ namespace LoveQuiz.Server.Models
   ""adviceList"": [""string"", ""string""]
 }
 ");
-            sb.AppendLine("Răspunsuri:");
+            sb.AppendLine("Scrie în română. Nu include nicio explicație în afara obiectului JSON. Iată răspunsurile:");
 
             int index = 1;
-            foreach(var pair in submissions)
+            foreach (var pair in submissions)
             {
-                var question = pair.QuestionText;
-                var answer = pair.AnswerText;
-
-                sb.AppendLine($"Q{index}: \"{question}\"");
-                sb.AppendLine($"A{index}: \"{answer}\"\n");
+                sb.AppendLine($"Întrebarea {index}: \"{pair.QuestionText}\"");
+                sb.AppendLine($"Răspunsul {index}: \"{pair.AnswerText}\"\n");
                 index++;
             }
-           
+
             return sb.ToString();
         }
+
     }
 
 
