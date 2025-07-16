@@ -5,13 +5,19 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import './main-block.scss';
 import './tailwind.css';
+import FloatingHearts from './FloatingHeats';
 
 
 function MainBlock() {
     const navigate = useNavigate();
 
     return(
-        <div className="main-block flex pb-12 -z-20">
+        <>
+        <div>
+            <FloatingHearts />
+        </div>
+        
+        <div className="main-block flex pb-12">
             <div className="main-block-text flex-1/2 items-center justify-start pl-12">
                 <div className="animate-slide-down main-block__title z-10">
                     <div className="main-block__title">
@@ -30,7 +36,7 @@ Acest quiz nu îți va da toate răspunsurile, dar îți poate oferi un punct de
 Începe acum. Pentru tine.</span>
                 </div>
 
-                <div className="animate-slide-up main-block__button-wrapper wrapper self-start z-10">
+                <div className="animate-slide-up main-block__button-wrapper wrapper self-start">
                     <button className="main-block__button" onClick={() => navigate('/gender')}>
                         Afla raspunsul acum!
                         <span className="block">*in doar 5 minute*</span>
@@ -43,6 +49,7 @@ Acest quiz nu îți va da toate răspunsurile, dar îți poate oferi un punct de
             </div>
 
         </div>
+        </>
     );
 }
 

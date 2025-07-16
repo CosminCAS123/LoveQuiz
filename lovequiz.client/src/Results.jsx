@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import './main-block.scss';
+import './tailwind.css';
+import Header from "./Header.jsx";
+import Footer from "./Footer.jsx";
 
 export default function Results() {
   const navigate = useNavigate();
@@ -64,7 +68,13 @@ export default function Results() {
   const getUserAnswerId = (qid) => (Array.isArray(answers) ? answers[qid] : answers[qid]);
   console.log(report);
   return (
-    <div className="p-8 space-y-6">
+
+    <>
+    <div className="header-wrapper">
+      <Header />
+    </div>
+    
+    <div className="p-8 space-y-6 main-block-wrapper">
       <h1 className="text-2xl font-bold">Rezultatele tale</h1>
 
       {error && (
@@ -103,5 +113,10 @@ export default function Results() {
         Înapoi la început
       </button>
     </div>
+
+      <div className="footer-wrapper">
+        <Footer />
+      </div>
+    </>
   );
 }

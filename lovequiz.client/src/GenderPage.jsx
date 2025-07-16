@@ -20,18 +20,28 @@ function GenderBlock() {
         </div>
 
         <div className="gender-block-wrapper wrapper ccontainer">
+
+        <div className="animate-slide-down main-block__title z-10 text-center">
+            <div className="main-block__title">
+                <em>TU ESTI DE VINA!</em>
+                </div>
+                <div className="main-block__title--subtitle pl-3">
+              <em>sau poate sunt eu...?</em>
+          </div>
+        </div>
+
             <div className="gender-block flex">
                 <div className="gender-block__title animate-fade-in z-10">
-                    Alege-ti genul:
+                    alege-ti genul pentru a afla:
                 </div>
 
                 <div className="gender-block__genders animate-grow z-10">
-                    <button className="gender-block__genders-box" onClick={() => navigate('male')}>
+                    <button className="gender-block__genders-box" onClick={() => navigate('/gender/male')}>
                         <img src="../assets/man-3.png" className="gender-block__genders--male-image"/>
 
                         <span className="gender-block__genders--male-text">Barbat</span>
                     </button>
-                    <button className="gender-block__genders-box" onClick={() => navigate('female')}>
+                    <button className="gender-block__genders-box" onClick={() => navigate('/gender/female')}>
                         <img src="../assets/woman-2.png" className="gender-block__genders--female-image"/>
 
                         <span className="gender-block__genders--female-text">Femeie</span>

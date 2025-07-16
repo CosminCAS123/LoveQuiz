@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { Heart } from "lucide-react";
+import "./index.css";
 
 // How many hearts? Crank it up or down.
 const NUMBER_OF_HEARTS = 10;
@@ -24,8 +25,8 @@ export default function FloatingHearts() {
       size: 18 + Math.random() * 34,    // 18–52 px
       delay: Math.random() * 5,         // 0–5 s stagger
       duration: 8 + Math.random() * 12, // 8–20 s per loop
-      opacity: 0.3 + Math.random() * 0.5,
-      hue: Math.random() < 0.5 ? "text-pink-400" : "text-rose-500",
+      opacity: 0.15 + Math.random() * 0.25,
+      hue: "text-rose-400"
     }))
   ).current;
 
@@ -54,6 +55,7 @@ export default function FloatingHearts() {
           100% { transform: translateY(-120vh); }
         }
       `}</style>
+
     </div>
   );
 }
