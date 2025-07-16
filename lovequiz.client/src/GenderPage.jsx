@@ -6,7 +6,6 @@ import Footer from './Footer.jsx'
 import './tailwind.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { useRef } from 'react';
 import FloatingHearts from './FloatingHeats.jsx';
 
@@ -49,7 +48,6 @@ function GenderBlock() {
 }
 
 export function QuizComponent({ gender }) {
-  console.log("QuizComponent gender:", gender);
   const quizRef  = useRef(null);
   const navigate = useNavigate();
 
@@ -85,7 +83,11 @@ export function QuizComponent({ gender }) {
       alert("Te rugăm să alegi un răspuns înainte de a continua.");
       return;                                
     }
-    isLast ? navigate("/result") : setCurrent(p => p + 1);
+    if (isLast) {
+      navigate("/result", { state: { answers: selectedAnswers, questions } });
+    } else {
+      setCurrent(p => p + 1);
+    }
   };
 
   const handlePrev = () => setCurrent(p => Math.max(p - 1, 0));
@@ -136,7 +138,6 @@ export function QuizComponent({ gender }) {
   );
 }
 
-
 export function FemaleBlock() {
 
 
@@ -163,8 +164,6 @@ export function FemaleBlock() {
                 
   );
 }
-
-
 
 export function MaleBlock() {
 
