@@ -20,23 +20,23 @@ function GenderBlock() {
         </div>
 
         <div className="gender-block-wrapper wrapper ccontainer">
-
-        <div className="animate-slide-down main-block__title z-10 text-center">
-            <div className="main-block__title">
-                <em>TU ESTI DE VINA!</em>
-                </div>
-                <div className="main-block__title--subtitle pl-3">
-              <em>sau poate sunt eu...?</em>
-          </div>
-        </div>
+      
+            <div className="animate-slide-down main-block__title z-10 text-center">
+                <div className="main-block__title">
+                    <em>TU ESTI DE VINA!</em>
+                    </div>
+                    <div className="main-block__title--subtitle pl-3">
+                  <em>sau poate sunt eu...?</em>
+              </div>
+            </div>
 
             <div className="gender-block flex">
                 <div className="gender-block__title animate-fade-in z-10">
                     alege-ti genul pentru a afla:
                 </div>
 
-                <div className="gender-block__genders animate-grow z-10">
-                    <button className="gender-block__genders-box" onClick={() => navigate('/gender/male')}>
+                <div className="gender-block__genders animate-grow">
+                    <button className="gender-block__genders-box z-21" onClick={() => navigate('/gender/male')}>
                         <img src="../assets/man-3.png" className="gender-block__genders--male-image"/>
 
                         <span className="gender-block__genders--male-text">Barbat</span>
@@ -105,6 +105,20 @@ export function QuizComponent({ gender }) {
   return (
     <div className="quiz-wrapper pl-12 relative questions-wrapper mt-auto mb-auto animate-grow" ref={quizRef}>
       <div>
+
+      <div className="w-full max-w-xl mx-auto mb-4">
+        <div className="h-2 w-full bg-rose-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-color-magenta transition-all duration-500"
+            style={{ width: `${((current + 1) / questions.length) * 100}%` }}
+          />
+        </div>
+        <p className="text-xs text-center mt-1 text-color-primary">
+          Intrebarea {current + 1} din {questions.length}
+        </p>
+      </div>
+
+
         <div className="question font-extrabold text-xl mb-6 text-center">{q.question}</div>
 
         <ul className="answers space-y-4 answers-wrapper">
@@ -166,7 +180,7 @@ export function FemaleBlock() {
 
     </div>
 
-    <div className="footer-wrapper">
+    <div className="footer-wrapper h-[5vh]">
       <Footer />
     </div> 
 
@@ -192,7 +206,7 @@ export function MaleBlock() {
 
     </div>
 
-    <div className="footer-wrapper">
+    <div className="footer-wrapper h-[5vh]">
       <Footer />
     </div> 
 
