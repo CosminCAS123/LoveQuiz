@@ -42,6 +42,7 @@ button {
   min-width: 150px;
   max-width: 200px;
   transition: background-color 0.2s ease;
+  z-index: 100;
 
   span {
     font-size: 0.75rem;
@@ -49,6 +50,10 @@ button {
 }
 
 button:hover {
+  background-color: #fb6471;
+}
+
+button:active{ 
   background-color: #fb6471;
 }
 
@@ -65,3 +70,14 @@ h1 {
   line-height: 1.1;
 }
 
+.heart-fade-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top,
+    transparent 0%,
+    rgba(255, 255, 255, 1) 30%,
+    rgba(255, 255, 255, 1) 70%,
+    transparent 100%
+  );
+}
