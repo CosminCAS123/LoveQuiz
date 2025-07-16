@@ -57,7 +57,7 @@ body {
   display: block;
   min-width: 320px;
   min-height: 100vh;
-  background: #A86A7A;
+  background: #A86A7A !important;
 }
 
 h1 {
