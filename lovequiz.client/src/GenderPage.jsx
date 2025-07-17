@@ -98,7 +98,7 @@ export function QuizComponent({ gender }) {
       return;                                
     }
     if (isLast) {
-      navigate("/result", { state: { answers: selectedAnswers, questions } });
+      navigate("/results", { state: { answers: selectedAnswers, questions } });
     } else {
       setCurrent(p => p + 1);
     }
@@ -145,7 +145,7 @@ export function QuizComponent({ gender }) {
                   setSelectedAnswers(prev => ({ ...prev, [q.id]: i }));
                   setTimeout(() => {
                     if (isLast) {
-                      navigate("/result", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
+                      navigate("/results", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
                     } else {
                       setCurrent(p => p + 1);
                     }
@@ -168,7 +168,7 @@ export function QuizComponent({ gender }) {
                 
                   setTimeout(() => {
                     if (isLast) {
-                      navigate("/result", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
+                      navigate("/results", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
                     } else {
                       setCurrent(p => p + 1);
                       setAnimationState("grow");
