@@ -14,6 +14,22 @@ export default function Results() {
   const [report, setReport] = useState(null);
   const [error,  setError]  = useState(null);
 
+  const full_report = {
+    adviceList: [
+      "Încurajează o comunicare deschisă și sinceră; exprimă-ți nevoile fără a blama.",
+      "Stabiliți momente de conectare, fără distrageri, pentru a întări relația."
+    ],
+    compatibilityVerdict: "Există riscuri mari de conflict și neînțelegeri.",
+    keyInsights: [
+      "Partenerul tău poate manifesta comportamente de evitare atunci când vine vorba de discuții dificile.",
+      "Sentimentele de nesiguranță și anxietate sunt prezente, iar comunicarea nu este eficientă."
+    ],
+    summary: "Relația prezintă semne de tensiune și neînțelegeri, cu o comunicare deficitară și un sentiment de nesiguranță din partea partenerului. Est…",
+    title: "Analiza relației de cuplu",
+    toxicityLevel: 7
+  };
+  console.log(full_report);
+
 
   const buildSubmissions = () =>
     questions                       // iterate over the questions we have
@@ -52,7 +68,28 @@ export default function Results() {
       })
       .then(data => setReport(data))
       .catch(err => setError(err.message));
+    
+
+    //FULL REPORT API CALL - EACH CALL COSTS A FEW FRACTIONS OF ONE LEU, REFER TO VARIABLE 'full_report' WHILE IMPLEMENTING FRONTEND
+    // fetch("http://localhost:5023/api/quiz/full-report", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(submissions),
+    // })
+    //   .then((res) => {
+    //     if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     console.log("Full Report:", data);
+    //   })
+    //   .catch((err) => {
+    //     console.error("Full Report Error:", err.message);
+    //   });
+    
   }, [state]); 
+
+  
 
   if (!questions.length) {
     return (
@@ -65,8 +102,7 @@ export default function Results() {
     );
   }
 
-  const getUserAnswerId = (qid) => (Array.isArray(answers) ? answers[qid] : answers[qid]);
-  console.log(report);
+
   return (
 
     <>

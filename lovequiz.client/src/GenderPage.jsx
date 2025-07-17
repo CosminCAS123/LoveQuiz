@@ -33,6 +33,9 @@ function GenderBlock() {
             <div className="gender-block flex">
                 <div className="gender-block__title animate-fade-in z-10">
                     alege-ti genul pentru a afla:
+                    <span>
+                      *in doar 5 minute*
+                    </span>
                 </div>
 
                 <div className="gender-block__genders animate-grow">
@@ -60,6 +63,7 @@ function GenderBlock() {
 export function QuizComponent({ gender }) {
   const quizRef  = useRef(null);
   const navigate = useNavigate();
+  const [animationState, setAnimationState] = useState("grow");
 
   const [questions, setQuestions] = useState([]);
   const [error,     setError]     = useState(null);
@@ -103,8 +107,14 @@ export function QuizComponent({ gender }) {
   const handlePrev = () => setCurrent(p => Math.max(p - 1, 0));
 
   return (
-    <div className="quiz-wrapper pl-12 relative questions-wrapper mt-auto mb-auto animate-grow" ref={quizRef}>
-      <div>
+    <div
+      className={`quiz-wrapper pl-12 relative questions-wrapper mt-auto mb-auto flex max-h-[70vh] ${
+        animationState === "fade" ? "animate-fade-out-left" :
+        animationState === "grow" ? "animate-grow" : ""
+      }`}
+      ref={quizRef}
+    >
+      <div className="">
 
       <div className="w-full max-w-xl mx-auto mb-4">
         <div className="h-2 w-full bg-rose-100 rounded-full overflow-hidden">
@@ -119,26 +129,52 @@ export function QuizComponent({ gender }) {
       </div>
 
 
-        <div className="question font-extrabold text-xl mb-6 text-center">{q.question}</div>
+        <div className="question font-extrabold text-xl mb-6 text-center ">{q.question}</div>
 
-        <ul className="answers space-y-4 answers-wrapper">
+        <ul className="answers space-y-4 answers-wrapper ">
           {q.answers.map((ans, i) => (
             <li key={i} className="answer-row">
+
               <input
                 type="radio"
                 id={`q${q.id}-${i}`}
                 name={`q${q.id}`}
                 value={i}
                 checked={selectedAnswers[q.id] === i}
-                onChange={() => handleRadioChange(i)}
+                onChange={() => {
+                  setSelectedAnswers(prev => ({ ...prev, [q.id]: i }));
+                  setTimeout(() => {
+                    if (isLast) {
+                      navigate("/result", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
+                    } else {
+                      setCurrent(p => p + 1);
+                    }
+                  }, 250); 
+                }}
                 className="answer-radio"
               />
+
               <label
                 htmlFor={`q${q.id}-${i}`}
                 className="
                   flex cursor-pointer select-none items-center gap-3 rounded-lg
                   px-4 py-3 text-md custom-answer-choices answer-label  /* transition removed */
                 "
+                onClick={() => {
+                  if (animationState === "fade") return;
+                
+                  setSelectedAnswers(prev => ({ ...prev, [q.id]: i }));
+                  setAnimationState("fade");
+                
+                  setTimeout(() => {
+                    if (isLast) {
+                      navigate("/result", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
+                    } else {
+                      setCurrent(p => p + 1);
+                      setAnimationState("grow");
+                    }
+                  }, 400); 
+                }}
               >
                 {ans.answer}
               </label>
@@ -153,9 +189,10 @@ export function QuizComponent({ gender }) {
             </button>
           )}
 
-          <button onClick={handleNext} className="ml-auto quiz-button">
+          {/* Button to go to the next question - i do not think we need it anymore */}
+          {/* <button onClick={handleNext} className="ml-auto quiz-button">
             {isLast ? "Afla raspunsul" : "Inainte"}
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

@@ -57,12 +57,12 @@ namespace LoveQuiz.Server.Controllers
         }
 
 
-        [HttpPost("db-test")]
-        public async Task<IActionResult> DbTest()
-        {
-            await _quizService.SaveSessionAsync();
-            return Ok("✅ Test row inserted into Supabase.");
-        }
+        // [HttpPost("db-test")]
+        // public async Task<IActionResult> DbTest()
+        // {
+        //     await _quizService.SaveSessionAsync();
+        //     return Ok("✅ Test row inserted into Supabase.");
+        // }
 
         [HttpPost("full-report")]
         public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] List<QuizSubmissionDto> submissions)

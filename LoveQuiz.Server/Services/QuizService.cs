@@ -10,12 +10,11 @@ namespace LoveQuiz.Server.Services
         private const string jsonPath = "Data/quiz_data.json";
         private const string freeTeaser = "Acesta e doar vârful aisbergului. Descoperă întreaga analiză pentru a afla impactul real.";
         private const string edgeFreeTeaser = "Totuși, există nuanțe ascunse. Vrei să afli mai multe?";
-        private readonly QuizSessionRepository quiz_repo;
+        // private readonly QuizSessionRepository quiz_repo;
         private readonly OpenAIReportService openAI_service;
         private readonly QuizQuestionsCache questions_cache;
-        public QuizService(QuizSessionRepository repo , QuizQuestionsCache cache, OpenAIReportService openAI)
+        public QuizService(QuizQuestionsCache cache, OpenAIReportService openAI)
         {
-            this.quiz_repo = repo;
             this.questions_cache = cache;
             this.openAI_service = openAI;
         }
@@ -115,10 +114,10 @@ namespace LoveQuiz.Server.Services
 
             }
 
-        public async Task SaveSessionAsync()
-        {
-            await quiz_repo.InsertTestRowAsync();
-        }
+        // public async Task SaveSessionAsync()
+        // {
+        //     await quiz_repo.InsertTestRowAsync();
+        // }
     }
 
 
