@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import GenderBlock from './GenderPage.jsx'
 import {FemaleBlock, MaleBlock} from './GenderPage.jsx'
-import Results from './Results.jsx'
+import Results, {PaidResults} from './Results.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,7 +15,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/gender" element={<GenderBlock />} />
         <Route path="/gender/female" element={<FemaleBlock />} />
         <Route path="/gender/male" element={<MaleBlock />} />
-        <Route path="/result" element={<Results />} />
+        <Route path="/results" element={<Results />} />
+        <Route path="/results/paid" element={<PaidResults />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

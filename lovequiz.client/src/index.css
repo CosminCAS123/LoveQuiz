@@ -81,3 +81,7 @@ h1 {
     transparent 100%
   );
 }
+
+.text-color-primary {
+  color: #b17987;
+}
