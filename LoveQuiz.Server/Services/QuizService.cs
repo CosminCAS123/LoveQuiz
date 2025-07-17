@@ -23,7 +23,7 @@ namespace LoveQuiz.Server.Services
         {
             var textPairs = questions_cache.GetSelectedTextPairs(submissions);
 
-            var prompt = PromptBuilder.BuildPrompt(textPairs); // coming next
+            var prompt = PromptBuilder.BuildPrompt(textPairs); 
 
             return await openAI_service.GetReportOpenAIAsync(prompt);
         }
