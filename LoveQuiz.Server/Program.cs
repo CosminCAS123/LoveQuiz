@@ -4,11 +4,11 @@ using System.Data;
 using LoveQuiz.Server.Services;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//Console.WriteLine("Loaded OpenAI Key: " + builder.Configuration["OpenAI:ApiKey"]?.Substring(0, 6) + "...");
+
+
 
 builder.Services.AddControllers();
-builder.Services.AddHttpClient(); // ?? This is the missing piece
+builder.Services.AddHttpClient(); 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

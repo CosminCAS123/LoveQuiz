@@ -3,23 +3,21 @@
     public class FinalReport
     {
         public string Title { get; set; } = string.Empty;
-        // Enhanced version of the free title (e.g. "Teama de abandon domină relația")
+        // Custom, emotionally-resonant title (e.g. "The Over-Giver: When Love Becomes Self-Sacrifice")
 
         public string Summary { get; set; } = string.Empty;
-        // 2–3 sentence overview of the couple’s emotional dynamic
+        // 2–3 sentence overview of the user's emotional dynamic
 
         public int ToxicityLevel { get; set; }
-        // 1–5 scale, shown with emoji or color (e.g., 🟢 to 🔴)
+        // 0–100 scale; frontend maps this to labels/emojis (e.g., 🟢 0–20, 🔴 61–80)
 
         public string CompatibilityVerdict { get; set; } = string.Empty;
-        // Short sentence like "Vă potriviți, dar cu eforturi constante"
+        // One-liner judgment (e.g., "You match, but only with conscious effort")
 
-        public List<string> KeyInsights { get; set; } = new();
-        // Personal observations based on answers
+        public List<LoveTrait> Aspects { get; set; } = new();
+        // Detailed breakdown per aspect (e.g., emotional dependency, communication)
 
         public List<string> AdviceList { get; set; } = new();
-        // Concrete tips for improvement
-
-       
+        // Specific tips or exercises to improve relationship health
     }
 }
