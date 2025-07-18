@@ -114,7 +114,7 @@ export function QuizComponent({ gender }) {
       }`}
       ref={quizRef}
     >
-      <div className="">
+      <div className="w-full">
 
       <div className="w-full max-w-xl mx-auto mb-4">
         <div className="h-2 w-full bg-rose-100 rounded-full overflow-hidden">
