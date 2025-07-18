@@ -11,8 +11,7 @@
         public int ToxicityLevel { get; set; }
         // 0–100 scale; frontend maps this to labels/emojis (e.g., 🟢 0–20, 🔴 61–80)
 
-        public string CompatibilityVerdict { get; set; } = string.Empty;
-        // One-liner judgment (e.g., "You match, but only with conscious effort")
+       
 
         public List<LoveTrait> Aspects { get; set; } = new();
         // Detailed breakdown per aspect (e.g., emotional dependency, communication)
