@@ -85,3 +85,14 @@ h1 {
 .text-color-primary {
   color: #b17987;
 }
+
+.bg-color-primary {
+  background-color: #F6E4E7;
+}
+
+.custom-button {
+  
+  button {
+      min-width: 0px;
+  }
+}
