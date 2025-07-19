@@ -96,3 +96,7 @@ h1 {
       min-width: 0px;
   }
 }
+
+.button-margin {
+  margin-bottom: 3.5rem;
+}

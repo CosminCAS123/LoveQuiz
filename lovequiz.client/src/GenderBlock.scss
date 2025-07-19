@@ -39,6 +39,10 @@
     @media (max-width: 600px) {
         font-size: 18px;
     }
+
+    @media (max-width: 400px) {
+        font-size: 14px;
+    }
 }
 
 .quiz-button {
@@ -56,6 +60,10 @@
 .answers {
     @media (max-width: 600px) {
         font-size: 14px;
+    }
+
+    @media (max-width: 400px) {
+        font-size: 11px;
     }
 }
 
@@ -101,6 +109,7 @@
     justify-content: center;
     align-items: center;
     padding: 0 1rem;
+    margin-bottom: 5rem;
 
     &__title {
         font-size: 25px;
@@ -142,6 +151,10 @@
             &:hover{
                 background-color: #fb6471;
             }
+
+            &:active{
+                background-color: #fb6471;
+            }
         }
 
         &--male {
@@ -173,4 +186,10 @@
 
 .bg-color-magenta{
     background-color: #A86A7A;
+}
+
+.custom-quiz-button {
+    @media (max-width: 400px) {
+        font-size: 12px;
+    }
 }

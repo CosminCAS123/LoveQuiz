@@ -116,20 +116,20 @@ export function QuizComponent({ gender }) {
     >
       <div className="w-full">
 
-      <div className="w-full max-w-xl mx-auto mb-4">
+      <div className="w-full max-w-xl mx-auto pb-4">
         <div className="h-2 w-full bg-rose-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-color-magenta transition-all duration-500"
             style={{ width: `${((current + 1) / questions.length) * 100}%` }}
           />
         </div>
-        <p className="text-xs text-center mt-1 text-color-primary">
+        <p className="text-xs text-center pt-1 text-color-primary">
           Intrebarea {current + 1} din {questions.length}
         </p>
       </div>
 
 
-        <div className="question font-extrabold text-xl mb-6 text-center ">{q.question}</div>
+        <div className="question font-extrabold text-xl pb-6 text-center ">{q.question}</div>
 
         <ul className="answers space-y-4 answers-wrapper ">
           {q.answers.map((ans, i) => (
@@ -182,9 +182,9 @@ export function QuizComponent({ gender }) {
           ))}
         </ul>
 
-        <div className="mt-10 flex gap-4">
+        <div className="pt-10 flex gap-4">
           {current > 0 && (
-            <button onClick={handlePrev} className="quiz-button">
+            <button onClick={handlePrev} className="quiz-button custom-quiz-button">
               Inapoi
             </button>
           )}
@@ -217,7 +217,7 @@ export function FemaleBlock() {
 
     </div>
 
-    <div className="footer-wrapper h-[5vh]">
+    <div className="footer-wrapper h-[8vh]">
       <Footer />
     </div> 
 
