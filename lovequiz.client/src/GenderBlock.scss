@@ -5,10 +5,6 @@
     padding-top: 5rem;
     flex: 1;
     background-color: #F6E4E7;
-
-    @media (max-width: 600px) {
-        padding-top: 10rem;
-    }
 }
 
 .questions-wrapper {
@@ -16,6 +12,11 @@
     z-index: 100;
     margin-left: auto;
     margin-right: auto;
+    width: 1060px;
+    max-width: 1060px;
+    height: auto;
+    justify-items: center;
+    align-items: center;
 
     border: 10px double #A86A7A;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -32,6 +33,18 @@
     }
 }
 
+.question {
+    flex-shrink: 1;
+
+    @media (max-width: 600px) {
+        font-size: 18px;
+    }
+
+    @media (max-width: 400px) {
+        font-size: 14px;
+    }
+}
+
 .quiz-button {
     padding: 0.65rem 1rem;
     min-width: 130px;
@@ -41,6 +54,16 @@
     min-height: 80vh;
     @media (max-width: 600px) {
         //min-height: 85vh;
+    }
+}
+
+.answers {
+    @media (max-width: 600px) {
+        font-size: 14px;
+    }
+
+    @media (max-width: 400px) {
+        font-size: 11px;
     }
 }
 
@@ -85,16 +108,20 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 1rem;
+    margin-bottom: 5rem;
 
     &__title {
-        font-size: 5rem;
+        font-size: 25px;
         font-weight: 600;
         color: #A86A7A;
-        -webkit-text-stroke: 3px #000;
+        -webkit-text-stroke: .75px #000;
+        margin-top: 2.5rem;
 
-        @media (max-width: 600px) {
-            font-size: 3rem;
-            -webkit-text-stroke: 1.3px #000;
+        span {
+            display: block;
+            text-align: center;
+            font-size: 15px;
         }
     }
 
@@ -124,6 +151,10 @@
             &:hover{
                 background-color: #fb6471;
             }
+
+            &:active{
+                background-color: #fb6471;
+            }
         }
 
         &--male {
@@ -141,7 +172,8 @@
 }
 
 .quiz-wrapper {
-    color: #A86A7A;
+    color: #874B5C;
+    width: 100%;
 }
 
 .text-color-primary {
@@ -150,4 +182,14 @@
 
 .bg-color-primary {
     background-color: #F6E4E7;
+}
+
+.bg-color-magenta{
+    background-color: #A86A7A;
+}
+
+.custom-quiz-button {
+    @media (max-width: 400px) {
+        font-size: 12px;
+    }
 }

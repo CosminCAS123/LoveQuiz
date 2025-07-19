@@ -80,7 +80,22 @@
       }
     
       .animate-grow {
-        animation: grow 0.6s ease-out forwards;
+        animation: grow 0.4s ease-out forwards;
+      }
+
+      @keyframes shrink {
+        0% {
+          scale: 1;  
+          opacity: 1;
+        }
+        100% {
+          scale: 0;
+          opacity: 0;
+        }
+      }
+    
+      .animate-shrink {
+        animation: shrink 0.4s ease-out forwards;
       }
 
       @keyframes fade-in {
@@ -92,8 +107,42 @@
         }
       }
 
+      @keyframes fade-in-left {
+
+      }
+
       .animate-fade-in {
         animation: fade-in 1s ease-out forwards;
+      }
+
+      @keyframes fade-out-left {
+        0% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-150px);
+        }
+      }
+
+      .animate-fade-out-left {
+        animation: fade-out-left 400ms ease-out forwards;
+      }
+
+      @keyframes fade-out-right {
+        0% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(150px);
+        }
+      }
+
+      .animate-fade-out-right {
+        animation: fade-out-right 400ms ease-out forwards;
       }
 
       @keyframes heartbeat {

@@ -6,7 +6,6 @@ import Footer from './Footer.jsx'
 import './tailwind.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { useRef } from 'react';
 import FloatingHearts from './FloatingHeats.jsx';
 
@@ -21,18 +20,31 @@ function GenderBlock() {
         </div>
 
         <div className="gender-block-wrapper wrapper ccontainer">
+      
+            <div className="animate-slide-down main-block__title z-10 text-center">
+                <div className="main-block__title">
+                    <em>TU ESTI DE VINA!</em>
+                    </div>
+                    <div className="main-block__title--subtitle pl-3">
+                  <em>sau poate sunt eu...?</em>
+              </div>
+            </div>
+
             <div className="gender-block flex">
                 <div className="gender-block__title animate-fade-in z-10">
-                    Alege-ti genul:
+                    alege-ti genul pentru a afla:
+                    <span>
+                      *in doar 5 minute*
+                    </span>
                 </div>
 
-                <div className="gender-block__genders animate-grow z-10">
-                    <button className="gender-block__genders-box" onClick={() => navigate('male')}>
+                <div className="gender-block__genders animate-grow">
+                    <button className="gender-block__genders-box z-21" onClick={() => navigate('/gender/male')}>
                         <img src="../assets/man-3.png" className="gender-block__genders--male-image"/>
 
                         <span className="gender-block__genders--male-text">Barbat</span>
                     </button>
-                    <button className="gender-block__genders-box" onClick={() => navigate('female')}>
+                    <button className="gender-block__genders-box" onClick={() => navigate('/gender/female')}>
                         <img src="../assets/woman-2.png" className="gender-block__genders--female-image"/>
 
                         <span className="gender-block__genders--female-text">Femeie</span>
@@ -49,9 +61,9 @@ function GenderBlock() {
 }
 
 export function QuizComponent({ gender }) {
-  console.log("QuizComponent gender:", gender);
   const quizRef  = useRef(null);
   const navigate = useNavigate();
+  const [animationState, setAnimationState] = useState("grow");
 
   const [questions, setQuestions] = useState([]);
   const [error,     setError]     = useState(null);
@@ -85,34 +97,84 @@ export function QuizComponent({ gender }) {
       alert("Te rugăm să alegi un răspuns înainte de a continua.");
       return;                                
     }
-    isLast ? navigate("/result") : setCurrent(p => p + 1);
+    if (isLast) {
+      navigate("/results", { state: { answers: selectedAnswers, questions } });
+    } else {
+      setCurrent(p => p + 1);
+    }
   };
 
   const handlePrev = () => setCurrent(p => Math.max(p - 1, 0));
 
   return (
-    <div className="quiz-wrapper pl-12 relative questions-wrapper mt-auto mb-auto animate-grow" ref={quizRef}>
-      <div>
-        <div className="question font-extrabold text-xl mb-6 text-center">{q.question}</div>
+    <div
+      className={`quiz-wrapper pl-12 relative questions-wrapper mt-auto mb-auto flex max-h-[70vh] ${
+        animationState === "fade" ? "animate-fade-out-left" :
+        animationState === "grow" ? "animate-grow" : ""
+      }`}
+      ref={quizRef}
+    >
+      <div className="w-full">
 
-        <ul className="answers space-y-4 answers-wrapper">
+      <div className="w-full max-w-xl mx-auto pb-4">
+        <div className="h-2 w-full bg-rose-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-color-magenta transition-all duration-500"
+            style={{ width: `${((current + 1) / questions.length) * 100}%` }}
+          />
+        </div>
+        <p className="text-xs text-center pt-1 text-color-primary">
+          Intrebarea {current + 1} din {questions.length}
+        </p>
+      </div>
+
+
+        <div className="question font-extrabold text-xl pb-6 text-center ">{q.question}</div>
+
+        <ul className="answers space-y-4 answers-wrapper ">
           {q.answers.map((ans, i) => (
             <li key={i} className="answer-row">
+
               <input
                 type="radio"
                 id={`q${q.id}-${i}`}
                 name={`q${q.id}`}
                 value={i}
                 checked={selectedAnswers[q.id] === i}
-                onChange={() => handleRadioChange(i)}
+                onChange={() => {
+                  setSelectedAnswers(prev => ({ ...prev, [q.id]: i }));
+                  setTimeout(() => {
+                    if (isLast) {
+                      navigate("/results", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
+                    } else {
+                      setCurrent(p => p + 1);
+                    }
+                  }, 250); 
+                }}
                 className="answer-radio"
               />
+
               <label
                 htmlFor={`q${q.id}-${i}`}
                 className="
                   flex cursor-pointer select-none items-center gap-3 rounded-lg
                   px-4 py-3 text-md custom-answer-choices answer-label  /* transition removed */
                 "
+                onClick={() => {
+                  if (animationState === "fade") return;
+                
+                  setSelectedAnswers(prev => ({ ...prev, [q.id]: i }));
+                  setAnimationState("fade");
+                
+                  setTimeout(() => {
+                    if (isLast) {
+                      navigate("/results", { state: { answers: { ...selectedAnswers, [q.id]: i }, questions } });
+                    } else {
+                      setCurrent(p => p + 1);
+                      setAnimationState("grow");
+                    }
+                  }, 400); 
+                }}
               >
                 {ans.answer}
               </label>
@@ -120,22 +182,22 @@ export function QuizComponent({ gender }) {
           ))}
         </ul>
 
-        <div className="mt-10 flex gap-4">
+        <div className="pt-10 flex gap-4">
           {current > 0 && (
-            <button onClick={handlePrev} className="quiz-button">
+            <button onClick={handlePrev} className="quiz-button custom-quiz-button">
               Inapoi
             </button>
           )}
 
-          <button onClick={handleNext} className="ml-auto quiz-button">
+          {/* Button to go to the next question - i do not think we need it anymore */}
+          {/* <button onClick={handleNext} className="ml-auto quiz-button">
             {isLast ? "Afla raspunsul" : "Inainte"}
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
   );
 }
-
 
 export function FemaleBlock() {
 
@@ -155,7 +217,7 @@ export function FemaleBlock() {
 
     </div>
 
-    <div className="footer-wrapper">
+    <div className="footer-wrapper h-[8vh]">
       <Footer />
     </div> 
 
@@ -163,8 +225,6 @@ export function FemaleBlock() {
                 
   );
 }
-
-
 
 export function MaleBlock() {
 
@@ -183,7 +243,7 @@ export function MaleBlock() {
 
     </div>
 
-    <div className="footer-wrapper">
+    <div className="footer-wrapper h-[5vh]">
       <Footer />
     </div> 
 

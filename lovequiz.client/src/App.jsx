@@ -5,6 +5,7 @@ import MainBlock from './Landing_page.jsx';
 import Footer from './Footer.jsx';
 import './tailwind.css';
 import FloatingHearts from './FloatingHeats.jsx';
+import GenderBlock from './GenderPage.jsx';
 
 function App() {
     const handleClick = () => {
@@ -13,8 +14,7 @@ function App() {
 
     return (
       <>
-      <FloatingHearts />
-        <div className="header-wrapper wrapper">
+        {/* <div className="header-wrapper wrapper">
           <Header />
         </div>
         
@@ -24,7 +24,8 @@ function App() {
 
         <div className="footer-wrapper">
           <Footer />
-        </div> 
+        </div>  */}
+        <GenderBlock />
       </>
     );
 }
