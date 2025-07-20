@@ -2,11 +2,11 @@
 {
     public class QuizVisit
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public string Email { get; set; }
         public string? Gender { get; set; }
         public bool Converted { get; set; } = false;
-        public DateTime CreatedAt { get; set; };
+        public DateTime CreatedAt { get; set; }
     }
 
 }

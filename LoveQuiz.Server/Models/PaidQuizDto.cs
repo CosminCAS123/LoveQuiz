@@ -8,7 +8,6 @@ namespace LoveQuiz.Server.Models
         public string? Gender { get; set; }
         public List<QuizSubmissionDto> Answers{ get; set; }
 
-        public string? PhoneNumber { get; set; }
 
         public PaidQuiz ToEntity()
         {
@@ -16,7 +15,6 @@ namespace LoveQuiz.Server.Models
             {
                 Email = this.Email,
                 Gender = this.Gender,
-                PhoneNumber = this.PhoneNumber,
                 AnswersJson = JsonSerializer.Serialize(this.Answers),
                 CreatedAt = DateTime.UtcNow
             };
