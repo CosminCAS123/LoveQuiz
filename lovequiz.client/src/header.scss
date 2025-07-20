@@ -26,12 +26,16 @@
         align-items: center;
 
         &--image {
-            width: 80px;
+            width: 65px;
+
+            @media (min-width: 600px) {
+                width: 55px;
+            }
         }
 
         &::after {
             content: "Love Quiz";
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: #F6E4E7;
         }

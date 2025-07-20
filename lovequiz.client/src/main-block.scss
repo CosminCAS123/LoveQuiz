@@ -4,6 +4,8 @@
         flex: 1;
         background-color: #F6E4E7;
         color: #874B5C;
+
+        min-height: 74vh;
     }
 
     @media (max-width: 600px) {
@@ -29,20 +31,35 @@
         font-size: 65px;
         font-weight: 800;
         color: #A86A7A;
-        -webkit-text-stroke: 2px #000;
+        //-webkit-text-stroke: 2px #000;
         letter-spacing: 0.5px;
-        font-family: 'Poppins', sans-serif;
+        //font-family: 'Poppins', sans-serif;
+
+
+        text-shadow:
+            -1.5px -1.5px 0 #000,
+            1.5px -1.5px 0 #000,
+            -1.5px  1.5px 0 #000,
+            1.5px  1.5px 0 #000;
+
 
         &--subtitle {
             font-size: 25px;
             font-weight: 600;
             color: #A86A7A;
-            -webkit-text-stroke: .75px #000;
+            //-webkit-text-stroke: .75px #000;
             margin-top: -.75rem;
+
+            text-shadow:
+                -.5px -.5px 0 #000,
+                .5px -.5px 0 #000,
+                -.5px  .5px 0 #000,
+                .5px  .5px 0 #000;
+
 
             @media (min-width: 600px) {
                 font-size: 22px;
-                -webkit-text-stroke: 0.7px #000;
+                //-webkit-text-stroke: 0.7px #000;
             }
         }
     }
@@ -92,5 +109,19 @@
     
     button {
         min-width: 0px;
+    }
+}
+
+.results_white_wrapper {
+    @media(min-width: 600px) {
+        max-width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+
+        &-testimonials {
+            max-width: 482px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
 }
