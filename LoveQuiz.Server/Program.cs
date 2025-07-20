@@ -15,21 +15,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<QuizService>();
 builder.Services.AddSingleton<QuizQuestionsCache>();
-// builder.Services.AddScoped<QuizSessionRepository>();
+//builder.Services.AddScoped<QuizSessionRepository>();
 builder.Services.AddScoped<OpenAIReportService>();
 
-// builder.Services.AddScoped<IDbConnection>(sp =>
-// {
-//     var config = sp.GetRequiredService<IConfiguration>();
-//     var connectionString = config.GetConnectionString("Supabase")
-//         ?? throw new InvalidOperationException("Connection string 'Supabase' not found.");
+/*builder.Services.AddScoped<IDbConnection>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var connectionString = config.GetConnectionString("Supabase")
+        ?? throw new InvalidOperationException("Connection string 'Supabase' not found.");
 
-//     return new NpgsqlConnection(connectionString);
-// });
+    return new NpgsqlConnection(connectionString);
+});*/
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Dev", p => p
-        .WithOrigins("http://localhost:5173")
+        .WithOrigins("https://localhost:5173") // frontend
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
@@ -49,7 +50,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
 
 app.UseCors("Dev");
 

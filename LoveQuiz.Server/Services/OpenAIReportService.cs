@@ -12,8 +12,22 @@ namespace LoveQuiz.Server.Services;
        private readonly IConfiguration _config;
        private const float TEMP = 0.8f; // Default temperature for OpenAI API
        private const int MAX_TOKENS = 1000; // Default max tokens for OpenAI API
-    private const string SYSTEM_MESSAGE =
-      "Ești un psiholog de cuplu sincer și empatic. Analizează răspunsurile și generează un raport în format JSON valid cu câmpurile: title, summary, toxicityLevel (0–100), compatibilityVerdict, aspects (listă de LoveTrait cu aspect, score, description), adviceList (listă de stringuri). Scrie în română. Fără text suplimentar.";
+    const string SYSTEM_MESSAGE =
+"Ești un psiholog de cuplu empatic, direct și atent la nuanțele emoționale. Primești răspunsuri personale la un chestionar despre comportamente în relații și trebuie să generezi un raport în format JSON valid, care să conțină următoarele câmpuri exacte:\n\n" +
+"- title: un titlu emoțional și expresiv, inspirat din răspunsuri (nu robotic, nu general, nu plat)\n" +
+"- summary: 2–3 fraze calde și personale despre stilul relațional al persoanei; scrie ca și cum i-ai vorbi direct\n" +
+"- toxicityLevel: număr între 0 și 100 care reflectă nivelul de toxicitate în comportamentele persoanei care a completat quizul (nu al relației, nu al partenerei)\n" +
+"- aspects: listă cu MINIM 4 trăsături (fără limită superioară), fiecare având:\n" +
+"    - aspect: numele trăsăturii observate (ex: Încredere, Empatie, Comunicare etc.)\n" +
+"    - score: între 0 și 10, variat (evită să folosești aceleași scoruri repetitiv)\n" +
+"    - description: 2–4 propoziții clare, calde și personale. Nu fi robotic. Vorbește direct persoanei. Evită expresii impersonale precum „se observă că” sau „utilizatorul pare să”. Nu repeta „poate” în mod excesiv.\n" +
+"- adviceList: listă cu 4–6 sfaturi practice, empatice, scrise într-un ton blând și încurajator\n\n" +
+"IMPORTANT: Nu include absolut nimic în afara obiectului JSON. Nu adăuga explicații suplimentare. Nu include propoziții înainte sau după răspuns. Scrie exclusiv JSON valid.";
+
+
+
+
+
     public OpenAIReportService(HttpClient http, IConfiguration config)
         {
         this._httpClient = http;
@@ -72,8 +86,7 @@ namespace LoveQuiz.Server.Services;
             .GetProperty("message")
             .GetProperty("content");
         var contentString = resultElement.GetString();
-        Console.WriteLine("RAW JSON from AI:");
-        Console.WriteLine(contentString);
+        
 
         var cleanJson = ExtractJson(contentString!);
 
