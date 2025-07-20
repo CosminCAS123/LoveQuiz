@@ -15,7 +15,7 @@ function GenderBlock() {
     return (
       <>
       <FloatingHearts />
-        <div className="header-wrapper wrapper">
+        <div className="header-wrapper">
           <Header />
         </div>
 
@@ -208,7 +208,7 @@ export function FemaleBlock() {
 
     <>
     <FloatingHearts />
-    <div className="header-wrapper wrapper">
+    <div className="header-wrapper ">
       <Header />
     </div>
 
@@ -234,7 +234,7 @@ export function MaleBlock() {
 
     <>
     <FloatingHearts />
-    <div className="header-wrapper wrapper">
+    <div className="header-wrapper">
       <Header />
     </div>
 

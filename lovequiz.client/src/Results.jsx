@@ -208,7 +208,7 @@ export default function Results() {
 
   return (
     <>
-      <div className="header-wrapper wrapper">
+      <div className="header-wrapper">
         <Header />
       </div>
 
@@ -443,7 +443,7 @@ export function PaidResults() {
 
   return(
     <>
-    <div className="header-wrapper wrapper">
+    <div className="header-wrapper">
       <Header />
     </div>
 
