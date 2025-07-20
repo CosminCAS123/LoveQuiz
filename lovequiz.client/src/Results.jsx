@@ -128,8 +128,8 @@ export default function Results() {
   useEffect(() => {
     const submissions = buildSubmissions();
     if (!submissions.length) return;
-
-    fetch("http://localhost:5023/api/quiz/free-report", {
+      //add https://localhost:7279 before api for local development
+    fetch("/api/quiz/free-report", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(submissions),

@@ -45,7 +45,7 @@ Acest quiz nu îți va da toate răspunsurile, dar îți poate oferi un punct de
             </div>
 
             <div className="animate-grow main-block__image wrapper main-block-image flex-1/2 z-10">
-                <img src="../assets/main-img.png" className="main-block__image--main"/>
+                <img src="/assets/main-img.png" className="main-block__image--main"/>
             </div>
 
         </div>

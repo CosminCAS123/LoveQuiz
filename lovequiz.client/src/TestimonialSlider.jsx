@@ -4,21 +4,21 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const testimonials = [
   {
-    image: "../assets/testimonial_pic_3.png",
+    image: "/assets/testimonial_pic_3.png",
     stars: 5,
     name: "Andrei Popescu",
     content: "Site-ul mi-a deschis ochii. Am avut o discutie reala cu partenera mea dupa ani intregi.",
     date: "10 iulie 2025",
   },
   {
-    image: "../assets/testimonial_pic_2.png",
+    image: "/assets/testimonial_pic_2.png",
     stars: 4,
     name: "Ioana Marinescu",
     content: "E impresionant cat de bine m-a descris raportul! Merita fiecare secunda.",
     date: "12 iulie 2025",
   },
   {
-    image: "../assets/testimonial_pic_1.png",
+    image: "/assets/testimonial_pic_1.png",
     stars: 5,
     name: "Mihai Stan",
     content: "M-a facut sa constientizez lucruri despre mine pe care le ignoram complet.",

@@ -40,12 +40,12 @@ function GenderBlock() {
 
                 <div className="gender-block__genders animate-grow">
                     <button className="gender-block__genders-box z-21" onClick={() => navigate('/gender/male')}>
-                        <img src="../assets/man-3.png" className="gender-block__genders--male-image"/>
+                        <img src="/assets/man-3.png" className="gender-block__genders--male-image"/>
 
                         <span className="gender-block__genders--male-text">Barbat</span>
                     </button>
                     <button className="gender-block__genders-box" onClick={() => navigate('/gender/female')}>
-                        <img src="../assets/woman-2.png" className="gender-block__genders--female-image"/>
+                        <img src="/assets/woman-2.png" className="gender-block__genders--female-image"/>
 
                         <span className="gender-block__genders--female-text">Femeie</span>
                     </button>
@@ -71,7 +71,8 @@ export function QuizComponent({ gender }) {
   const [selectedAnswers, setSelectedAnswers] = useState({}); 
 
   useEffect(() => {
-    fetch(`http://localhost:5023/api/quiz/questions?gender=${encodeURIComponent(gender)}`)
+      fetch(`/api/quiz/questions?gender=${encodeURIComponent(gender)}`)//this is for production, for development use       fetch(`https://localhost:7279/api/quiz/questions?gender=${encodeURIComponent(gender)}`)
+
       .then(r => {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
