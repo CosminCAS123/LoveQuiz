@@ -218,7 +218,7 @@ export function FemaleBlock() {
 
     </div>
 
-    <div className="footer-wrapper h-[8vh]">
+    <div className="footer-wrapper">
       <Footer />
     </div> 
 
@@ -244,7 +244,7 @@ export function MaleBlock() {
 
     </div>
 
-    <div className="footer-wrapper h-[5vh]">
+    <div className="footer-wrapper">
       <Footer />
     </div> 
 

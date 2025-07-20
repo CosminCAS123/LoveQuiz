@@ -1,6 +1,8 @@
 
 
 .gender-block-wrapper{
+    min-height: 83vh;
+
     width: 100%;
     padding-top: 5rem;
     flex: 1;
@@ -51,9 +53,8 @@
 }
 
 .questions-page-height {
-    min-height: 80vh;
+    min-height: 83vh;
     @media (max-width: 600px) {
-        //min-height: 85vh;
     }
 }
 
@@ -115,13 +116,24 @@
         font-size: 25px;
         font-weight: 600;
         color: #A86A7A;
-        -webkit-text-stroke: .75px #000;
         margin-top: 2.5rem;
+
+        text-shadow:
+            -.5px -.5px 0 #000,
+            .5px -.5px 0 #000,
+            -.5px  .5px 0 #000,
+            .5px  .5px 0 #000;
 
         span {
             display: block;
             text-align: center;
             font-size: 15px;
+
+            text-shadow:
+            -.25px -.25px 0 #000,
+            .25px -.25px 0 #000,
+            -.25px  .25px 0 #000,
+            .25px  .25px 0 #000;
         }
     }
 
@@ -161,11 +173,21 @@
             &-image {
                 width: 140px;
             }
+
+            &-text {
+                font-size: 1.25rem;
+                font-weight: 500;
+            }
         }
     
         &--female {
             &-image {
                 width: 140px;
+            }
+
+            &-text {
+                font-size: 1.25rem;
+                font-weight: 500;
             }
         }
     }

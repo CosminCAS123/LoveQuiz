@@ -5,6 +5,7 @@ import TestimonialSlider from "./TestimonialSlider.jsx";
 import './main-block.scss';
 import './index.css';
 import './tailwind.css';
+import './header.scss';
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 
@@ -207,7 +208,7 @@ export default function Results() {
 
   return (
     <>
-      <div className="header-wrapper">
+      <div className="header-wrapper wrapper">
         <Header />
       </div>
 
@@ -250,7 +251,7 @@ export default function Results() {
               </button>
 
 
-              <div className="bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+              <div className="results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
                 <div className="bg-color-primary p-6 rounded-2xl shadow-sm max-w-md mx-auto space-y-4">
                   <h3 className="text-3xl text-[#874B5C] font-black mb-8">
                     Esti la un pas de raspunsurile pe care nu ti le-a dat nimeni pana acum:
@@ -329,7 +330,7 @@ export default function Results() {
                 Afla cum sa faci asta
               </button>
 
-              <div className="bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+              <div className="results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
                 <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
                   <h3 className="font-bold text-3xl mb-8">Vrei să aflii adevărul complet?</h3>
                   <p className="text-sm text-color-primary font-semibold">
@@ -374,7 +375,7 @@ export default function Results() {
                 Vezi raportul complet
               </button>
 
-              <div className="bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+              <div className="results_white_wrapper-testimonials bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
                 <TestimonialSlider />
               </div>
 
@@ -442,7 +443,7 @@ export function PaidResults() {
 
   return(
     <>
-    <div className="header-wrapper">
+    <div className="header-wrapper wrapper">
       <Header />
     </div>
 
@@ -450,7 +451,7 @@ export function PaidResults() {
 
     </div>
 
-    <div className="footer-wrapper">
+    <div className="footer-wrapper ">
       <Footer />
     </div>
     </>
