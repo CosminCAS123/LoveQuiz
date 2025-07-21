@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import FloatingHearts from './FloatingHeats.jsx';
+import { RotatingLines } from 'react-loader-spinner';
+import { ClipLoader } from 'react-spinners';
 
 function GenderBlock() {
     const navigate = useNavigate();
@@ -84,8 +86,8 @@ export function QuizComponent({ gender }) {
       .catch(err => setError(err.message));
   }, [gender]);
 
-  if (error)            return <p className="error">Nu se poate incarca intrebarea.</p>;
-  if (questions.length === 0) return <p>Se incarca…</p>;
+  if (error)            return <p className="error text-color-primary m-auto">Nu se poate incarca intrebarea.</p>;
+  if (questions.length === 0) return <div className='text-color-primary m-auto'> <RotatingLines color="#A86A7A" width="40" />;</div>
 
   const q      = questions[current];
   const isLast = current === questions.length - 1;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaCheckCircle, FaChevronLeft, FaChevronRight, FaTimesCircle } from "react-icons/fa";
 import TestimonialSlider from "./TestimonialSlider.jsx";
 import './main-block.scss';
 import './index.css';
@@ -128,8 +128,8 @@ export default function Results() {
 
   useEffect(() => {
     const submissions = buildSubmissions();
+    console.log(submissions);
     if (!submissions.length) return;
-      //add https://localhost:7279 before api for local development
     fetch("/api/quiz/free-report", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -144,6 +144,19 @@ export default function Results() {
         setTimeout(() => setShowIntro(false), 2500);
       })
       .catch((err) => setError(err.message));
+
+    // fetch("/api/quiz/full-report", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(submissions),
+    // })
+    //   .then((res) =>{
+    //     if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
   }, [state]);
 
   const getPiePercent = (level) => {
@@ -398,46 +411,107 @@ export default function Results() {
 
 export function PaidResults() {
 
+
+  const getPiePercent = (level) => {
+    const ranges = [
+      [11, 14],
+      [36, 39],
+      [61, 64],
+      [86, 89],
+    ];
+    const [min, max] = ranges[level];
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  const renderPieChart = (level) => {
+    const percent = getPiePercent(level);
+    const color = ["#22c55e", "#eab308", "#f97316", "#dc2626"][level];
+  
+    return (
+      <div className="flex flex-col items-center justify-center space-y-4 mt-4">
+        <h2 className="text-xl font-semibold text-color-primary">
+          Șansele ca TU să fii problema
+        </h2>
+        <svg width="160" height="160" viewBox="0 0 36 36" className="relative">
+          {/* Background circle */}
+          <circle
+            cx="18"
+            cy="18"
+            r="15.9155"
+            fill="none"
+            stroke="#f2f2f2"
+            strokeWidth="3.8"
+          />
+          {/* Filled arc */}
+          <circle
+            cx="18"
+            cy="18"
+            r="15.9155"
+            fill="none"
+            stroke={color}
+            strokeWidth="3.8"
+            strokeDasharray={`${percent}, 100`}
+            strokeDashoffset="0"
+            strokeLinecap="round"
+            transform="rotate(-90 18 18)"
+          />
+          {/* Percentage text */}
+          <text
+            x="55%"
+            y="50%"
+            dominantBaseline="middle"
+            textAnchor="middle"
+            fill="#924058"
+            fontSize="6"
+            fontWeight="bold"
+          >
+            {percent}%
+          </text>
+        </svg>
+      </div>
+    );
+  };
+
+
   const full_report = {
     adviceList: [
-      "Îmbunătățiți comunicarea deschisă pentru a evita neînțelegerile.",
-      "Încercați să petreceți mai mult timp de calitate împreună pentru a întări conexiunea.",
-      "Discutați despre sentimentele de neliniște pentru a construi încredere.",
-      "Stabiliți limite clare legate de interacțiunile cu alte persoane pentru a evita gelozia.",
-      "Fiecare dintre voi ar trebui să se simtă confortabil să își exprime nevoile și dorințele."
+      "Încearcă să discuți deschis despre neliniștile tale cu partenerul, pentru a crea un spațiu de înțelegere reciprocă.",
+      "Practică tehnici de relaxare care să te ajute să faci față momentelor de anxietate.",
+      "Fii mai blândă cu tine însăți și acceptă că este normal să ai emoții intense în relații.",
+      "Încurajează-i pe cei din jur să îți ofere feedback și să împărtășească cum se simt, pentru a ajuta la consolidarea comunicării.",
+      "Setează momente de calitate împreună cu partenerul tău, unde să vă conectați profund fără distrageri.",
+      "Amintește-ți că fiecare relație are momente dificile și este important să le abordați împreună, cu răbdare."
     ],
     aspects: [
       {
-        aspect: "Comunicare",
-        score: 4,
-        description: "Partenera își exprimă sentimentele, dar uneori se simte atacată sau neliniștită."
+        aspect: "Comunicatie",
+        description: "Îți exprimi gândurile și sentimentele, chiar dacă uneori te simți atacată. E un pas important spre crearea unei legături mai profunde.",
+        score: 6
       },
       {
         aspect: "Încredere",
-        score: 5,
-        description: "Există dubii referitoare la fidelitate, dar partenera încearcă să nu fie excesiv de gelos."
-      },
-      {
-        aspect: "Atenție",
-        score: 3,
-        description: "Partenera simte că nu primește aceeași atenție, ceea ce îi provoacă neliniște."
-      },
-      {
-        aspect: "Adaptabilitate",
-        score: 6,
-        description: "În ciuda dificultăților, partenera încearcă să se adapteze la situații noi."
+        description: "Ai tendința de a analiza situațiile și de a simți neliniște în momentele de incertitudine. Cultivarea încrederii în partener te va ajuta să te relaxezi.",
+        score: 4
       },
       {
         aspect: "Empatie",
-        score: 5,
-        description: "Se observă o dorință de a înțelege reacțiile partenerului, chiar și în momente dificile."
+        description: "Îți pasă de sentimentele celuilalt și încerci să înțelegi reacțiile lui. Această empatie poate crea o atmosferă mai caldă în relații.",
+        score: 7
+      },
+      {
+        aspect: "Autocontrol",
+        description: "În momentele de tensiune, reușești să te abții de la reacții impulsive, semn că îți dorești să rezolvi conflictele cu calm.",
+        score: 5
+      },
+      {
+        aspect: "Asertivitate",
+        description: "Deși îți exprimi dorințele, uneori te simți nesigură sau neînțeleasă. Cultivarea încrederii în sine te va ajuta să comunici mai eficient nevoile tale.",
+        score: 3
       }
     ],
-    compatibilityVerdict: "Moderată",
-    summary:
-      "Partenera manifestă o atitudine de analiză și îngrijorare în relație, dar încearcă să rămână deschisă și să se adapteze. Există un mix d…",
-    title: "Analiza relației de cuplu",
-    toxicityLevel: 30
+    summary: "Observ că îți pasă profund de relația ta și dorești să simți o conexiune autentică. Deși încerci să gestionezi nesiguranțele cu răbdare…",
+    title: "Între neliniște și dorința de conexiune",
+    toxicityLevel: 25
   };
   console.log(full_report);
 
@@ -448,6 +522,195 @@ export function PaidResults() {
     </div>
 
     <div className="main-block-wrapper p-8 space-y-6">
+      <div className="title">
+        <h3>RELATIA TA ESTE DE TIPUL:</h3>
+        <h1>ANXIOS-PREOCUPAT</h1>
+        <h3>-esti o Furtuna Anxioasa-</h3>
+      </div>
+
+      <div className="title__description">
+        <h3 className="text-xl">Ce inseamna asta?</h3>
+        <span>Dorești cu disperare apropierea și confirmarea iubirii, dar trăiești cu o frică constantă de respingere. Orice întârziere în răspuns sau lipsă de afecțiune te face să te simți nesigur. Ai o sensibilitate crescută la semne de respingere și uneori poți părea sufocant sau copleșitor. Intențiile tale sunt sincere, dar intensitatea emoțională poate destabiliza relația.</span>
+      </div>
+
+      <div className="emotional_needs_container results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+        <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
+          <h3 className="font-semibold text-2xl mb-8">Ce functioneaza?</h3>
+
+          <div className="flex flex-col">
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaCheckCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Esti inteles</p>
+                <p className="text-sm text-gray-500">simti ca partenerul te “vede” din punct de vedere emotional</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaCheckCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Te simti in siguranta</p>
+                <p className="text-sm text-gray-500">partenerul tau iti ofera siguranta emotionala si fizica</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaCheckCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Esti valorizat</p>
+                <p className="text-sm text-gray-500">eforturile tale conteaza si sunt recunoscute</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaCheckCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Responsivitate emotionala</p>
+                <p className="text-sm text-gray-500">partenerul tau raspunde atunci cand ai nevoie de sustinere</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaCheckCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Incredere</p>
+                <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
+              </div>
+            </div>
+          </div>
+                  
+        </div>
+      </div>
+
+      <div className="emotional_needs_container mt-10 results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+        <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
+          <h3 className="font-semibold text-2xl mb-8">Ce NU functioneaza?</h3>
+
+          <div className="flex flex-col">
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaTimesCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Esti inteles</p>
+                <p className="text-sm text-gray-500">simti ca partenerul te “vede” din punct de vedere emotional</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaTimesCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Te simti in siguranta</p>
+                <p className="text-sm text-gray-500">partenerul tau iti ofera siguranta emotionala si fizica</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaTimesCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Esti valorizat</p>
+                <p className="text-sm text-gray-500">eforturile tale conteaza si sunt recunoscute</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaTimesCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Responsivitate emotionala</p>
+                <p className="text-sm text-gray-500">partenerul tau raspunde atunci cand ai nevoie de sustinere</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 pb-6">
+              <div className="pt-2">
+                <FaTimesCircle className="text-color-primary text-xl" />
+              </div>
+              <div>
+                <p className="font-semibold text-color-primary text-sm">Incredere</p>
+                <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
+              </div>
+            </div>
+          </div>  
+        </div>
+      </div>
+
+
+      <div className="aspects_container mt-10 mb-10">
+        <h3 className="text-xl">Aspecte ale relatiei tale:</h3>
+        <span className="block pt-4"><strong>Empatie:</strong> Îți pasă de sentimentele celuilalt și încerci să înțelegi reacțiile lui. Această empatie poate crea o atmosferă mai caldă în relații <strong>- 7/10</strong></span>
+        <span className="block pt-4"><strong>Comunicatie:</strong> Îți exprimi gândurile și sentimentele, chiar dacă uneori te simți atacată. E un pas important spre crearea unei legături mai profunde <strong>- 6/10</strong></span>
+        <span className="block pt-4"><strong>Autocontrol:</strong> În momentele de tensiune, reușești să te abții de la reacții impulsive, semn că îți dorești să rezolvi conflictele cu calm <strong>- 9/10</strong></span>
+        <span className="block pt-4"><strong>Asertivitate:</strong> Deși îți exprimi dorințele, uneori te simți nesigură sau neînțeleasă. Cultivarea încrederii în sine te va ajuta să comunici mai eficient <strong>- 3/10</strong></span>
+      </div>
+        {renderPieChart(2)}
+
+
+      <div className="attachment_container mt-10">
+        <h3>Nevoia ta de atasament este:</h3>
+        <h1>ANXIOS-PREOCUPAT</h1>
+        <h3>Cauti validare constanta si cea mai mare frica a ta este respingerea</h3>
+
+        <div className="w-[250px] h-[250px] bg-white mx-auto mt-5 text-center justify-center">Imagine sugestiva</div>
+      </div>
+
+      <h3 className="mt-10">Obiceiurile nesanatoase din relatie:</h3>
+      <div className="unhealthy-habits_container mt-5 results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+        <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
+          
+          <h3 className="">TOXICITATE</h3>
+
+          <div className="flex flex-col text-left items-start px-6 mt-5">
+            <p className="font-semibold text-color-primary text-sm pb-6">Nu mai critica: <span className="text-gray-500"> foloseste constructii precum “eu simt” pentru a iti exprima nevoile fara a invinui </span> </p>
+            <p className="font-semibold text-color-primary text-sm pb-6">Nu mai dispretui: <span className="text-gray-500"> practica zilnic respectul si admiratia, observa lucrurile bune la partenerul tau  </span> </p>
+            <p className="font-semibold text-color-primary text-sm pb-6">Nu mai fii defensiv: <span className="text-gray-500"> fa o pauza din vorbit, asculta ce are de zis partenerul si recunoaste macar o parte din adevar </span> </p>
+            <p className="font-semibold text-color-primary text-sm pb-6">Nu lasa furia sa te controleze: <span className="text-gray-500"> ia o pauza pentru a te calma si revino la discutie linistit </span> </p>
+          </div>
+
+          <div className="custom-button w-full flex items-space-between items-center">
+            <button className="mr-auto">
+              <FaChevronLeft className="text-[#874B5C]" />
+            </button>
+            <span className="justify-center text-center align-center">Pagina 1/10</span>
+            <button className="ml-auto">
+              <FaChevronRight className="text-[#874B5C]" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <h3 className="mt-10">Nivelul toxicitatii tale:</h3>
+      <div className="flex">
+        <div className="w-[150px] h-[150px] bg-white"></div>
+        {renderPieChart(2)}
+      </div>
+      
+      <h3 className="mt-10">Sfaturi finale:</h3>
+      <div className="block">
+        <span className="pt-4 block text-sm">-Încearcă să discuți deschis despre neliniștile tale cu partenerul, pentru a crea un spațiu de înțelegere reciprocă.</span>
+        <span className="pt-4 block text-sm">-Practică tehnici de relaxare care să te ajute să faci față momentelor de anxietate.</span>
+        <span className="pt-4 block text-sm">-Fii mai blândă cu tine însăți și acceptă că este normal să ai emoții intense în relații.</span>
+        <span className="pt-4 block text-sm">-Încurajează-i pe cei din jur să îți ofere feedback și să împărtășească cum se simt, pentru a ajuta la consolidarea comunicării.</span>
+        <span className="pt-4 block text-sm">-Setează momente de calitate împreună cu partenerul tău, unde să vă conectați profund fără distrageri.</span>
+        <span className="pt-4 block text-sm">-Amintește-ți că fiecare relație are momente dificile și este important să le abordați împreună, cu răbdare.</span>
+      </div>
+
+      <h3 className="text-xl text-center mt-10">Si nu uita: invata sa asculti mai mult si sa vorbesti mai putin!</h3>
 
     </div>
 
