@@ -10,10 +10,10 @@ namespace LoveQuiz.Server.Services
         private const string jsonPath = "Data/quiz_data.json";
         private const string freeTeaser = "Acesta e doar vârful aisbergului. Descoperă întreaga analiză pentru a afla impactul real.";
         private const string edgeFreeTeaser = "Totuși, există nuanțe ascunse. Vrei să afli mai multe?";
-        // private readonly QuizSessionRepository quiz_repo;
+        private readonly QuizSessionRepository quiz_repo;
         private readonly OpenAIReportService openAI_service;
         private readonly QuizQuestionsCache questions_cache;
-        public QuizService(QuizQuestionsCache cache, OpenAIReportService openAI)
+        public QuizService(QuizQuestionsCache cache, OpenAIReportService openAI, QuizSessionRepository quiz_repo)
         {
             this.questions_cache = cache;
             this.openAI_service = openAI;
@@ -22,12 +22,12 @@ namespace LoveQuiz.Server.Services
         {
             var textPairs = questions_cache.GetSelectedTextPairs(submissions);
 
-            var prompt = PromptBuilder.BuildPrompt(textPairs); 
+            var prompt = PromptBuilder.BuildPrompt(textPairs);
 
             return await openAI_service.GetReportOpenAIAsync(prompt);
         }
 
-        public  IEnumerable<PublicQuestionDto> GetAllQuestions(string gender)
+        public IEnumerable<PublicQuestionDto> GetAllQuestions(string gender)
         {
 
             var filtered = questions_cache.Questions
@@ -47,7 +47,7 @@ namespace LoveQuiz.Server.Services
 
         }
 
-    public  NoPaymentReport GetFreeReport(IEnumerable<QuizSubmissionDto> submissions)
+        public NoPaymentReport GetFreeReport(IEnumerable<QuizSubmissionDto> submissions)
         {
             var flagCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
@@ -60,37 +60,37 @@ namespace LoveQuiz.Server.Services
                     flagCounts[answer.Flag] = flagCounts.TryGetValue(answer.Flag, out var c) ? c + 1 : 1;
                 }
             }
-                // ---------- 2.  No red-flags case ----------
-                if (flagCounts.Count == 0)
-                    return new NoPaymentReport
-                    {
-                        Title = "Nicio alarmă majoră deocamdată",
-                        Teaser = edgeFreeTeaser,
-                        SeverityLevel = 0
-                    };
-
-                // ---------- 3.  Severity map ----------
-                var severityMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            // ---------- 2.  No red-flags case ----------
+            if (flagCounts.Count == 0)
+                return new NoPaymentReport
                 {
-                    ["insecurity"] = 1,
-                    ["avoidance"] = 1,
-                    ["dependency"] = 2,
-                    ["manipulation"] = 3,
-                    ["control"] = 3
+                    Title = "Nicio alarmă majoră deocamdată",
+                    Teaser = edgeFreeTeaser,
+                    SeverityLevel = 0
                 };
 
-                // ---------- 4. Find worst flag ----------
+            // ---------- 3.  Severity map ----------
+            var severityMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["insecurity"] = 1,
+                ["avoidance"] = 1,
+                ["dependency"] = 2,
+                ["manipulation"] = 3,
+                ["control"] = 3
+            };
 
-                var worstFlag = flagCounts.OrderByDescending(f => f.Value)
-                    .ThenByDescending(f => severityMap.GetValueOrDefault(f.Key, 0))
-                    .First().Key;
+            // ---------- 4. Find worst flag ----------
 
-                var level = severityMap.GetValueOrDefault(worstFlag, 0);
-                 var count = flagCounts[worstFlag];
+            var worstFlag = flagCounts.OrderByDescending(f => f.Value)
+                .ThenByDescending(f => severityMap.GetValueOrDefault(f.Key, 0))
+                .First().Key;
 
-                  
-                if (level == 1 && count >= 3) level = 2; // If insecurity or avoidance is reported 3+ times, treat it as level 2
-                if (level == 2 && count >= 4) level = 3; // If dependency is reported 4+ times, treat it as level 3
+            var level = severityMap.GetValueOrDefault(worstFlag, 0);
+            var count = flagCounts[worstFlag];
+
+
+            if (level == 1 && count >= 3) level = 2; // If insecurity or avoidance is reported 3+ times, treat it as level 2
+            if (level == 2 && count >= 4) level = 3; // If dependency is reported 4+ times, treat it as level 3
 
 
             worstFlag = worstFlag switch
@@ -101,25 +101,31 @@ namespace LoveQuiz.Server.Services
                 "manipulation" => "manipulare",
                 "control" => "control emoțional",
                 _ => throw new KeyNotFoundException("Didn't get the worst flag correctly")
-            }; 
+            };
 
-                return new NoPaymentReport
-                {
-                    Title = $"Semne de **{worstFlag}**",
-                    Teaser = freeTeaser,
-                    SeverityLevel = level //EMOJI/COLOR PALLETE BASED ON LEVEL
-                    // SeverityLevel: 0 = no flags, 1 = minor, 2 = moderate, 3 = severe
-                    
-                };
+            return new NoPaymentReport
+            {
+                Title = $"Semne de **{worstFlag}**",
+                Teaser = freeTeaser,
+                SeverityLevel = level //EMOJI/COLOR PALLETE BASED ON LEVEL
+                                      // SeverityLevel: 0 = no flags, 1 = minor, 2 = moderate, 3 = severe
 
-            }
+            };
 
-        // public async Task SaveSessionAsync()
-        // {
-        //     await quiz_repo.InsertTestRowAsync();
-        // }
+        }
+
+        public async Task LogQuizVisitAsync(QuizVisitDto dto)
+        {
+            var visit = dto.ToEntity();
+            await quiz_repo.InsertQuizVisitAsync(visit);
+        }
+        public async Task AddPaidQuizAsync(PaidQuizDto dto)
+        {
+            var paid_quiz = dto.ToEntity();
+
+            await quiz_repo.InsertPaidQuizAsync(paid_quiz);
+        }
+
     }
-
-
-    }
+}
 

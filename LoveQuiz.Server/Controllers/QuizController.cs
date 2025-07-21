@@ -86,7 +86,45 @@ namespace LoveQuiz.Server.Controllers
             }
         }
 
+        [HttpPost("log-visit")]
+        public async Task<IActionResult> LogVisit([FromBody] QuizVisitDto dto)
+        {
+            try
+            {
+                await _quizService.LogQuizVisitAsync(dto);
+                return Ok(new { message = "Visit logged successfully" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Optionally log the error
+                return StatusCode(500, new { error = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpPost("log-paid-quiz")]
+        public async Task<IActionResult> CreatePaidQuiz([FromBody] PaidQuizDto dto)
+        {
+            try
+            {
+                await _quizService.AddPaidQuizAsync(dto);
+                return Ok(new { message = "Saved successfully" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Optionally log the error
+                return StatusCode(500, new { error = "An unexpected error occurred." });
+            }
+        }
+    }
 
 
     }
-}
+

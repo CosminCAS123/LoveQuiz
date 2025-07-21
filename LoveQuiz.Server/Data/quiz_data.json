@@ -2,7 +2,7 @@
   {
     "id": 1,
     "gender": "female",
-    "question": "Când îi spui partenerului că ceva te-a rănit, cum reacționează de obicei?",
+    "question": "Când îi spui iubitului că ceva te-a rănit, cum reacționează de obicei?",
     "answers": [
       {
         "id": 1,
@@ -558,34 +558,329 @@
         }
       ]
     },
+  {
+    "id": 20,
+    "gender": "male",
+    "question": "Ea îți spune calm că a fost rănită pentru că ai uitat aniversarea voastră. Cum reacționezi?",
+    "answers": [
+      {
+        "id": 1,
+        "answer": "Îmi cer scuze sincer și încerc să repar lucrurile.",
+        "points": 0
+      },
+      {
+        "id": 2,
+        "answer": "Îmi pare rău, dar îi spun că a fost o perioadă stresantă.",
+        "points": 1
+      },
+      {
+        "id": 3,
+        "answer": "Mă apăr spunând că nu e mare lucru.",
+        "points": 2,
+        "flag": "manipulation"
+      },
+      {
+        "id": 4,
+        "answer": "O acuz că face o dramă dintr-un detaliu banal.",
+        "points": 3,
+        "flag": "manipulation"
+      }
+    ]
+  },
+  
     {
-      "id": 20,
-      "gender": "male",
-      "question": "Ea îți spune calm că a fost rănită pentru că ai uitat aniversarea voastră. Cum reacționezi?",
+      "id": 21,
+      "gender": "female",
+      "question": "Tu îi spui că ai nevoie de mai multă atenție din partea lui, dar simți că deja îi ceri destule. Cum reacționează?",
       "answers": [
         {
           "id": 1,
-          "answer": "Îmi cer scuze sincer și încerc să repar lucrurile.",
+          "answer": "Te ascultă și încearcă să înțeleagă.",
           "points": 0
         },
         {
           "id": 2,
-          "answer": "Îmi pare rău, dar îi spun că a fost o perioadă stresantă.",
+          "answer": "Îți explică blând că și el are nevoie de spațiu uneori.",
           "points": 1
         },
         {
           "id": 3,
-          "answer": "Mă apăr spunând că nu e mare lucru.",
+          "answer": "Se enervează și îți spune că exagerezi.",
+          "points": 2,
+          "flag": "avoidance"
+        },
+        {
+          "id": 4,
+          "answer": "Te acuză că ești prea dependentă emoțional.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "gender": "female",
+      "question": "Tu îi spui calm că ai fost rănită pentru că a uitat aniversarea voastră. Cum reacționează?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Își cere scuze sincer și încearcă să repare lucrurile.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Îi pare rău, dar îți spune că a fost o perioadă stresantă.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Se apără spunând că nu e mare lucru.",
           "points": 2,
           "flag": "manipulation"
         },
         {
           "id": 4,
-          "answer": "O acuz că face o dramă dintr-un detaliu banal.",
+          "answer": "Te acuză că faci o dramă dintr-un detaliu banal.",
           "points": 3,
           "flag": "manipulation"
         }
       ]
+    },
+    {
+      "id": 23,
+      "gender": "female",
+      "question": "Îi spui că te simți neglijată emoțional. Cum interpretează asta în mintea lui?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Încearcă să înțeleagă ce îți lipsește.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Simte o ușoară vinovăție, dar nu reacționează imediat.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Crede că exagerezi și se enervează.",
+          "points": 2,
+          "flag": "avoidance"
+        },
+        {
+          "id": 4,
+          "answer": "Îți spune că ești prea sensibilă și că dramatizezi.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "gender": "female",
+      "question": "Tu îi spui că vrei o pauză în relație, fără prea multe explicații. Ce face el?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Acceptă și îți oferă spațiul de care ai nevoie.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Se simte rănit, dar încearcă să înțeleagă.",
+          "points": 1,
+          "flag": "insecurity"
+        },
+        {
+          "id": 3,
+          "answer": "Își face tot felul de scenarii și devine neliniștit.",
+          "points": 2,
+          "flag": "dependency"
+        },
+        {
+          "id": 4,
+          "answer": "Se panichează și insistă să nu faceți pauza.",
+          "points": 3,
+          "flag": "dependency"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "gender": "female",
+      "question": "Tu îi spui că ai ieșit des cu un coleg, dar doar ca prieteni. Cum reacționează în interiorul lui?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Are încredere în tine și nu își face griji.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Încearcă să nu arate, dar începe să aibă îndoieli.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Se consumă pe dinăuntru și începe să verifice ce faci.",
+          "points": 2,
+          "flag": "insecurity"
+        },
+        {
+          "id": 4,
+          "answer": "Îți interzice să te mai vezi cu acel coleg.",
+          "points": 3,
+          "flag": "control"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "gender": "male",
+      "question": "Când îi spui că ceva ce a făcut te-a rănit, cum reacționează ea de obicei?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Te ascultă și încearcă să înțeleagă.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Se supără, dar rămâne prezentă în conversație.",
+          "points": 1,
+          "flag": "avoidance"
+        },
+        {
+          "id": 3,
+          "answer": "Îți minimalizează trăirea („nu e mare lucru”, „exagerezi”).",
+          "points": 2,
+          "flag": "manipulation"
+        },
+        {
+          "id": 4,
+          "answer": "Îți întoarce vina și te face să te simți vinovat că ai adus subiectul.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "gender": "male",
+      "question": "Tu îi propui să mergeți la terapie de cuplu, simțind că v-ați îndepărtat. Cum reacționează ea?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Acceptă, dacă simte că aveți nevoie.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Ezită, dar promite că se gândește.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "O ia ca pe un atac și devine defensivă.",
+          "points": 2,
+          "flag": "avoidance"
+        },
+        {
+          "id": 4,
+          "answer": "Refuză complet și spune că e o prostie.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "gender": "male",
+      "question": "Îi spui că vrei să petreceți weekendul separat — tu cu băieții, ea cu fetele — și să nu vă scrieți prea mult. Cum reacționează?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Sună bine, are încredere în tine.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Îi e greu, dar încearcă să se obișnuiască.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Începe să-și imagineze tot felul de scenarii.",
+          "points": 2,
+          "flag": "insecurity"
+        },
+        {
+          "id": 4,
+          "answer": "Refuză complet ideea, zice că nu e ok să nu țineți legătura.",
+          "points": 3,
+          "flag": "control"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "gender": "male",
+      "question": "Îi spui că vrei să stați mai puțin pe telefon și mai conectați unul la altul. Cum reacționează ea?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Zice că ai dreptate și simte și ea la fel.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Zice da, dar pare ușor defensivă.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Îți spune că exagerezi și că nu e o problemă reală.",
+          "points": 2,
+          "flag": "avoidance"
+        },
+        {
+          "id": 4,
+          "answer": "Îți răspunde ironic că dacă nu-ți convine, să stai singur.",
+          "points": 3,
+          "flag": "manipulation"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "gender": "male",
+      "question": "Faci o glumă despre ea în fața prietenilor — nimic rău, dar toți râd. Cum reacționează ea înăuntru?",
+      "answers": [
+        {
+          "id": 1,
+          "answer": "Zâmbește, știe că nu a fost cu răutate.",
+          "points": 0
+        },
+        {
+          "id": 2,
+          "answer": "Zâmbește, dar pare puțin deranjată.",
+          "points": 1
+        },
+        {
+          "id": 3,
+          "answer": "Îți spune mai târziu că a rănit-o.",
+          "points": 2,
+          "flag": "insecurity"
+        },
+        {
+          "id": 4,
+          "answer": "Se enervează și îți spune că nu tolerează așa ceva.",
+          "points": 3,
+          "flag": "control"
+        }
+      ]
     }
+  ]
 
-]
+
+
