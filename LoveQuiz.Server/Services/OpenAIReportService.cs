@@ -34,6 +34,16 @@ namespace LoveQuiz.Server.Services;
         this._config = config;
 
         }   
+
+
+
+
+
+
+
+
+
+
     public async Task<FinalReport> GetReportOpenAIAsync(string prompt)
     {
         var apiKey = _config["OpenAI:ApiKey"] ?? throw new InvalidOperationException("OpenAI API key not found.");
@@ -66,6 +76,16 @@ namespace LoveQuiz.Server.Services;
         return final_report;
 
     }
+
+
+
+
+
+
+
+
+
+
     public async Task<FinalReportRaw> GenerateFinalReportRawAsync(object requestBody, string apiKey)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
