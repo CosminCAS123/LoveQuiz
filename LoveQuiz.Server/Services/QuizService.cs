@@ -16,6 +16,7 @@ namespace LoveQuiz.Server.Services
         public QuizService(QuizQuestionsCache cache, OpenAIReportService openAI, QuizSessionRepository quiz_repo)
         {
             this.questions_cache = cache;
+            this.quiz_repo = quiz_repo;
             this.openAI_service = openAI;
         }
         public async Task<FinalReport> GetFullReportAsync(List<QuizSubmissionDto> submissions)

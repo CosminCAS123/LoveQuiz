@@ -2,21 +2,32 @@
 {
     public class FinalReport
     {
-        public string Title { get; set; } = string.Empty;
-        // Custom, emotionally-resonant title (e.g. "The Over-Giver: When Love Becomes Self-Sacrifice")
+        public AttachmentStyleInfo AttachmentStyle { get; set; } = new();
+        // Contains id, label, nickname, and summary
 
-        public string Summary { get; set; } = string.Empty;
-        // 2–3 sentence overview of the user's emotional dynamic
-
-        public int ToxicityLevel { get; set; }
-        // 0–100 scale; frontend maps this to labels/emojis (e.g., 🟢 0–20, 🔴 61–80)
-
-       
+        public List<EmotionalNeed> MetNeeds { get; set; } = new();
+        public List<EmotionalNeed> UnmetNeeds { get; set; } = new();
+        // Split based on AI's boolean list
 
         public List<LoveTrait> Aspects { get; set; } = new();
-        // Detailed breakdown per aspect (e.g., emotional dependency, communication)
+        // Each aspect with score and description
+
+        public int ToxicityLevel { get; set; }
+        // 0–100 scale
 
         public List<string> AdviceList { get; set; } = new();
-        // Specific tips or exercises to improve relationship health
+        // Final actionable advice
+
+        public ToxicHabitsSection ToxicHabitsSection { get; set; } = new();
+        // Title + 4 predefined habits based on attachment style
+
+        public string AverageAspectScore =>
+    Aspects.Count == 0
+        ? "0"
+        : (Aspects.Average(a => a.Score) % 1 == 0
+            ? Aspects.Average(a => a.Score).ToString("0")
+            : Aspects.Average(a => a.Score).ToString("0.0"));
+
     }
+
 }

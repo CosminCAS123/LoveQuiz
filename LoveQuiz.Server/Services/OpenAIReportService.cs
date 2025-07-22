@@ -34,10 +34,19 @@ namespace LoveQuiz.Server.Services;
         this._config = config;
 
         }   
+
+
+
+
+
+
+
+
+
+
     public async Task<FinalReport> GetReportOpenAIAsync(string prompt)
     {
-        var apiKey = _config["OpenAI:ApiKey"]
-          ?? throw new InvalidOperationException("OpenAI API key not found.");
+        var apiKey = _config["OpenAI:ApiKey"] ?? throw new InvalidOperationException("OpenAI API key not found.");
 
         var requestBody = new
         {
@@ -60,6 +69,25 @@ namespace LoveQuiz.Server.Services;
     }
         };
 
+        var raw_report = await GenerateFinalReportRawAsync(requestBody, apiKey);
+
+        var final_report = ConvertRawToFinalReport(raw_report);
+
+        return final_report;
+
+    }
+
+
+
+
+
+
+
+
+
+
+    public async Task<FinalReportRaw> GenerateFinalReportRawAsync(object requestBody, string apiKey)
+    {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
         request.Content = JsonContent.Create(requestBody);
@@ -79,23 +107,49 @@ namespace LoveQuiz.Server.Services;
             throw new InvalidOperationException("Received empty response from OpenAI.");
         }
 
-        // ✅ Directly parse JSON if using response_format: "json"
         using var document = JsonDocument.Parse(json);
         var resultElement = document.RootElement
             .GetProperty("choices")[0]
             .GetProperty("message")
             .GetProperty("content");
         var contentString = resultElement.GetString();
-        
 
         var cleanJson = ExtractJson(contentString!);
 
-        var report = JsonSerializer.Deserialize<FinalReport>(cleanJson,
+        var rawReport = JsonSerializer.Deserialize<FinalReportRaw>(cleanJson,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        return report!;
+        return rawReport!;
     }
+    private FinalReport ConvertRawToFinalReport(FinalReportRaw rawReport)
+    {
+        //EMOTIONAL NEEDS
+        var allNeeds = StaticInfo.EmotionalNeeds;
+        var metNeeds = new List<EmotionalNeed>();
+        var unmetNeeds = new List<EmotionalNeed>();
+        for (int i = 0;  i < allNeeds.Count; i++)
+        {
+            if (rawReport.EmotionalNeedsMet[i])
+                metNeeds.Add(allNeeds[i]);
+            else
+                unmetNeeds.Add(allNeeds[i]);
+        }
 
+        var attachmentStyle = StaticInfo.AttachmentStyles[rawReport.AttachmentStyleId]; //GET ATTACHEMENTSTYLEINFO
+        var toxicHabits = StaticInfo.ToxicHabitsByStyle[rawReport.AttachmentStyleId]; //GET TOXICHABITS BY ID
+
+        //CONVERT
+        return new FinalReport
+        {
+            AttachmentStyle = attachmentStyle,
+            MetNeeds = metNeeds,
+            UnmetNeeds = unmetNeeds,
+            Aspects = rawReport.Aspects,
+            ToxicityLevel = rawReport.ToxicityLevel,
+            AdviceList = rawReport.AdviceList,
+            ToxicHabitsSection = toxicHabits
+        };
+    }
     private static string ExtractJson(string content)
     {
         var start = content.IndexOf('{');

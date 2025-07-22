@@ -5,6 +5,8 @@ using LoveQuiz.Server.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 
+//builder.Configuration.AddEnvironmentVariables();
+
 
 
 builder.Services.AddControllers();
@@ -21,8 +23,12 @@ builder.Services.AddScoped<OpenAIReportService>();
 builder.Services.AddScoped<IDbConnection>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
-    var connectionString = config.GetConnectionString("Supabase")
-        ?? throw new InvalidOperationException("Connection string 'Supabase' not found.");
+    var connectionString = config.GetConnectionString("Supabase");
+
+ 
+
+    if (string.IsNullOrWhiteSpace(connectionString))
+        throw new InvalidOperationException("Connection string 'Supabase' not found.");
 
     return new NpgsqlConnection(connectionString);
 });
@@ -34,6 +40,7 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
+Console.WriteLine("Supabase connection: " + builder.Configuration.GetConnectionString("Supabase"));
 
 var app = builder.Build();
 
