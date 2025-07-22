@@ -79,7 +79,6 @@ namespace LoveQuiz.Server.Services;
             throw new InvalidOperationException("Received empty response from OpenAI.");
         }
 
-        // ✅ Directly parse JSON if using response_format: "json"
         using var document = JsonDocument.Parse(json);
         var resultElement = document.RootElement
             .GetProperty("choices")[0]
