@@ -458,7 +458,23 @@ export function PaidResults() {
       });
   }, []); 
 
-  if (!full_report) return <p>Loading...</p>;
+  if (!full_report) return (
+  <>
+    <div className="header-wrapper">
+      <Header />
+    </div>
+
+    <div className="flex items-center justify-center h-[50vh] main-block-wrapper">
+      <p className="text-xl text-color-primary animate-pulse">
+        Analizăm rezultatele tale…
+      </p>
+    </div>
+  
+    <div className="footer-wrapper ">
+      <Footer />
+    </div>
+  </>
+);
 
 
   const getLevelFromPercent = (percent) => {
