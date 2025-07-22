@@ -19,11 +19,11 @@ namespace LoveQuiz.Server.Services
         private const int ECHILIBRAT_ID = 5;
 
         //ATTACHEMENT STYLE LABEL
-        private const string ANXIOUS_PREOCUPAT_LABEL = "Anxios–preocupat(ă)";
-        private const string EVITANT_DEZANGAJAT_LABEL = "Evitant–dezangajat(ă)";
+        private const string ANXIOUS_PREOCUPAT_LABEL = "Anxios–preocupat";
+        private const string EVITANT_DEZANGAJAT_LABEL = "Evitant–dezangajat";
         private const string PREOCUPAT_CONTROLATOR_LABEL = "Preocupat–controlator";
         private const string MANIPULATIV_DEFENSIV_LABEL = "Manipulativ–defensiv";
-        private const string ECHILIBRAT_LABEL = "Echilibrat(ă)";
+        private const string ECHILIBRAT_LABEL = "Echilibrat";
 
         //ATTACHEMENT STYLE NICNKAMES
         private const string ANXIOUS_PREOCUPAT_NICKNAME = "Furtuna Anxioasă";

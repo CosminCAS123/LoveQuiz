@@ -128,7 +128,8 @@ export default function Results() {
 
   useEffect(() => {
     const submissions = buildSubmissions();
-    console.log(submissions);
+    console.log(state);
+    // console.log(submissions);
     if (!submissions.length) return;
     fetch("/api/quiz/free-report", {
       method: "POST",
@@ -258,7 +259,8 @@ export default function Results() {
                 </div>
               {/* </div> */}
 
-              <button onClick={() => navigate("/results/paid")}
+              <button 
+                onClick={() => navigate("/results/paid", { state })}
                 className="quiz-button mt-4 mb-10">
                 Acceseaza rezultatele
               </button>
@@ -338,7 +340,8 @@ export default function Results() {
                 </div>
               </div>
 
-              <button onClick={() => navigate("/results/paid")}
+              <button 
+                onClick={() => navigate("/results/paid", { state })}
                 className="quiz-button my-8 button-margin">
                 Afla cum sa faci asta
               </button>
@@ -383,7 +386,8 @@ export default function Results() {
                 </div>
               </div>
 
-              <button onClick={() => navigate("/results/paid")}
+              <button 
+                onClick={() => navigate("/results/paid", { state })}
                 className="quiz-button my-8 button-margin">
                 Vezi raportul complet
               </button>
@@ -411,29 +415,67 @@ export default function Results() {
 
 export function PaidResults() {
 
+  const [full_report, setFullReport] = useState(null);
+  const { state } = useLocation();
 
-  const getPiePercent = (level) => {
-    const ranges = [
-      [11, 14],
-      [36, 39],
-      [61, 64],
-      [86, 89],
-    ];
-    const [min, max] = ranges[level];
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const { answers = {}, questions = [] } = state || {};
+
+  const buildSubmissions = () =>
+    questions
+      .map((q) => {
+        const selectedIdx = Array.isArray(answers) ? answers[q.id] : answers[q.id];
+        if (selectedIdx == null) return null;
+        const ansObj = q.answers[selectedIdx];
+        if (!ansObj) return null;
+        return {
+          questionId: q.id,
+          answerId: ansObj.id,
+        };
+      })
+      .filter(Boolean);
+
+  useEffect(() => {
+    const submissions = buildSubmissions();
+    console.log(submissions);
+
+    fetch("/api/quiz/full-report", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(submissions)
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setFullReport(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch full report:", err);
+      });
+  }, []); 
+
+  if (!full_report) return <p>Loading...</p>;
+
+
+  const getLevelFromPercent = (percent) => {
+    if (percent <= 25) return 0;      // Green
+    if (percent <= 50) return 1;      // Yellow
+    if (percent <= 75) return 2;      // Orange
+    return 3;                         // Red
   };
 
-  const renderPieChart = (level) => {
-    const percent = getPiePercent(level);
+  const renderPieChart = (percentRaw) => {
+    const percent = Math.round(percentRaw); // Ensure clean percentage
+    const level = getLevelFromPercent(percent);
     const color = ["#22c55e", "#eab308", "#f97316", "#dc2626"][level];
   
     return (
       <div className="flex flex-col items-center justify-center space-y-4 mt-4">
-        <h2 className="text-xl font-semibold text-color-primary">
-          Șansele ca TU să fii problema
-        </h2>
         <svg width="160" height="160" viewBox="0 0 36 36" className="relative">
-          {/* Background circle */}
           <circle
             cx="18"
             cy="18"
@@ -442,7 +484,6 @@ export function PaidResults() {
             stroke="#f2f2f2"
             strokeWidth="3.8"
           />
-          {/* Filled arc */}
           <circle
             cx="18"
             cy="18"
@@ -455,7 +496,6 @@ export function PaidResults() {
             strokeLinecap="round"
             transform="rotate(-90 18 18)"
           />
-          {/* Percentage text */}
           <text
             x="55%"
             y="50%"
@@ -471,49 +511,11 @@ export function PaidResults() {
       </div>
     );
   };
-
-
-  const full_report = {
-    adviceList: [
-      "Încearcă să discuți deschis despre neliniștile tale cu partenerul, pentru a crea un spațiu de înțelegere reciprocă.",
-      "Practică tehnici de relaxare care să te ajute să faci față momentelor de anxietate.",
-      "Fii mai blândă cu tine însăți și acceptă că este normal să ai emoții intense în relații.",
-      "Încurajează-i pe cei din jur să îți ofere feedback și să împărtășească cum se simt, pentru a ajuta la consolidarea comunicării.",
-      "Setează momente de calitate împreună cu partenerul tău, unde să vă conectați profund fără distrageri.",
-      "Amintește-ți că fiecare relație are momente dificile și este important să le abordați împreună, cu răbdare."
-    ],
-    aspects: [
-      {
-        aspect: "Comunicatie",
-        description: "Îți exprimi gândurile și sentimentele, chiar dacă uneori te simți atacată. E un pas important spre crearea unei legături mai profunde.",
-        score: 6
-      },
-      {
-        aspect: "Încredere",
-        description: "Ai tendința de a analiza situațiile și de a simți neliniște în momentele de incertitudine. Cultivarea încrederii în partener te va ajuta să te relaxezi.",
-        score: 4
-      },
-      {
-        aspect: "Empatie",
-        description: "Îți pasă de sentimentele celuilalt și încerci să înțelegi reacțiile lui. Această empatie poate crea o atmosferă mai caldă în relații.",
-        score: 7
-      },
-      {
-        aspect: "Autocontrol",
-        description: "În momentele de tensiune, reușești să te abții de la reacții impulsive, semn că îți dorești să rezolvi conflictele cu calm.",
-        score: 5
-      },
-      {
-        aspect: "Asertivitate",
-        description: "Deși îți exprimi dorințele, uneori te simți nesigură sau neînțeleasă. Cultivarea încrederii în sine te va ajuta să comunici mai eficient nevoile tale.",
-        score: 3
-      }
-    ],
-    summary: "Observ că îți pasă profund de relația ta și dorești să simți o conexiune autentică. Deși încerci să gestionezi nesiguranțele cu răbdare…",
-    title: "Între neliniște și dorința de conexiune",
-    toxicityLevel: 25
-  };
   console.log(full_report);
+
+
+  const gender = localStorage.getItem('gender');
+  console.log(gender);
 
   return(
     <>
@@ -522,195 +524,233 @@ export function PaidResults() {
     </div>
 
     <div className="main-block-wrapper p-8 space-y-6">
-      <div className="title">
-        <h3>RELATIA TA ESTE DE TIPUL:</h3>
-        <h1>ANXIOS-PREOCUPAT</h1>
-        <h3>-esti o Furtuna Anxioasa-</h3>
+      <div className="title mb-20">
+        <h3 className="text-md text-center font-semibold text-color-primary">STILUL TAU DE ATASAMENT ESTE:</h3>
+        <h3 className="text-4xl text-center pt-5 font-extrabold">{full_report.attachmentStyle.label.toUpperCase()}</h3>
+        <h3 className="text-md text-center font-semibold">-{full_report.attachmentStyle.nickname}-</h3>
       </div>
 
-      <div className="title__description">
-        <h3 className="text-xl">Ce inseamna asta?</h3>
-        <span>Dorești cu disperare apropierea și confirmarea iubirii, dar trăiești cu o frică constantă de respingere. Orice întârziere în răspuns sau lipsă de afecțiune te face să te simți nesigur. Ai o sensibilitate crescută la semne de respingere și uneori poți părea sufocant sau copleșitor. Intențiile tale sunt sincere, dar intensitatea emoțională poate destabiliza relația.</span>
+      <div className="title__description mb-16">
+        <h3 className="text-xl font-semibold mb-4">Ce inseamna asta?</h3>
+        <span className="text-base font-medium text-color-primary">{full_report.attachmentStyle.summary}</span>
       </div>
+    
+      <h3 className="text-xl font-semibold mb-4">Nevoile tale emotionale:</h3>
 
-      <div className="emotional_needs_container results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
-        <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
-          <h3 className="font-semibold text-2xl mb-8">Ce functioneaza?</h3>
+      {full_report.metNeeds && full_report.metNeeds.length > 0 && (
+        <div className="emotional_needs_container mb-10 results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+          <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
+            <h3 className="font-semibold text-xl mb-8">Ce functioneaza</h3>
 
-          <div className="flex flex-col">
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaCheckCircle className="text-color-primary text-xl" />
-              </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Esti inteles</p>
-                <p className="text-sm text-gray-500">simti ca partenerul te “vede” din punct de vedere emotional</p>
-              </div>
-            </div>
+            <div className="flex flex-col">
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaCheckCircle className="text-color-primary text-xl" />
-              </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Te simti in siguranta</p>
-                <p className="text-sm text-gray-500">partenerul tau iti ofera siguranta emotionala si fizica</p>
-              </div>
-            </div>
+              {full_report.metNeeds.map((need, index) => (
+                <div key={index} className="flex items-start space-x-3 pb-6">
+                  <div className="pt-2">
+                    <FaCheckCircle className="text-color-primary text-xl" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-color-primary text-base">{need.title}</p>
+                    <p className="text-sm text-gray-500">{need.description}</p>
+                  </div>
+                </div>
+              ))}
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaCheckCircle className="text-color-primary text-xl" />
+              {/* <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaCheckCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Esti inteles</p>
+                  <p className="text-sm text-gray-500">simti ca partenerul te “vede” din punct de vedere emotional</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Esti valorizat</p>
-                <p className="text-sm text-gray-500">eforturile tale conteaza si sunt recunoscute</p>
-              </div>
-            </div>
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaCheckCircle className="text-color-primary text-xl" />
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaCheckCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Te simti in siguranta</p>
+                  <p className="text-sm text-gray-500">partenerul tau iti ofera siguranta emotionala si fizica</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Responsivitate emotionala</p>
-                <p className="text-sm text-gray-500">partenerul tau raspunde atunci cand ai nevoie de sustinere</p>
-              </div>
-            </div>
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaCheckCircle className="text-color-primary text-xl" />
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaCheckCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Esti valorizat</p>
+                  <p className="text-sm text-gray-500">eforturile tale conteaza si sunt recunoscute</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Incredere</p>
-                <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
+
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaCheckCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Responsivitate emotionala</p>
+                  <p className="text-sm text-gray-500">partenerul tau raspunde atunci cand ai nevoie de sustinere</p>
+                </div>
               </div>
-            </div>
+
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaCheckCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Incredere</p>
+                  <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
+                </div>
+              </div> */}
+              {/* todo */}
+              
+            </div> 
           </div>
-                  
         </div>
-      </div>
+      )}
 
-      <div className="emotional_needs_container mt-10 results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
-        <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
-          <h3 className="font-semibold text-2xl mb-8">Ce NU functioneaza?</h3>
+      {full_report.metNeeds && full_report.unmetNeeds.length > 0 && (
+        <div className="emotional_needs_container mb-16 results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+          <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
+            <h3 className="font-semibold text-xl mb-8">Ce NU functioneaza?</h3>
 
-          <div className="flex flex-col">
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaTimesCircle className="text-color-primary text-xl" />
-              </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Esti inteles</p>
-                <p className="text-sm text-gray-500">simti ca partenerul te “vede” din punct de vedere emotional</p>
-              </div>
-            </div>
+            <div className="flex flex-col">
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaTimesCircle className="text-color-primary text-xl" />
-              </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Te simti in siguranta</p>
-                <p className="text-sm text-gray-500">partenerul tau iti ofera siguranta emotionala si fizica</p>
-              </div>
-            </div>
+              {full_report.unmetNeeds.map((need, index) => (
+                <div key={index} className="flex items-start space-x-3 pb-6">
+                  <div className="pt-2">
+                    <FaTimesCircle className="text-color-primary text-xl" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-color-primary text-base">{need.title}</p>
+                    <p className="text-sm text-gray-500">{need.description}</p>
+                  </div>
+                </div>
+              ))}
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaTimesCircle className="text-color-primary text-xl" />
+              {/* <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaTimesCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Esti inteles</p>
+                  <p className="text-sm text-gray-500">simti ca partenerul te “vede” din punct de vedere emotional</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Esti valorizat</p>
-                <p className="text-sm text-gray-500">eforturile tale conteaza si sunt recunoscute</p>
-              </div>
-            </div>
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaTimesCircle className="text-color-primary text-xl" />
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaTimesCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Te simti in siguranta</p>
+                  <p className="text-sm text-gray-500">partenerul tau iti ofera siguranta emotionala si fizica</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Responsivitate emotionala</p>
-                <p className="text-sm text-gray-500">partenerul tau raspunde atunci cand ai nevoie de sustinere</p>
-              </div>
-            </div>
 
-            <div className="flex items-start space-x-3 pb-6">
-              <div className="pt-2">
-                <FaTimesCircle className="text-color-primary text-xl" />
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaTimesCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Esti valorizat</p>
+                  <p className="text-sm text-gray-500">eforturile tale conteaza si sunt recunoscute</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-color-primary text-sm">Incredere</p>
-                <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
+
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaTimesCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Responsivitate emotionala</p>
+                  <p className="text-sm text-gray-500">partenerul tau raspunde atunci cand ai nevoie de sustinere</p>
+                </div>
               </div>
-            </div>
-          </div>  
+
+              <div className="flex items-start space-x-3 pb-6">
+                <div className="pt-2">
+                  <FaTimesCircle className="text-color-primary text-xl" />
+                </div>
+                <div>
+                  <p className="font-semibold text-color-primary text-sm">Incredere</p>
+                  <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
+                </div>
+              </div> */}
+              {/* todo */}
+            </div>  
+          </div>
         </div>
-      </div>
+      )}
 
 
       <div className="aspects_container mt-10 mb-10">
-        <h3 className="text-xl">Aspecte ale relatiei tale:</h3>
-        <span className="block pt-4"><strong>Empatie:</strong> Îți pasă de sentimentele celuilalt și încerci să înțelegi reacțiile lui. Această empatie poate crea o atmosferă mai caldă în relații <strong>- 7/10</strong></span>
-        <span className="block pt-4"><strong>Comunicatie:</strong> Îți exprimi gândurile și sentimentele, chiar dacă uneori te simți atacată. E un pas important spre crearea unei legături mai profunde <strong>- 6/10</strong></span>
-        <span className="block pt-4"><strong>Autocontrol:</strong> În momentele de tensiune, reușești să te abții de la reacții impulsive, semn că îți dorești să rezolvi conflictele cu calm <strong>- 9/10</strong></span>
-        <span className="block pt-4"><strong>Asertivitate:</strong> Deși îți exprimi dorințele, uneori te simți nesigură sau neînțeleasă. Cultivarea încrederii în sine te va ajuta să comunici mai eficient <strong>- 3/10</strong></span>
-      </div>
-        {renderPieChart(2)}
+        <h3 className="text-xl font-semibold mb-4">Aspecte ale relatiei tale:</h3>
 
-
-      <div className="attachment_container mt-10">
-        <h3>Nevoia ta de atasament este:</h3>
-        <h1>ANXIOS-PREOCUPAT</h1>
-        <h3>Cauti validare constanta si cea mai mare frica a ta este respingerea</h3>
-
-        <div className="w-[250px] h-[250px] bg-white mx-auto mt-5 text-center justify-center">Imagine sugestiva</div>
+        {full_report.aspects.map((aspect, index) => (
+          <span key={index} className="block pt-4"><strong>{aspect.aspect.charAt(0).toUpperCase() + aspect.aspect.slice(1)}:</strong> {aspect.description} <strong>- {aspect.score}/10</strong></span>
+        ))}
       </div>
 
-      <h3 className="mt-10">Obiceiurile nesanatoase din relatie:</h3>
-      <div className="unhealthy-habits_container mt-5 results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
-        <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
-          
-          <h3 className="">TOXICITATE</h3>
+        {full_report.averageAspectScore >= 5 ? <h3 className="text-center text-xl font-semibold mb-4">Este un scor mai bun decat majoritatea!</h3> : <h3 className="text-center text-xl font-semibold mb-4">Din pacate mai ai de lucrat...</h3>}
+        {renderPieChart(full_report.averageAspectScore * 10)} 
+        <div className="pb-8"></div>
+        
 
-          <div className="flex flex-col text-left items-start px-6 mt-5">
-            <p className="font-semibold text-color-primary text-sm pb-6">Nu mai critica: <span className="text-gray-500"> foloseste constructii precum “eu simt” pentru a iti exprima nevoile fara a invinui </span> </p>
-            <p className="font-semibold text-color-primary text-sm pb-6">Nu mai dispretui: <span className="text-gray-500"> practica zilnic respectul si admiratia, observa lucrurile bune la partenerul tau  </span> </p>
-            <p className="font-semibold text-color-primary text-sm pb-6">Nu mai fii defensiv: <span className="text-gray-500"> fa o pauza din vorbit, asculta ce are de zis partenerul si recunoaste macar o parte din adevar </span> </p>
-            <p className="font-semibold text-color-primary text-sm pb-6">Nu lasa furia sa te controleze: <span className="text-gray-500"> ia o pauza pentru a te calma si revino la discutie linistit </span> </p>
-          </div>
+      <div className="attachment_container mb-16">
+        <h3 className="text-md font-semibold pb-2">Stilul tau de atasament este:</h3>
+        <h3 className="text-4xl pb-2 font-extrabold">{full_report.attachmentStyle.label.toUpperCase()}</h3>
 
-          <div className="custom-button w-full flex items-space-between items-center">
-            <button className="mr-auto">
-              <FaChevronLeft className="text-[#874B5C]" />
-            </button>
-            <span className="justify-center text-center align-center">Pagina 1/10</span>
-            <button className="ml-auto">
-              <FaChevronRight className="text-[#874B5C]" />
-            </button>
-          </div>
+        <div className="flex justify-center items-center">
+
+          <img className="w-1/2 h-auto mx-auto" src={`../assets/${gender}/${full_report.attachmentStyle.label}.png`}></img>
+
+          <h3 className="text-md font-semibold text-center m-2 p-1 border rounded-xl">Cauti validare constanta si cea mai mare frica a ta este respingerea</h3> 
+          {/* todo */}
+
         </div>
       </div>
 
-      <h3 className="mt-10">Nivelul toxicitatii tale:</h3>
-      <div className="flex">
-        <div className="w-[150px] h-[150px] bg-white"></div>
-        {renderPieChart(2)}
-      </div>
-      
-      <h3 className="mt-10">Sfaturi finale:</h3>
-      <div className="block">
-        <span className="pt-4 block text-sm">-Încearcă să discuți deschis despre neliniștile tale cu partenerul, pentru a crea un spațiu de înțelegere reciprocă.</span>
-        <span className="pt-4 block text-sm">-Practică tehnici de relaxare care să te ajute să faci față momentelor de anxietate.</span>
-        <span className="pt-4 block text-sm">-Fii mai blândă cu tine însăți și acceptă că este normal să ai emoții intense în relații.</span>
-        <span className="pt-4 block text-sm">-Încurajează-i pe cei din jur să îți ofere feedback și să împărtășească cum se simt, pentru a ajuta la consolidarea comunicării.</span>
-        <span className="pt-4 block text-sm">-Setează momente de calitate împreună cu partenerul tău, unde să vă conectați profund fără distrageri.</span>
-        <span className="pt-4 block text-sm">-Amintește-ți că fiecare relație are momente dificile și este important să le abordați împreună, cu răbdare.</span>
+      <h3 className="text-xl font-semibold mb-4">Obiceiurile nesanatoase din relatie:</h3>
+      <div className="unhealthy-habits_container mb-16 results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
+        <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
+          
+          <h3 className="font-semibold text-xl mb-8">{full_report.toxicHabitsSection.title}</h3>
+
+          <div className="flex flex-col text-left items-start px-6 mt-5">
+            {full_report.toxicHabitsSection.habits.map((habit, index) => (
+              <p key={index} className="font-semibold text-color-primary text-sm pb-6">{habit.title}: <span className="text-gray-500">{habit.description}</span></p>
+            ))}
+          </div>
+
+          {/* <div className="custom-button w-full flex items-space-between items-center">
+            <button className="mr-auto">
+              <FaChevronLeft className="text-[#874B5C]" />
+            </button>
+            <button className="ml-auto">
+              <FaChevronRight className="text-[#874B5C]" />
+            </button>
+          </div> */}
+        </div>
       </div>
 
-      <h3 className="text-xl text-center mt-10">Si nu uita: invata sa asculti mai mult si sa vorbesti mai putin!</h3>
+      <h3 className="text-xl font-semibold mb-4">Nivelul toxicitatii tale:</h3>
+      <div className="flex justify-between mb-16">
+        <img className="w-1/2" src={`../assets/${gender}/60%.png`} />
+        {renderPieChart(full_report.toxicityLevel)}
+      </div>
+      
+      <h3 className="text-xl font-semibold mb-4">Sfaturi finale:</h3>
+      <div className="block mb-16">
+        {full_report.adviceList.map((advice, index) => (
+          <span key={index} className="pt-4 block text-md text-color-primary font-medium">-{advice}</span>
+        ))}
+      </div>
+
+      <h3 className="text text-center mt-10 text-md"><strong>SI NU UITA:</strong> construiti o relatie bazata pe respect reciproc, comunicare sincera si sprijin constant, in care ambii parteneri se simt in siguranta sa fie ei insisi si sa creasca impreuna</h3>
 
     </div>
 

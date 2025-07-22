@@ -41,12 +41,23 @@ function GenderBlock() {
                 </div>
 
                 <div className="gender-block__genders animate-grow">
-                    <button className="gender-block__genders-box z-21" onClick={() => navigate('/gender/male')}>
+                    <button 
+                    className="gender-block__genders-box z-21" 
+                    onClick={() => {
+                      localStorage.setItem('gender', 'male');
+                      navigate('/gender/male');
+                    }}>
                         <img src="/assets/man-3.png" className="gender-block__genders--male-image"/>
 
                         <span className="gender-block__genders--male-text">Barbat</span>
                     </button>
-                    <button className="gender-block__genders-box" onClick={() => navigate('/gender/female')}>
+
+                    <button 
+                    className="gender-block__genders-box" 
+                    onClick={() => {
+                      localStorage.setItem('gender', 'female');
+                      navigate('/gender/female');
+                    }}>
                         <img src="/assets/woman-2.png" className="gender-block__genders--female-image"/>
 
                         <span className="gender-block__genders--female-text">Femeie</span>
