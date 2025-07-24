@@ -13,9 +13,14 @@ namespace LoveQuiz.Server.Controllers
     public class QuizController: ControllerBase
     {
         private readonly QuizService _quizService;
-        public QuizController(QuizService quizService)
+        private readonly IWebHostEnvironment _env;
+        private static readonly Guid DevBypassToken = Guid.Parse("00000000-0000-0000-0000-000000000001");
+
+
+        public QuizController(QuizService quizService, IWebHostEnvironment env)
         {
             this._quizService = quizService ?? throw new ArgumentNullException(nameof(quizService));
+            _env = env;
         }
 
         [HttpGet("questions")]
@@ -55,21 +60,46 @@ namespace LoveQuiz.Server.Controllers
             }
             return Ok(report);
         }
-
-
-        // [HttpPost("db-test")]
-        // public async Task<IActionResult> DbTest()
-        // {
-        //     await _quizService.SaveSessionAsync();
-        //     return Ok("✅ Test row inserted into Supabase.");
-        // }
-
-        [HttpPost("full-report")]
-        public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] List<QuizSubmissionDto> submissions)
+        //MARK PAYMENT
+        [HttpPost("mark-as-paid")]
+        public async Task<IActionResult> MarkAsPaid([FromBody] string email)
         {
             try
             {
-                var report = await _quizService.GetFullReportAsync(submissions);
+                var token = await _quizService.GenerateAccessTokenAsync(email);
+                return Ok(new { token });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"Internal error: {ex.Message}" });
+            }
+        }
+
+        [HttpPost("full-report")]
+        public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] FullReportTokenRequestDto dto)
+        {
+            try
+            {
+                // Allow dev bypass token (works even in production temporarily)
+                if (dto.Token == DevBypassToken)
+                {
+                    var devReport = await _quizService.GetFullReportAsync(dto.Submissions);
+                    return Ok(devReport);
+                }
+
+                // Validate real token session
+                var session = await _quizService.GetByTokenAsync(dto.Token);
+                if (session == null || !session.Converted)
+                    return Unauthorized("Invalid or expired token.");
+
+                var report = await _quizService.GetFullReportAsync(dto.Submissions);
+
+                await _quizService.MarkTokenAsUsedAsync(dto.Token);
+
                 return Ok(report);
             }
             catch (UnauthorizedAccessException)
@@ -86,13 +116,13 @@ namespace LoveQuiz.Server.Controllers
             }
         }
 
-        [HttpPost("log-visit")]
-        public async Task<IActionResult> LogVisit([FromBody] QuizVisitDto dto)
+        [HttpPost("log-free-session")]
+        public async Task<IActionResult> LogSession([FromBody] QuizSessionDto dto)
         {
             try
             {
-                await _quizService.LogQuizVisitAsync(dto);
-                return Ok(new { message = "Visit logged successfully" });
+                await _quizService.AddFreeQuizSessionAsync(dto);
+                return Ok(new { message = "Session logged successfully" });
             }
             catch (ArgumentException ex)
             {
@@ -100,31 +130,16 @@ namespace LoveQuiz.Server.Controllers
             }
             catch (Exception ex)
             {
-                // Optionally log the error
                 return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
 
-        [HttpPost("log-paid-quiz")]
-        public async Task<IActionResult> CreatePaidQuiz([FromBody] PaidQuizDto dto)
-        {
-            try
-            {
-                await _quizService.AddPaidQuizAsync(dto);
-                return Ok(new { message = "Saved successfully" });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                // Optionally log the error
-                return StatusCode(500, new { error = "An unexpected error occurred." });
-            }
-        }
-    }
+
+
 
 
     }
+
+
+}
 
