@@ -2,6 +2,7 @@ using Dapper;
 using Npgsql;
 using System.Data;
 using LoveQuiz.Server.Services;
+using AspNetCoreRateLimit;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -10,7 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-builder.Services.AddHttpClient(); 
+builder.Services.AddHttpClient();
+
+//for IP RATE LIMITING
+
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -56,6 +64,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//DO WHEN APP GOES LIVE
+
+/*if (app.Environment.IsProduction())
+{
+    app.UseIpRateLimiting();
+}
+*/ 
 app.UseHttpsRedirection();
 
 app.UseCors("Dev");

@@ -8,7 +8,7 @@ namespace LoveQuiz.Server.Models
         public static string BuildPrompt(List<QuizSubmissionTextDto> submissions)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Acestea sunt răspunsurile oferite de un utilizator la un chestionar despre comportamente și reacții în relații de cuplu.\n");
+            sb.AppendLine("Acestea sunt răspunsurile oferite de un utilizator la chestionarul despre comportamente și reacții în relații de cuplu.\n");
 
             int index = 1;
             foreach (var pair in submissions)

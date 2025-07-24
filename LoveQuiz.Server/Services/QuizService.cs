@@ -114,17 +114,41 @@ namespace LoveQuiz.Server.Services
             };
 
         }
-
-        public async Task LogQuizVisitAsync(QuizVisitDto dto)
+        public async Task AddFreeQuizSessionAsync(QuizSessionDto dto)
         {
-            var visit = dto.ToEntity();
-            await quiz_repo.InsertQuizVisitAsync(visit);
+            
+
+            var session = new QuizSession
+            {
+                Id = Guid.NewGuid(),
+                Email = dto.Email,
+                Gender = dto.Gender,
+                Converted = false,
+                CreatedAt = DateTime.UtcNow,
+                TokenUsed = false,
+                AccessToken = null
+                // Later you can add: PaymentStatus = null, RefCode = ..., etc.
+            }; await quiz_repo.InsertQuizSessionAsync(session);
         }
-        public async Task AddPaidQuizAsync(PaidQuizDto dto)
+        public async Task<QuizSession?> GetByTokenAsync(Guid token)
         {
-            var paid_quiz = dto.ToEntity();
+            return await quiz_repo.GetByTokenAsync(token);
+        }
 
-            await quiz_repo.InsertPaidQuizAsync(paid_quiz);
+        public async Task MarkTokenAsUsedAsync(Guid token)
+        {
+            await quiz_repo.MarkTokenAsUsedAsync(token);
+        }
+        public async Task<Guid> GenerateAccessTokenAsync(string email)
+        {
+            var session = await quiz_repo.GetByEmailAsync(email);
+            if (session == null)
+                throw new KeyNotFoundException("No quiz session found for the given email.");
+
+            var token = Guid.NewGuid();
+
+            await quiz_repo.MarkSessionAsPaidAsync(email, token);
+            return token;
         }
 
     }
