@@ -150,7 +150,10 @@ namespace LoveQuiz.Server.Services
             await quiz_repo.MarkSessionAsPaidAsync(email, token);
             return token;
         }
-
+        public async Task<bool> SessionExistsAsync(string email)
+        {
+            return await quiz_repo.SessionExistsAsync(email);
+        }
     }
 }
 

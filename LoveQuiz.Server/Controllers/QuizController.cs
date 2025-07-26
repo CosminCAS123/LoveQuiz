@@ -50,9 +50,12 @@ namespace LoveQuiz.Server.Controllers
             }
         }
 
+        //fuck it people can 
+
         [HttpPost("free-report")]
-        public ActionResult<NoPaymentReport>GetFreeReport([FromBody] IEnumerable<QuizSubmissionDto> submissions)
+        public async Task<ActionResult<NoPaymentReport>>GetFreeReport([FromBody] IEnumerable<QuizSubmissionDto> submissions)
         {
+           
             var report = _quizService.GetFreeReport(submissions);
             if (report == null)
             {
@@ -60,26 +63,9 @@ namespace LoveQuiz.Server.Controllers
             }
             return Ok(report);
         }
-        //MARK PAYMENT
-        [HttpPost("mark-as-paid")]
-        public async Task<IActionResult> MarkAsPaid([FromBody] string email)
-        {
-            try
-            {
-                var token = await _quizService.GenerateAccessTokenAsync(email);
-                return Ok(new { token });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { error = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = $"Internal error: {ex.Message}" });
-            }
-        }
 
-        [HttpPost("full-report")]
+
+        [HttpPost("full-report")]   
         public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] FullReportTokenRequestDto dto)
         {
             try

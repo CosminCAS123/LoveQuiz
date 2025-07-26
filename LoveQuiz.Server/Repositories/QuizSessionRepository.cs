@@ -78,4 +78,9 @@ public class QuizSessionRepository
 
         await _db.ExecuteAsync(sql, new { Email = email, Token = token });
     }
+    public async Task<bool> SessionExistsAsync(string email)
+    {
+        const string sql = "SELECT EXISTS (SELECT 1 FROM quiz_sessions WHERE email = @Email);";
+        return await _db.ExecuteScalarAsync<bool>(sql, new { Email = email });
+    }
 }
