@@ -142,6 +142,7 @@ Scrie exclusiv JSON valid, fără text suplimentar sau explicații. Scrie totul 
 
         var attachmentStyle = StaticInfo.AttachmentStyles[rawReport.AttachmentStyleId]; //GET ATTACHEMENTSTYLEINFO
         var toxicHabits = StaticInfo.ToxicHabitsByStyle[rawReport.AttachmentStyleId]; //GET TOXICHABITS BY ID
+        var shortText = StaticInfo.ShortTexts[rawReport.AttachmentStyleId];//GET SHORT TEXT BY ATTACHEMENTSTYLEID
 
         //CONVERT
         return new FinalReport
@@ -152,7 +153,8 @@ Scrie exclusiv JSON valid, fără text suplimentar sau explicații. Scrie totul 
             Aspects = rawReport.Aspects,
             ToxicityLevel = rawReport.ToxicityLevel,
             AdviceList = rawReport.AdviceList,
-            ToxicHabitsSection = toxicHabits
+            ToxicHabitsSection = toxicHabits,
+            AttachmentStyleShortText = shortText
         };
     }
     private static string ExtractJson(string content)

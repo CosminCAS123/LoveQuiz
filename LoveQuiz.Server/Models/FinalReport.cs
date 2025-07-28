@@ -14,6 +14,8 @@
 
         public int ToxicityLevel { get; set; }
         // 0–100 scale
+        public string AttachmentStyleShortText { get; set; } = string.Empty;
+
 
         public List<string> AdviceList { get; set; } = new();
         // Final actionable advice

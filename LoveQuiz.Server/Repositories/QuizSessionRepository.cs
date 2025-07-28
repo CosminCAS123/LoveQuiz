@@ -35,10 +35,7 @@ public class QuizSessionRepository
                 session.CreatedAt
             });
         }
-        catch (PostgresException ex) when (ex.SqlState == "23505") // unique_violation
-        {
-            throw new ArgumentException("Această adresă de email a fost deja folosită.");
-        }
+      catch (Exception ex) { Console.WriteLine(ex); }
     }
 
     public async Task<QuizSession?> GetByEmailAsync(string email)
@@ -46,36 +43,11 @@ public class QuizSessionRepository
         const string sql = "SELECT * FROM quiz_sessions WHERE email = @Email;";
         return await _db.QueryFirstOrDefaultAsync<QuizSession>(sql, new { Email = email });
     }
-
-    public async Task MarkTokenAsUsedAsync(Guid token)
+    public async Task<QuizSession?> GetBySessionIdAsync(Guid sessionId)
     {
-        const string sql = @"
-        UPDATE quiz_sessions
-        SET token_used = TRUE
-        WHERE access_token = @Token;
-    ";
-
-        await _db.ExecuteAsync(sql, new { Token = token });
+        const string sql = "SELECT * FROM quiz_sessions WHERE id = @SessionId;";
+        return await _db.QueryFirstOrDefaultAsync<QuizSession>(sql, new { SessionId = sessionId });
     }
-    public async Task<QuizSession?> GetByTokenAsync(Guid token)
-    {
-        const string sql = @"
-        SELECT * FROM quiz_sessions 
-        WHERE access_token = @Token AND token_used = FALSE;
-    ";
 
-        return await _db.QueryFirstOrDefaultAsync<QuizSession>(sql, new { Token = token });
-    }
-    public async Task MarkSessionAsPaidAsync(string email, Guid token)
-    {
-        const string sql = @"
-        UPDATE quiz_sessions
-        SET converted = TRUE,
-            access_token = @Token,
-            token_used = FALSE
-        WHERE email = @Email;
-    ";
-
-        await _db.ExecuteAsync(sql, new { Email = email, Token = token });
-    }
 }
+

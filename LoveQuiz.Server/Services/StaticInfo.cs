@@ -9,6 +9,7 @@ namespace LoveQuiz.Server.Services
         public static readonly Dictionary<int, AttachmentStyleInfo> AttachmentStyles;
         public static readonly Dictionary<int, ToxicHabitsSection> ToxicHabitsByStyle;
         public static readonly List<EmotionalNeed> EmotionalNeeds;
+        public static readonly Dictionary<int, string> ShortTexts;
         //ATTACHMENT
       
         //ATTACHEMENT STYLE ID
@@ -178,7 +179,12 @@ namespace LoveQuiz.Server.Services
         private const string EMOTIONAL_NEED_DESCRIPTION_10 = "Să simți că mergeți în aceeași direcție, cu planuri și valori împărtășite.";
 
 
-
+        //SHORT TEXTS
+        private const string ANXIOS_PREOCUPAT_SHORT_TEXT = "Cauți validare constantă și cea mai mare frică a ta este respingerea.";
+        private const string EVITANT_DEZANGAJAT_SHORT_TEXT = "Îți reprimi emoțiile și cea mai mare frică a ta este pierderea controlului sau dependența.";
+        private const string PREOCUPAT_CONTROLATOR_SHORT_TEXT = "Simți nevoia să controlezi totul din teamă că vei fi rănit(ă) sau abandonat(ă).";
+        private const string MANIPULATIV_DEFENSIV_SHORT_TEXT = "Te protejezi prin distanțare sau manipulare, de teamă să nu fii vulnerabil(ă).";
+        private const string ECHILIBRAT_SHORT_TEXT = "Îți înțelegi nevoile emoționale și nu te temi de apropiere sau autonomie.";
         static StaticInfo()
         {
             AttachmentStyles = new Dictionary<int, AttachmentStyleInfo>
@@ -346,6 +352,30 @@ namespace LoveQuiz.Server.Services
                 Description = "Să simți că mergeți în aceeași direcție, cu planuri și valori împărtășite."
             }
         };
+            ShortTexts = new Dictionary<int, string>
+            {
+                {
+                    ANXIOUS_PREOCUPAT_ID,
+                    ANXIOS_PREOCUPAT_SHORT_TEXT
+                },
+                {
+                    EVITANT_DEZANGAJAT_ID,
+                    EVITANT_DEZANGAJAT_SHORT_TEXT
+                },
+                {
+                    PREOCUPAT_CONTROLATOR_ID,
+                    PREOCUPAT_CONTROLATOR_SHORT_TEXT
+                },
+                {
+                    MANIPULATIV_DEFENSIV_ID,
+                    MANIPULATIV_DEFENSIV_SHORT_TEXT
+                },
+                {
+                    ECHILIBRAT_ID,
+                    ECHILIBRAT_SHORT_TEXT
+                }
+
+            };
 
         }
 

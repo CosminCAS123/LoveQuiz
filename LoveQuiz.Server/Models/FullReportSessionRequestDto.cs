@@ -1,8 +1,8 @@
 ﻿namespace LoveQuiz.Server.Models
 {
-    public class FullReportTokenRequestDto
+    public class FullReportSessionRequestDto
     {
-        public Guid Token { get; set; }
+        public Guid SessionId { get; set; }
         public List<QuizSubmissionDto> Submissions { get; set; }
     }
 }
