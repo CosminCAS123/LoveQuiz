@@ -8,9 +8,6 @@
         public bool Converted { get; set; } = false;
         public DateTime CreatedAt { get; set; }
 
-        // 🔑 Token-related fields
-        public Guid? AccessToken { get; set; }
-        public bool TokenUsed { get; set; } = false; //
     }
 
 

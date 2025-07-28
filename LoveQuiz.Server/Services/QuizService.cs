@@ -114,9 +114,14 @@ namespace LoveQuiz.Server.Services
             };
 
         }
-        public async Task AddFreeQuizSessionAsync(QuizSessionDto dto)
+        public async Task<Guid> AddFreeQuizSessionAsync(QuizSessionDto dto)
         {
-            
+            if (!dto.Email.Contains("@") || dto.Email.Length < 9)
+                throw new ArgumentException("Adresa invalida.");
+
+            var existing = await quiz_repo.GetByEmailAsync(dto.Email);
+            if (existing != null)
+                throw new ArgumentException("Această adresă de email a fost deja folosită.");
 
             var session = new QuizSession
             {
@@ -124,36 +129,18 @@ namespace LoveQuiz.Server.Services
                 Email = dto.Email,
                 Gender = dto.Gender,
                 Converted = false,
-                CreatedAt = DateTime.UtcNow,
-                TokenUsed = false,
-                AccessToken = null
-                // Later you can add: PaymentStatus = null, RefCode = ..., etc.
-            }; await quiz_repo.InsertQuizSessionAsync(session);
+                CreatedAt = DateTime.UtcNow
+             
+            };
+
+            await quiz_repo.InsertQuizSessionAsync(session);
+            return session.Id;
         }
-        public async Task<QuizSession?> GetByTokenAsync(Guid token)
+        public async Task<QuizSession?> GetBySessionIdAsync(Guid sessionId)
         {
-            return await quiz_repo.GetByTokenAsync(token);
+            return await quiz_repo.GetBySessionIdAsync(sessionId);
         }
 
-        public async Task MarkTokenAsUsedAsync(Guid token)
-        {
-            await quiz_repo.MarkTokenAsUsedAsync(token);
-        }
-        public async Task<Guid> GenerateAccessTokenAsync(string email)
-        {
-            var session = await quiz_repo.GetByEmailAsync(email);
-            if (session == null)
-                throw new KeyNotFoundException("No quiz session found for the given email.");
-
-            var token = Guid.NewGuid();
-
-            await quiz_repo.MarkSessionAsPaidAsync(email, token);
-            return token;
-        }
-        public async Task<bool> SessionExistsAsync(string email)
-        {
-            return await quiz_repo.SessionExistsAsync(email);
-        }
     }
 }
 

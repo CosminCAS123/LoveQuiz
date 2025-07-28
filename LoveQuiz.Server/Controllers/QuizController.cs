@@ -64,28 +64,16 @@ namespace LoveQuiz.Server.Controllers
             return Ok(report);
         }
 
-
-        [HttpPost("full-report")]   
-        public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] FullReportTokenRequestDto dto)
+        [HttpPost("full-report")]
+        public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] FullReportSessionRequestDto dto)
         {
             try
             {
-                // Allow dev bypass token (works even in production temporarily)
-                if (dto.Token == DevBypassToken)
-                {
-                    var devReport = await _quizService.GetFullReportAsync(dto.Submissions);
-                    return Ok(devReport);
-                }
-
-                // Validate real token session
-                var session = await _quizService.GetByTokenAsync(dto.Token);
+                var session = await _quizService.GetBySessionIdAsync(dto.SessionId);
                 if (session == null || !session.Converted)
-                    return Unauthorized("Invalid or expired token.");
+                    return Unauthorized("Invalid or unpaid session.");
 
                 var report = await _quizService.GetFullReportAsync(dto.Submissions);
-
-                await _quizService.MarkTokenAsUsedAsync(dto.Token);
-
                 return Ok(report);
             }
             catch (UnauthorizedAccessException)
@@ -107,8 +95,8 @@ namespace LoveQuiz.Server.Controllers
         {
             try
             {
-                await _quizService.AddFreeQuizSessionAsync(dto);
-                return Ok(new { message = "Session logged successfully" });
+                var sessionId = await _quizService.AddFreeQuizSessionAsync(dto);
+                return Ok(new { message = "Session logged successfully", sessionId });
             }
             catch (ArgumentException ex)
             {
@@ -116,7 +104,7 @@ namespace LoveQuiz.Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = "An unexpected error occurred." });
+                return StatusCode(500, new { error = $"{ex.Message}" });
             }
         }
 
