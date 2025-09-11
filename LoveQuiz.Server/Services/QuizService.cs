@@ -21,6 +21,7 @@ namespace LoveQuiz.Server.Services
         }
         public async Task<FinalReport> GetFullReportAsync(List<QuizSubmissionDto> submissions)
         {
+
             var textPairs = questions_cache.GetSelectedTextPairs(submissions);
 
             var prompt = PromptBuilder.BuildPrompt(textPairs);
