@@ -2,10 +2,10 @@
 {
     public class FinalReport
     {
-        public AttachmentStyleInfo AttachmentStyle { get; set; } = new();
+        public AttachmentStyleInfo AttachmentStyle { get; set; } = new(); // FIRST SECTION 
         // Contains id, label, nickname, and summary
 
-        public List<EmotionalNeed> MetNeeds { get; set; } = new();
+        public List<EmotionalNeed> MetNeeds { get; set; } = new(); 
         public List<EmotionalNeed> UnmetNeeds { get; set; } = new();
         // Split based on AI's boolean list
 
