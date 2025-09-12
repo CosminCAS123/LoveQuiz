@@ -3,13 +3,14 @@ using Npgsql;
 using System.Data;
 using LoveQuiz.Server.Services;
 using AspNetCoreRateLimit;
+using QuestPDF.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 
 //builder.Configuration.AddEnvironmentVariables();
 
 
-
+QuestPDF.Settings.License = LicenseType.Community;
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 
