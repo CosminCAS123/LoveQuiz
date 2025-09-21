@@ -306,7 +306,7 @@ namespace LoveQuiz.Server.Services
         {
             new EmotionalNeed
             {
-                Title = "Să fii înțeles(ă)",
+                Title = "Să fii înțeles",
                 Description = "Să simți că partenerul te ascultă cu adevărat și îți înțelege trăirile."
             },
             new EmotionalNeed
@@ -316,7 +316,7 @@ namespace LoveQuiz.Server.Services
             },
             new EmotionalNeed
             {
-                Title = "Să fii valorizat(ă)",
+                Title = "Să fii valorizat ",
                 Description = "Să simți că ceea ce ești și ceea ce faci contează pentru partener."
             },
             new EmotionalNeed

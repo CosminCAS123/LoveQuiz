@@ -7,7 +7,7 @@
 
         public int Score { get; set; }
         // 0–10, for charts or color-coded indicators
-
+            
         public string Description { get; set; } = string.Empty;
 
     }

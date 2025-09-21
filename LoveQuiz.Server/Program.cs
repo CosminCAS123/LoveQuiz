@@ -24,6 +24,7 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<PdfGenerationService>();
 builder.Services.AddScoped<QuizService>();
 builder.Services.AddSingleton<QuizQuestionsCache>();
 builder.Services.AddScoped<QuizSessionRepository>();
