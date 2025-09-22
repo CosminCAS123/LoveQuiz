@@ -35,10 +35,11 @@ namespace LoveQuiz.Server.Services
 
         //ATTACHEMENT STYLE SUMMARIES
         private const string ANXIOUS_PREOCUPAT_SUMMARY =
-    "Dorești cu disperare apropierea și confirmarea iubirii, dar trăiești cu o frică constantă de respingere. " +
-    "Orice întârziere în răspuns sau lipsă de afecțiune te face să te simți nesigur(ă). " +
-    "Ai o sensibilitate crescută la semne de respingere și uneori poți părea sufocant(ă) sau copleșitor(oare). " +
-    "Intențiile tale sunt sincere, dar intensitatea emoțională poate destabiliza relația.";
+  "Dorești cu disperare apropierea și confirmarea iubirii, dar trăiești cu o frică constantă de respingere. " +
+  "Orice întârziere în răspuns sau lipsă de afecțiune te face să te simți nesigur. " +
+  "Ai o sensibilitate crescută la semne de respingere și uneori prezența ta poate fi percepută ca prea intensă. " +
+  "Intențiile tale sunt sincere, dar intensitatea emoțională poate destabiliza relația.";
+
 
         private const string EVITANT_DEZANGAJAT_SUMMARY =
             "Te retragi emoțional când lucrurile devin intense. " +
@@ -53,16 +54,18 @@ namespace LoveQuiz.Server.Services
             "Intenția ta este de a proteja relația, dar metoda poate crea tensiune.";
 
         private const string MANIPULATIV_DEFENSIV_SUMMARY =
-            "Ai dificultăți în a te exprima direct și sincer în relație. " +
-            "Poți recurge la sarcasm, pasiv-agresivitate sau evitare atunci când ești rănit(ă). " +
-            "Ai învățat să te protejezi prin mecanisme de apărare care pot părea manipulatoare. " +
-            "Sub toate acestea există o nevoie profundă de siguranță și acceptare.";
+ "Ai dificultăți în a te exprima direct și sincer în relație. " +
+ "Poți recurge la sarcasm, pasiv-agresivitate sau evitare atunci când te simți rănit. " +
+ "Ai învățat să te protejezi prin mecanisme de apărare care pot fi percepute ca manipulatoare. " +
+ "Sub toate acestea există o nevoie profundă de siguranță și acceptare.";
+
 
         private const string ECHILIBRAT_SUMMARY =
-            "Te simți confortabil(ă) atât cu intimitatea, cât și cu spațiul personal. " +
-            "Poți comunica deschis, gestiona conflictele sănătos și oferi siguranță emoțională. " +
-            "Nu te temi de vulnerabilitate și știi cum să construiești o relație hrănitoare. " +
-            "Ai un stil de atașament sănătos care favorizează conexiunea autentică.";
+  "Te simți confortabil atât cu intimitatea, cât și cu spațiul personal. " +
+  "Poți comunica deschis, gestiona conflictele într-un mod sănătos și oferi siguranță emoțională. " +
+  "Nu te temi de vulnerabilitate și știi cum să construiești o relație hrănitoare. " +
+  "Ai un stil de atașament echilibrat care favorizează conexiunea autentică.";
+    
 
         //TOXIC HABITS
 
@@ -71,13 +74,13 @@ namespace LoveQuiz.Server.Services
         public const string ANXIOS_PREOCUPAT_SUBTITLE = "🔸 Te agăți emoțional, mereu în căutarea reasigurării.";
 
         public const string ANXIOS_PREOCUPAT_SUBTITLE_1 = "Teama constantă de abandon";
-        public const string ANXIOS_PREOCUPAT_DESCRIPTION_1 = "Te temi că vei fi părăsit(ă) și ceri confirmări exagerate.";
+        public const string ANXIOS_PREOCUPAT_DESCRIPTION_1 = "Te temi de părăsire și ceri confirmări exagerate.";
 
         public const string ANXIOS_PREOCUPAT_SUBTITLE_2 = "Supraanalizarea mesajelor";
         public const string ANXIOS_PREOCUPAT_DESCRIPTION_2 = "Interpretezi excesiv gesturile și cuvintele partenerului, generând tensiuni.";
 
         public const string ANXIOS_PREOCUPAT_SUBTITLE_3 = "Dependență emoțională";
-        public const string ANXIOS_PREOCUPAT_DESCRIPTION_3 = "Ai nevoie de atenție continuă pentru a te simți iubit(ă).";
+        public const string ANXIOS_PREOCUPAT_DESCRIPTION_3 = "Ai nevoie de atenție continuă pentru a simți iubire.";
 
         public const string ANXIOS_PREOCUPAT_SUBTITLE_4 = "Crize de gelozie";
         public const string ANXIOS_PREOCUPAT_DESCRIPTION_4 = "Reacționezi intens la semnale minime de amenințare relațională.";
@@ -100,7 +103,7 @@ namespace LoveQuiz.Server.Services
 
         //3:preocupat controlator 
         public const string PREOCUPAT_CONTROLATOR_TITLE = "Conflict de atașament";
-        public const string PREOCUPAT_CONTROLATOR_SUBTITLE = "🔸 Controlezi pentru a nu fi rănit(ă).";
+        public const string PREOCUPAT_CONTROLATOR_SUBTITLE = "🔸 Controlezi pentru a evita să fii rănit emoțional.";
 
         public const string PREOCUPAT_CONTROLATOR_SUBTITLE_1 = "Întrebări obsesive";
         public const string PREOCUPAT_CONTROLATOR_DESCRIPTION_1 = "Pui întrebări excesive pentru a simți că deții controlul.";
@@ -128,11 +131,11 @@ namespace LoveQuiz.Server.Services
         public const string MANIPULATIV_DEFENSIV_DESCRIPTION_3 = "Omite fapte sau le modifici pentru a controla emoțional situația.";
 
         public const string MANIPULATIV_DEFENSIV_SUBTITLE_4 = "Refuzul asumării greșelilor";
-        public const string MANIPULATIV_DEFENSIV_DESCRIPTION_4 = "Te aperi imediat sau dai vina pe altcineva când ești confruntat(ă).";
+        public const string MANIPULATIV_DEFENSIV_DESCRIPTION_4 = "Te aperi imediat sau dai vina pe altcineva atunci când te simți confruntat.";
 
         //5:echilibrat
         public const string ECHILIBRAT_TITLE = "Intimitate neglijată";
-        public const string ECHILIBRAT_SUBTITLE = "🔸 Ești echilibrat(ă), dar uneori ignori aspecte esențiale ale intimității.";
+        public const string ECHILIBRAT_SUBTITLE = "Ai un stil echilibrat, dar uneori ignori aspecte esențiale ale intimității";
 
         public const string ECHILIBRAT_SUBTITLE_1 = "Ignorarea propriei oboseli emoționale";
         public const string ECHILIBRAT_DESCRIPTION_1 = "Te concentrezi prea mult pe partener și uiți să ai grijă de tine.";
@@ -141,20 +144,20 @@ namespace LoveQuiz.Server.Services
         public const string ECHILIBRAT_DESCRIPTION_2 = "Eviți tensiunile pentru a păstra armonia, dar îți reprimi nevoile reale.";
 
         public const string ECHILIBRAT_SUBTITLE_3 = "Perfecționism relațional";
-        public const string ECHILIBRAT_DESCRIPTION_3 = "Ai așteptări înalte de la relație și devii critic(ă) când realitatea nu se aliniază.";
+        public const string ECHILIBRAT_DESCRIPTION_3 = "Ai așteptări înalte de la relație și uneori critici situația atunci când realitatea nu se aliniază.";
 
         public const string ECHILIBRAT_SUBTITLE_4 = "Nevoia de validare excesivă";
         public const string ECHILIBRAT_DESCRIPTION_4 = "Cauți confirmare frecventă chiar și atunci când nu e necesar.";
 
 
         //10 EMOTIONAL NEEDS
-        private const string EMOTIONAL_NEED_TITLE_1 = "Să fii înțeles(ă)";
+        private const string EMOTIONAL_NEED_TITLE_1 = "Înțelegere.";
         private const string EMOTIONAL_NEED_DESCRIPTION_1 = "Să simți că partenerul te ascultă cu adevărat și îți înțelege trăirile.";
 
         private const string EMOTIONAL_NEED_TITLE_2 = "Să te simți în siguranță";
         private const string EMOTIONAL_NEED_DESCRIPTION_2 = "Să știi că poți fi tu însuți/însăți fără frică de judecată sau abandon.";
 
-        private const string EMOTIONAL_NEED_TITLE_3 = "Să fii valorizat(ă)";
+        private const string EMOTIONAL_NEED_TITLE_3 = "Valorea ta.";
         private const string EMOTIONAL_NEED_DESCRIPTION_3 = "Să simți că ceea ce ești și ceea ce faci contează pentru partener.";
 
         private const string EMOTIONAL_NEED_TITLE_4 = "Responsivitate emoțională";
@@ -164,7 +167,7 @@ namespace LoveQuiz.Server.Services
         private const string EMOTIONAL_NEED_DESCRIPTION_5 = "Să te poți baza pe celălalt și să știi că este acolo pentru tine.";
 
         private const string EMOTIONAL_NEED_TITLE_6 = "Sprijin în vulnerabilitate";
-        private const string EMOTIONAL_NEED_DESCRIPTION_6 = "Să poți fi deschis(ă) și rănit(ă) fără a fi atacat(ă) sau ignorat(ă).";
+        private const string EMOTIONAL_NEED_DESCRIPTION_6 = "Să îți poți arăta vulnerabilitatea fără teama de respingere sau neglijare.";
 
         private const string EMOTIONAL_NEED_TITLE_7 = "Afecțiune & atingere";
         private const string EMOTIONAL_NEED_DESCRIPTION_7 = "Gesturi fizice care exprimă iubire și conectare (îmbrățișări, mângâieri).";
@@ -182,8 +185,8 @@ namespace LoveQuiz.Server.Services
         //SHORT TEXTS
         private const string ANXIOS_PREOCUPAT_SHORT_TEXT = "Cauți validare constantă și cea mai mare frică a ta este respingerea.";
         private const string EVITANT_DEZANGAJAT_SHORT_TEXT = "Îți reprimi emoțiile și cea mai mare frică a ta este pierderea controlului sau dependența.";
-        private const string PREOCUPAT_CONTROLATOR_SHORT_TEXT = "Simți nevoia să controlezi totul din teamă că vei fi rănit(ă) sau abandonat(ă).";
-        private const string MANIPULATIV_DEFENSIV_SHORT_TEXT = "Te protejezi prin distanțare sau manipulare, de teamă să nu fii vulnerabil(ă).";
+        private const string PREOCUPAT_CONTROLATOR_SHORT_TEXT = "Simți nevoia să controlezi totul din teama durerii sau abandonului.";
+        private const string MANIPULATIV_DEFENSIV_SHORT_TEXT = "Te protejezi prin distanțare sau manipulare, de teamă vulnerabilității.";
         private const string ECHILIBRAT_SHORT_TEXT = "Îți înțelegi nevoile emoționale și nu te temi de apropiere sau autonomie.";
         static StaticInfo()
         {
@@ -303,7 +306,7 @@ namespace LoveQuiz.Server.Services
         {
             new EmotionalNeed
             {
-                Title = "Să fii înțeles(ă)",
+                Title = "Să fii înțeles",
                 Description = "Să simți că partenerul te ascultă cu adevărat și îți înțelege trăirile."
             },
             new EmotionalNeed
@@ -313,7 +316,7 @@ namespace LoveQuiz.Server.Services
             },
             new EmotionalNeed
             {
-                Title = "Să fii valorizat(ă)",
+                Title = "Să fii valorizat ",
                 Description = "Să simți că ceea ce ești și ceea ce faci contează pentru partener."
             },
             new EmotionalNeed

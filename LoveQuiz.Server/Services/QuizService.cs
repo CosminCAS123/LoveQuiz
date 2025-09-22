@@ -21,6 +21,7 @@ namespace LoveQuiz.Server.Services
         }
         public async Task<FinalReport> GetFullReportAsync(List<QuizSubmissionDto> submissions)
         {
+
             var textPairs = questions_cache.GetSelectedTextPairs(submissions);
 
             var prompt = PromptBuilder.BuildPrompt(textPairs);
@@ -128,7 +129,7 @@ namespace LoveQuiz.Server.Services
                 Id = Guid.NewGuid(),
                 Email = dto.Email,
                 Gender = dto.Gender,
-                Converted = false,
+                Converted = true,
                 CreatedAt = DateTime.UtcNow
              
             };

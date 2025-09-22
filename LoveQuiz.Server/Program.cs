@@ -3,13 +3,14 @@ using Npgsql;
 using System.Data;
 using LoveQuiz.Server.Services;
 using AspNetCoreRateLimit;
+using QuestPDF.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 
 //builder.Configuration.AddEnvironmentVariables();
 
 
-
+QuestPDF.Settings.License = LicenseType.Community;
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 
@@ -23,6 +24,7 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<PdfGenerationService>();
 builder.Services.AddScoped<QuizService>();
 builder.Services.AddSingleton<QuizQuestionsCache>();
 builder.Services.AddScoped<QuizSessionRepository>();
