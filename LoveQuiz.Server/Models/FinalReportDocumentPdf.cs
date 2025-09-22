@@ -6,6 +6,7 @@ using QuestPDF.Infrastructure;
 public sealed class FinalReportDocumentPdf : IDocument
 {
     private readonly FinalReport _r;
+   
     public FinalReportDocumentPdf(FinalReport report) => _r = report;
 
     public DocumentMetadata GetMetadata() => new();
@@ -184,6 +185,22 @@ public sealed class FinalReportDocumentPdf : IDocument
                     });
                 });
             });
+
+            page.Footer().Height(56).PaddingTop(4).Column(foot =>
+            {
+                foot.Item().LineHorizontal(0.5f).LineColor(border);
+
+                foot.Item().PaddingTop(6).Row(r =>
+                {
+                    // bigger logo: 32pt tall
+                    r.AutoItem().Container().Height(32).AlignMiddle()
+                        .Image("wwwroot/brand/logo.png").FitHeight();
+
+                    r.RelativeItem().AlignMiddle().AlignCenter().Text("lovequiz.ro")
+                        .FontSize(10).FontColor(Colors.Grey.Darken1);
+                });
+            });
+
         });
     }
 }
