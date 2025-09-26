@@ -8,7 +8,7 @@ import {FemaleBlock, MaleBlock} from './GenderPage.jsx'
 import Results, {PaidResults} from './Results.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <BrowserRouter>
       <Routes>
         <Route path="/"       element={<App />} />
@@ -19,5 +19,5 @@ createRoot(document.getElementById('root')).render(
         <Route path="/results/paid" element={<PaidResults />} />
       </Routes>
     </BrowserRouter>
-  </StrictMode>
+ //REMOVED STRICT MODE , IT WAS CALLING 2 TIMES EACH REQUEST.
 )

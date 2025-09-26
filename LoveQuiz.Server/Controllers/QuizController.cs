@@ -15,13 +15,29 @@ namespace LoveQuiz.Server.Controllers
         private readonly QuizService _quizService;
         private readonly IWebHostEnvironment _env;
         private static readonly Guid DevBypassToken = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        private readonly PdfGenerationService _pdfGenerationService;
 
-
-        public QuizController(QuizService quizService, IWebHostEnvironment env)
+        public QuizController(QuizService quizService, IWebHostEnvironment env , PdfGenerationService pdfGenerationService)
         {
             this._quizService = quizService ?? throw new ArgumentNullException(nameof(quizService));
             _env = env;
+            _pdfGenerationService = pdfGenerationService;
         }
+
+
+        [HttpGet("session/{sessionId}/status")]
+        public async Task<ActionResult<object>> GetSessionStatus(string sessionId)
+        {
+            if (!Guid.TryParse(sessionId, out var guid))
+                return BadRequest("Invalid session ID format.");
+
+            var session = await _quizService.GetBySessionIdAsync(guid);
+            if (session == null)
+                return NotFound();
+
+            return Ok(new { converted = session.Converted, sessionId = session.Id });
+        }
+
 
         [HttpGet("questions")]
         public async Task<ActionResult<IEnumerable<QuestionDto>>> GetQuestions([FromQuery] string gender)
@@ -64,31 +80,31 @@ namespace LoveQuiz.Server.Controllers
             return Ok(report);
         }
 
-        [HttpPost("full-report")]
-        public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] FullReportSessionRequestDto dto)
-        {
-            try
+            [HttpPost("full-report")]
+            public async Task<ActionResult<FinalReport>> GetFullReport([FromBody] FullReportSessionRequestDto dto)
             {
-                var session = await _quizService.GetBySessionIdAsync(dto.SessionId);
-                if (session == null || !session.Converted)
-                    return Unauthorized("Invalid or unpaid session.");
+                try
+                {
+                    var session = await _quizService.GetBySessionIdAsync(dto.SessionId);
+                    if (session == null || !session.Converted)
+                        return Unauthorized("Invalid or unpaid session.");
 
-                var report = await _quizService.GetFullReportAsync(dto.Submissions);
-                return Ok(report);
+                    var report = await _quizService.GetFullReportAsync(dto.Submissions);
+                    return Ok(report);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return StatusCode(401, "API key invalid or unauthorized.");
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"Internal error: {ex.Message}");
+                }
             }
-            catch (UnauthorizedAccessException)
-            {
-                return StatusCode(401, "API key invalid or unauthorized.");
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal error: {ex.Message}");
-            }
-        }
 
         [HttpPost("log-free-session")]
         public async Task<IActionResult> LogSession([FromBody] QuizSessionDto dto)
@@ -109,6 +125,19 @@ namespace LoveQuiz.Server.Controllers
         }
 
 
+        //FOR NOW JUST RETURNS THE PDF, DOESNT SEND EMAIL OR ANYTHING
+        [HttpPost("send-email-results")]
+        public async Task<IActionResult> SendResults([FromBody]FinalReport finalReport , string email , CancellationToken ct)
+        {
+            if (finalReport is null)
+                return BadRequest("finalReport is null");
+
+            var bytes = await _pdfGenerationService.GenerateAsync(finalReport, ct);
+            var fileName = $"LoveQuiz_Final_Report_{DateTime.UtcNow:yyyyMMdd_HHmm}.pdf";
+            return File(bytes, "application/pdf", fileName);
+
+
+        }
 
 
 

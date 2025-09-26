@@ -8,19 +8,16 @@ namespace LoveQuiz.Server.Models
         public static string BuildPrompt(List<QuizSubmissionTextDto> submissions)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Acestea sunt răspunsurile oferite de un utilizator la chestionarul despre comportamente și reacții în relații de cuplu.\n");
+            sb.AppendLine("Răspunsurile utilizatorului la chestionar:");
 
-            int index = 1;
-            foreach (var pair in submissions)
+            for (int i = 0; i < submissions.Count; i++)
             {
-                sb.AppendLine($"Întrebare {index}: \"{pair.QuestionText}\"");
-                sb.AppendLine($"Răspuns {index}: \"{pair.AnswerText}\"\n");
-                index++;
+                var q = submissions[i];
+                sb.AppendLine($"Întrebare {i + 1}: \"{q.QuestionText}\"");
+                sb.AppendLine($"Răspuns {i + 1}: \"{q.AnswerText}\"");
             }
 
-            sb.AppendLine("Te rog să analizezi aceste răspunsuri pentru a identifica tiparele emoționale și comportamentale ale utilizatorului.");
-            sb.AppendLine("Fă o analiză empatică și creează un raport psihologic complet, în format JSON, conform instrucțiunilor din system message.");
-
+            // Niciun alt text: system message conține toate regulile/ordinea/ID-urile.S
             return sb.ToString();
         }
 
