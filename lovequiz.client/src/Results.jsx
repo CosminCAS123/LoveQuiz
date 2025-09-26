@@ -414,46 +414,86 @@ export default function Results() {
 }
 
 export function PaidResults() {
+    const [full_report, setFullReport] = useState(null);
+    const [error, setError] = useState(null);
+    const { state } = useLocation();
 
-  const [full_report, setFullReport] = useState(null);
-  const { state } = useLocation();
+    const answers =
+        (state && state.answers) ??
+        JSON.parse(localStorage.getItem("quiz.answers") || "{}");
+    const questions =
+        (state && state.questions) ??
+        JSON.parse(localStorage.getItem("quiz.questions") || "[]");
 
+    // used for image display
+    function getFirstHighestAboveOrEqual(input) {
+        const set = [20, 40, 60, 80, 100];
+        return set.find((num) => num >= input) || null;
+    }
 
-  const { answers = {}, questions = [] } = state || {};
-
-  // used for image display
-  function getFirstHighestAboveOrEqual(input) {
-    const set = [20, 40, 60, 80, 100];
-    return set.find(num => num >= input) || null;
-  }
-
-  const buildSubmissions = () =>
-    questions
-      .map((q) => {
-        const selectedIdx = Array.isArray(answers) ? answers[q.id] : answers[q.id];
-        if (selectedIdx == null) return null;
-        const ansObj = q.answers[selectedIdx];
-        if (!ansObj) return null;
-        return {
-          questionId: q.id,
-          answerId: ansObj.id,
-        };
-      })
-      .filter(Boolean);
+    const buildSubmissions = () =>
+        questions
+            .map((q) => {
+                const selectedIdx = Array.isArray(answers) ? answers[q.id] : answers[q.id];
+                if (selectedIdx == null) return null;
+                const ansObj = q.answers[selectedIdx];
+                if (!ansObj) return null;
+                return { questionId: q.id, answerId: ansObj.id };
+            })
+            .filter(Boolean);
 
     useEffect(() => {
         (async () => {
-            const sessionId = localStorage.getItem('quiz.sessionId');
+            const sessionId = localStorage.getItem("quiz.sessionId");
             if (!sessionId) {
-                console.error('Missing sessionId. Call /log-free-session first.');
+                console.error("Missing sessionId. Call /log-free-session first.");
                 return;
             }
 
+            // 1) Check if already converted
             try {
-                const res = await fetch('/api/quiz/payment/start', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(sessionId) // backend expects a raw JSON string
+                const st = await fetch(`/api/quiz/session/${sessionId}/status`);
+                const sdata = st.ok ? await st.json() : null;
+
+                if (sdata?.converted === true) {
+                    // ✅ Already paid -> build submissions & fetch full report
+                    const submissions = buildSubmissions();
+                    if (!submissions?.length) {
+                        console.error("Missing submissions.");
+                        return;
+                    }
+
+                    const res = await fetch("/api/quiz/full-report", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ sessionId, submissions }),
+                    });
+
+                    if (!res.ok) {
+                        const text = await res.text();
+                        throw new Error(`HTTP ${res.status}: ${text}`);
+                    }
+
+                    const data = await res.json();
+                    setFullReport(data);
+                    return;
+                }
+            } catch {
+                // if status check fails, we’ll fall back to starting payment
+            }
+
+            // 2) Not converted -> start payment
+            try {
+                // persist inputs so we can rebuild submissions after redirect
+                try {
+                    localStorage.setItem("quiz.questions", JSON.stringify(questions));
+                    localStorage.setItem("quiz.answers", JSON.stringify(answers));
+                } catch { }
+
+                const res = await fetch("/api/quiz/payment/start", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(sessionId), // backend expects raw JSON string
                 });
 
                 if (!res.ok) {
@@ -462,11 +502,11 @@ export function PaidResults() {
                 }
 
                 const { redirectUrl } = await res.json();
-                if (!redirectUrl) throw new Error('Missing redirectUrl from server.');
+                if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
                 window.location.href = redirectUrl; // -> Netopia checkout
             } catch (err) {
-                console.error('Failed to start payment:', err);
-                // TODO: show toast or fallback UI
+                console.error("Failed to start payment:", err);
+                // optional: set some local UI error state here
             }
         })();
     }, []);

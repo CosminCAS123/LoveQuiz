@@ -129,7 +129,7 @@ namespace LoveQuiz.Server.Services
                 Id = Guid.NewGuid(),
                 Email = dto.Email,
                 Gender = dto.Gender,
-                Converted = true,
+                Converted = false,
                 CreatedAt = DateTime.UtcNow
              
             };

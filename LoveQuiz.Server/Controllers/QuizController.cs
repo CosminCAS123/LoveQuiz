@@ -222,42 +222,67 @@ namespace LoveQuiz.Server.Controllers
             // Otherwise, just return raw
             return Content(responseBody, "application/json");
         }
-        [AllowAnonymous] // Netopia calls this directly
+        [AllowAnonymous]
         [HttpPost("netopia/confirm")]
         public async Task<IActionResult> NetopiaConfirm([FromBody] JsonElement body)
         {
-            // (Optional) log
-            Console.WriteLine("[NETOPIA IPN] " + body.GetRawText());
-
-            string? orderId = null;
-            int status = 0;
-            string? code = null;
-
-            if (body.TryGetProperty("order", out var order) &&
-                order.TryGetProperty("orderID", out var orderIdEl) &&
-                orderIdEl.ValueKind == JsonValueKind.String)
-                orderId = orderIdEl.GetString();
-
-            if (body.TryGetProperty("payment", out var payment) &&
-                payment.TryGetProperty("status", out var statusEl) &&
-                statusEl.ValueKind == JsonValueKind.Number)
-                status = statusEl.GetInt32();
-
-            if (body.TryGetProperty("error", out var err) &&
-                err.TryGetProperty("code", out var codeEl) &&
-                codeEl.ValueKind == JsonValueKind.String)
-                code = codeEl.GetString();
-
-            if (Guid.TryParse(orderId, out var sessionGuid))
+            try
             {
-                // Success in v2 is usually status 3 (Paid) or 5 (Confirmed) with code "00"
-                var success = (status == 3 || status == 5) && code == "00";
-                if (success)
-                    await _quizService.SetConvertedAsync(sessionGuid, true); // idempotent update
-            }
+                Console.WriteLine("[NETOPIA IPN] " + body.GetRawText());
 
-            // Always 200 so the gateway doesn't retry forever in dev
-            return Ok(new { received = true });
+                string? orderId = null;
+                int status = 0;
+
+                // code may be string, number, or absent in IPN
+                string? code = null;
+
+                if (body.TryGetProperty("order", out var order) &&
+                    order.TryGetProperty("orderID", out var orderIdEl) &&
+                    orderIdEl.ValueKind == JsonValueKind.String)
+                {
+                    orderId = orderIdEl.GetString();
+                }
+
+                if (body.TryGetProperty("payment", out var payment) &&
+                    payment.TryGetProperty("status", out var statusEl) &&
+                    statusEl.ValueKind == JsonValueKind.Number)
+                {
+                    status = statusEl.GetInt32();
+                }
+
+                if (body.TryGetProperty("error", out var err) &&
+                    err.TryGetProperty("code", out var codeEl))
+                {
+                    if (codeEl.ValueKind == JsonValueKind.String)
+                        code = codeEl.GetString();
+                    else if (codeEl.ValueKind == JsonValueKind.Number)
+                        code = codeEl.GetInt32().ToString("00"); // normalize numeric 0 -> "00"
+                }
+
+                if (Guid.TryParse(orderId, out var sessionGuid))
+                {
+                    // From docs:
+                    // - status 3 + code "00" => approved
+                    // - status 15 + code "100" => 3DS step (ignore here; not approved yet)
+                    // - status 5 only counts if code "00"; other codes => not completed
+
+                    bool isApproved =
+                        (status == 3 && (code == null || code == "00"))   // accept 3 even if code missing
+                        || (status == 5 && code == "00");
+
+                    if (isApproved)
+                    {
+                        await _quizService.SetConvertedAsync(sessionGuid, true);
+                    }
+                }
+
+                return Ok(new { received = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[NETOPIA IPN ERROR] {ex}");
+                return Ok(new { received = false });
+            }
         }
 
     }

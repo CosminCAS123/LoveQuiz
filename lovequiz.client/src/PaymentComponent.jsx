@@ -1,82 +1,71 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function PaymentChecker() {
 
     const [phase, setPhase] = useState("polling");
     const [error, setError] = useState(null);
-    const [report, setReport] = useState(null);
+    const [report, setReport] = useState(null); // (unused here; keep if needed elsewhere)
 
     const sessionId = localStorage.getItem("quiz.sessionId");
+    const navigate = useNavigate();
     console.log(sessionId);
 
     useEffect(() => {
         if (!sessionId) {
-        setError("Missing session id.");
-        setPhase("error");
-        return;
+            setError("Missing session id.");
+            setPhase("error");
+            return;
         }
 
         let cancelled = false;
         const controller = new AbortController();
 
         async function tick() {
-        try {
-            const res = await fetch(`/api/quiz/session/${sessionId}/status`, {
-            signal: controller.signal,
-            });
-            if (!res.ok) {
-            const msg =
-                res.status === 404
-                ? "Session not found."
-                : res.status === 400
-                ? "Bad request."
-                : `Status check failed (${res.status}).`;
-            if (!cancelled) {
-                setError(msg);
-                setPhase("error");
-            }
-            return;
-            }
-
-            const data = await res.json(); // expect { converted: boolean }
-            if (data?.converted === true) {
-            if (!cancelled) {
-                setPhase("generating");
-                const fr = await fetch(`/api/quiz/full-report`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sessionId }), // adjust if your API expects a different DTO
+            try {
+                const res = await fetch(`/api/quiz/session/${sessionId}/status`, {
+                    signal: controller.signal,
                 });
-                if (!fr.ok) {
-                setError(`Full report failed (${fr.status}).`);
-                setPhase("error");
-                return;
+                if (!res.ok) {
+                    const msg =
+                        res.status === 404
+                            ? "Session not found."
+                            : res.status === 400
+                                ? "Bad request."
+                                : `Status check failed (${res.status}).`;
+                    if (!cancelled) {
+                        setError(msg);
+                        setPhase("error");
+                    }
+                    return;
                 }
-                const payload = await fr.json();
-                setReport(payload);
-                setPhase("ready");
+
+                const data = await res.json(); // expect { converted: boolean }
+                if (data?.converted === true && !cancelled) {
+                    setPhase("done");
+                    // ✅ don't call full-report here; just navigate to PaidResults
+                    navigate("/paid-results", { replace: true });
+                }
+            } catch (e) {
+                if (!cancelled && e.name !== "AbortError") {
+                    setError("Network error while checking status.");
+                    setPhase("error");
+                }
             }
-            }
-        } catch (e) {
-            if (!cancelled && e.name !== "AbortError") {
-            setError("Network error while checking status.");
-            setPhase("error");
-            }
-        }
         }
 
-        // run immediately, then every 2.5s
+        // run immediately, then every 1.5s
         tick();
         const id = setInterval(tick, 1500);
 
         return () => {
-        cancelled = true;
-        controller.abort();
-        clearInterval(id);
+            cancelled = true;
+            controller.abort();
+            clearInterval(id);
         };
-    }, [sessionId]);
+    }, [sessionId, navigate]);
 
     
     return (
