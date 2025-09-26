@@ -38,6 +38,23 @@ public class QuizSessionRepository
       catch (Exception ex) { Console.WriteLine(ex); }
     }
 
+
+
+    public async Task<bool> SetConvertedAsync(Guid sessionId, bool value = true)
+    {
+        const string sql = @"
+UPDATE quiz_sessions
+SET converted = @Value,
+    -- keep a timestamp if you later add this column:
+    -- converted_at = CASE WHEN @Value = 1 THEN CURRENT_TIMESTAMP ELSE converted_at END
+WHERE id = @SessionId;";
+
+        var rows = await _db.ExecuteAsync(sql, new { SessionId = sessionId, Value = value });
+        return rows > 0;
+    }
+
+
+
     public async Task<QuizSession?> GetByEmailAsync(string email)
     {
         const string sql = "SELECT * FROM quiz_sessions WHERE email = @Email;";

@@ -4,6 +4,7 @@ using System.Text.Json;
 using LoveQuiz.Server.Services;
 using System.Text;
 using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -156,8 +157,9 @@ namespace LoveQuiz.Server.Controllers
                 config = new
                 {
                     emailTemplate = "confirm",
-                    notifyUrl = "https://<your-ngrok>.ngrok.io/api/quiz/netopia/confirm", // TODO: set when tunneling
-                    redirectUrl = "http://localhost:5173/payment/return",
+                    notifyUrl = "https://incunabular-christy-nondigestibly.ngrok-free.dev/api/quiz/netopia/confirm"
+, // TODO: set when tunneling
+                    redirectUrl = "https://localhost:5173/payment/return",
                     language = "ro"
                 },
                 payment = new
@@ -220,7 +222,43 @@ namespace LoveQuiz.Server.Controllers
             // Otherwise, just return raw
             return Content(responseBody, "application/json");
         }
+        [AllowAnonymous] // Netopia calls this directly
+        [HttpPost("netopia/confirm")]
+        public async Task<IActionResult> NetopiaConfirm([FromBody] JsonElement body)
+        {
+            // (Optional) log
+            Console.WriteLine("[NETOPIA IPN] " + body.GetRawText());
 
+            string? orderId = null;
+            int status = 0;
+            string? code = null;
+
+            if (body.TryGetProperty("order", out var order) &&
+                order.TryGetProperty("orderID", out var orderIdEl) &&
+                orderIdEl.ValueKind == JsonValueKind.String)
+                orderId = orderIdEl.GetString();
+
+            if (body.TryGetProperty("payment", out var payment) &&
+                payment.TryGetProperty("status", out var statusEl) &&
+                statusEl.ValueKind == JsonValueKind.Number)
+                status = statusEl.GetInt32();
+
+            if (body.TryGetProperty("error", out var err) &&
+                err.TryGetProperty("code", out var codeEl) &&
+                codeEl.ValueKind == JsonValueKind.String)
+                code = codeEl.GetString();
+
+            if (Guid.TryParse(orderId, out var sessionGuid))
+            {
+                // Success in v2 is usually status 3 (Paid) or 5 (Confirmed) with code "00"
+                var success = (status == 3 || status == 5) && code == "00";
+                if (success)
+                    await _quizService.SetConvertedAsync(sessionGuid, true); // idempotent update
+            }
+
+            // Always 200 so the gateway doesn't retry forever in dev
+            return Ok(new { received = true });
+        }
 
     }
 

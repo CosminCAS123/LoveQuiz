@@ -443,37 +443,34 @@ export function PaidResults() {
 
     useEffect(() => {
         (async () => {
-            const submissions = buildSubmissions();
-            if (!submissions?.length) return;
-
             const sessionId = localStorage.getItem('quiz.sessionId');
             if (!sessionId) {
                 console.error('Missing sessionId. Call /log-free-session first.');
                 return;
             }
 
-            const payload = { sessionId, submissions }; // matches FullReportSessionRequestDto
-
             try {
-                const res = await fetch('/api/quiz/full-report', {
+                const res = await fetch('/api/quiz/payment/start', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
+                    body: JSON.stringify(sessionId) // backend expects a raw JSON string
                 });
 
                 if (!res.ok) {
-                    // helpful debug for model-binding/authorization failures
                     const text = await res.text();
                     throw new Error(`HTTP ${res.status}: ${text}`);
                 }
 
-                const data = await res.json();
-                setFullReport(data);
+                const { redirectUrl } = await res.json();
+                if (!redirectUrl) throw new Error('Missing redirectUrl from server.');
+                window.location.href = redirectUrl; // -> Netopia checkout
             } catch (err) {
-                console.error('Failed to fetch full report:', err);
+                console.error('Failed to start payment:', err);
+                // TODO: show toast or fallback UI
             }
         })();
     }, []);
+
 
   if (!full_report) return (
   <>

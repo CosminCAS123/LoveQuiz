@@ -142,6 +142,8 @@ namespace LoveQuiz.Server.Services
             return await quiz_repo.GetBySessionIdAsync(sessionId);
         }
 
+        public Task<bool> SetConvertedAsync(Guid id, bool value = true) => quiz_repo.SetConvertedAsync(id, value);
+
     }
 }
 

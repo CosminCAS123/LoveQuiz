@@ -69,7 +69,7 @@ export default function PaymentChecker() {
 
         // run immediately, then every 2.5s
         tick();
-        const id = setInterval(tick, 2500);
+        const id = setInterval(tick, 1500);
 
         return () => {
         cancelled = true;
