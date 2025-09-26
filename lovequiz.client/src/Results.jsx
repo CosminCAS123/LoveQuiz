@@ -129,7 +129,7 @@ export default function Results() {
   useEffect(() => {
     const submissions = buildSubmissions();
     console.log(state);
-    // console.log(submissions);
+    console.log(submissions);
     if (!submissions.length) return;
     fetch("/api/quiz/free-report", {
       method: "POST",
@@ -692,7 +692,7 @@ export function PaidResults() {
                     <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
                   </div>
                 </div> */}
-                {/* todo */}
+                {/* todo - change the predefined text for this section to get rid of the (ă). I have made some examples above (the commented texts) that can be used to replace the old text*/}
                 
               </div> 
             </div>
@@ -767,7 +767,7 @@ export function PaidResults() {
                     <p className="text-sm text-gray-500">ai certitudinea ca partenerul tau iti vrea binele </p>
                   </div>
                 </div> */}
-                {/* todo */}
+                {/* todo  change the predefined text for this section to get rid of the (ă). I have made some examples above (the commented texts) that can be used to replace the old text*/}                
               </div>  
             </div>
           </div>
@@ -796,7 +796,7 @@ export function PaidResults() {
             <img className="w-1/2 h-auto mx-auto" src={`../assets/${gender}/${full_report.attachmentStyle.label}.png`}></img>
 
             <h3 className="text-md font-semibold text-center m-2 p-1 border rounded-xl">Cauti validare constanta si cea mai mare frica a ta este respingerea</h3> 
-            {/* todo */}
+            {/* todo - add this value in the API response, for now it is hardcoded */}
 
           </div>
         </div>
