@@ -9,7 +9,7 @@ import Results, {PaidResults} from './Results.jsx'
 import PaymentChecker from './PaymentComponent.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <BrowserRouter>
       <Routes>
         <Route path="/"       element={<App />} />
@@ -21,5 +21,5 @@ createRoot(document.getElementById('root')).render(
         <Route path="/payment/return" element={<PaymentChecker />} />
       </Routes>
     </BrowserRouter>
-  </StrictMode>
+ //REMOVED STRICT MODE , IT WAS CALLING 2 TIMES EACH REQUEST.
 )

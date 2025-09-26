@@ -220,18 +220,44 @@ export function QuizComponent({ gender }) {
               >
                 Anulează
               </button>
-              <button
-                className="quiz-button"
-                onClick={() => {
-                  if (!email.includes("@")) {
-                    alert("Te rugăm să introduci o adresă validă.");
-                    return;
-                  }
-                  navigate("/results", { state: { answers: selectedAnswers, questions, email } });
-                }}
-              >
-                Continuă
-              </button>
+                          <button
+                              className="quiz-button"
+                              onClick={async () => {
+                                  if (!email.includes("@")) {
+                                      alert("Te rugăm să introduci o adresă validă.");
+                                      return;
+                                  }
+
+                                  try {
+                                      const gender = localStorage.getItem("gender"); // already saved earlier
+
+                                      // 1) log the session
+                                      const res = await fetch("/api/quiz/log-free-session", {
+                                          method: "POST",
+                                          headers: { "Content-Type": "application/json" },
+                                          body: JSON.stringify({
+                                              email,
+                                              gender
+                                          })
+                                      });
+                                      if (!res.ok) throw new Error(`log-free-session HTTP ${res.status}`);
+                                      const { sessionId } = await res.json();
+
+                                      // 2) save it for full-report later
+                                      localStorage.setItem("quiz.sessionId", sessionId);
+
+                                      // 3) go to results page
+                                      navigate("/results", {
+                                          state: { answers: selectedAnswers, questions, email }
+                                      });
+                                  } catch (err) {
+                                      console.error(err);
+                                      alert("Nu am putut crea sesiunea. Încearcă din nou.");
+                                  }
+                              }}
+                          >
+                              Continuă
+                          </button>
             </div>
           </div>
         </div>

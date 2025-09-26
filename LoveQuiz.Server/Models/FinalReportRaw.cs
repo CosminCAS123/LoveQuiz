@@ -1,5 +1,7 @@
 ﻿namespace LoveQuiz.Server.Models
 {
+
+    //GIVEN BY OPEN AI
     public class FinalReportRaw
     {
         public int AttachmentStyleId { get; set; }

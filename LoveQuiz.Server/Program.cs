@@ -2,19 +2,29 @@ using Dapper;
 using Npgsql;
 using System.Data;
 using LoveQuiz.Server.Services;
+using AspNetCoreRateLimit;
+using QuestPDF.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 
 //builder.Configuration.AddEnvironmentVariables();
 
 
-
+QuestPDF.Settings.License = LicenseType.Community;
 builder.Services.AddControllers();
-builder.Services.AddHttpClient(); 
+builder.Services.AddHttpClient();
+
+//for IP RATE LIMITING
+
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<PdfGenerationService>();
 builder.Services.AddScoped<QuizService>();
 builder.Services.AddSingleton<QuizQuestionsCache>();
 builder.Services.AddScoped<QuizSessionRepository>();
@@ -56,6 +66,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//DO WHEN APP GOES LIVE
+
+/*if (app.Environment.IsProduction())
+{
+    app.UseIpRateLimiting();
+}
+*/ 
 app.UseHttpsRedirection();
 
 app.UseCors("Dev");

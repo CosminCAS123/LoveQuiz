@@ -21,6 +21,7 @@ namespace LoveQuiz.Server.Services
         }
         public async Task<FinalReport> GetFullReportAsync(List<QuizSubmissionDto> submissions)
         {
+
             var textPairs = questions_cache.GetSelectedTextPairs(submissions);
 
             var prompt = PromptBuilder.BuildPrompt(textPairs);
@@ -114,17 +115,31 @@ namespace LoveQuiz.Server.Services
             };
 
         }
-
-        public async Task LogQuizVisitAsync(QuizVisitDto dto)
+        public async Task<Guid> AddFreeQuizSessionAsync(QuizSessionDto dto)
         {
-            var visit = dto.ToEntity();
-            await quiz_repo.InsertQuizVisitAsync(visit);
+            if (!dto.Email.Contains("@") || dto.Email.Length < 9)
+                throw new ArgumentException("Adresa invalida.");
+
+            var existing = await quiz_repo.GetByEmailAsync(dto.Email);
+            if (existing != null)
+                throw new ArgumentException("Această adresă de email a fost deja folosită.");
+
+            var session = new QuizSession
+            {
+                Id = Guid.NewGuid(),
+                Email = dto.Email,
+                Gender = dto.Gender,
+                Converted = true,
+                CreatedAt = DateTime.UtcNow
+             
+            };
+
+            await quiz_repo.InsertQuizSessionAsync(session);
+            return session.Id;
         }
-        public async Task AddPaidQuizAsync(PaidQuizDto dto)
+        public async Task<QuizSession?> GetBySessionIdAsync(Guid sessionId)
         {
-            var paid_quiz = dto.ToEntity();
-
-            await quiz_repo.InsertPaidQuizAsync(paid_quiz);
+            return await quiz_repo.GetBySessionIdAsync(sessionId);
         }
 
     }

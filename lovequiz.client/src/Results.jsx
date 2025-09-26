@@ -441,28 +441,39 @@ export function PaidResults() {
       })
       .filter(Boolean);
 
-  useEffect(() => {
-    const submissions = buildSubmissions();
-    console.log(submissions);
+    useEffect(() => {
+        (async () => {
+            const submissions = buildSubmissions();
+            if (!submissions?.length) return;
 
-    fetch("/api/quiz/full-report", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(submissions)
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setFullReport(data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch full report:", err);
-      });
-  }, []); 
+            const sessionId = localStorage.getItem('quiz.sessionId');
+            if (!sessionId) {
+                console.error('Missing sessionId. Call /log-free-session first.');
+                return;
+            }
+
+            const payload = { sessionId, submissions }; // matches FullReportSessionRequestDto
+
+            try {
+                const res = await fetch('/api/quiz/full-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!res.ok) {
+                    // helpful debug for model-binding/authorization failures
+                    const text = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${text}`);
+                }
+
+                const data = await res.json();
+                setFullReport(data);
+            } catch (err) {
+                console.error('Failed to fetch full report:', err);
+            }
+        })();
+    }, []);
 
   if (!full_report) return (
   <>

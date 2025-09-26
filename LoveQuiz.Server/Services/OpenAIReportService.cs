@@ -11,23 +11,52 @@ namespace LoveQuiz.Server.Services;
        private readonly HttpClient _httpClient;
        private readonly IConfiguration _config;
        private const float TEMP = 0.8f; // Default temperature for OpenAI API
-       private const int MAX_TOKENS = 1000; // Default max tokens for OpenAI API
+       private const int MAX_TOKENS = 1400; // Default max tokens for OpenAI API
     const string SYSTEM_MESSAGE = @"
-Ești un psiholog de cuplu empatic, direct și atent la nuanțe. Analizezi răspunsuri la un test de cuplu și returnezi un obiect JSON valid, corespunzător structurii FinalReportRaw, fără explicații suplimentare. 
+Ești un psiholog de cuplu empatic și concis. Primești răspunsurile unui chestionar și trebuie să întorci EXCLUSIV un JSON VALID care corespunde exact clasei FinalReportRaw, fără explicații, fără markdown, fără text în plus.
 
-Formatul exact este:
+STRUCTURĂ JSON (chei și tipuri EXACTE):
+{
+  ""AttachmentStyleId"": number (1..5),
+  ""EmotionalNeedsMet"": [10 booleans în ORDINEA de mai jos],
+  ""Aspects"": [
+    { ""Aspect"": string, ""Score"": number (0..10), ""Description"": string (2–3 propoziții) },
+    { ... } (exact 4 obiecte în total)
+  ],
+  ""ToxicityLevel"": number (0..100),
+  ""AdviceList"": [4–5 string-uri, ~20 cuvinte fiecare]
+}
 
-- attachmentStyleId: un număr întreg între 1 și 5 care indică stilul de atașament dominant.
-- emotionalNeedsMet: o listă de 10 valori booleene (true sau false), în aceeași ordine ca lista fixă de nevoi emoționale. Nu menționa numele nevoilor.
-- aspects: o listă de 4 obiecte LoveTrait care conțin:
-  - aspect: numele unei teme psihologice (ex: încredere, comunicare),
-  - score: un scor între 0 și 10,
-  - description: o descriere emoțională a modului în care acest aspect influențează relația.
-- toxicityLevel: un scor între 0 și 100 care reflectă nivelul de toxicitate.
-- adviceList: o listă de 4-5 sfaturi practice, empatice și clare pentru îmbunătățirea relației.
+MAPARE STILURI DE ATAȘAMENT (alege UN SINGUR ID):
+1 = Anxios–preocupat
+2 = Evitant–dezangajat
+3 = Preocupat–controlator
+4 = Manipulativ–defensiv
+5 = Echilibrat
 
-Scrie exclusiv JSON valid, fără text suplimentar sau explicații. Scrie totul în limba română. Nu inventa întrebări sau concepte care nu există în datele primite.
+ORDINEA FIXĂ PENTRU EmotionalNeedsMet (NU scrie numele în JSON, doar true/false în această ordine):
+1. Să fii înțeles
+2. Să te simți în siguranță
+3. Să fii valorizat
+4. Responsivitate emoțională
+5. Încredere
+6. Sprijin în vulnerabilitate
+7. Afecțiune & atingere
+8. Autonomie & spațiu personal
+9. Claritate în comunicare
+10. Scop comun
+
+CERINȚE DE CONȚINUT:
+- Aspects: 4 teme relevante (ex. Comunicare, Încredere, Asertivitate, Autocontrol, Empatie, Gestionarea conflictelor etc.), fiecare cu Score 0..10 și Description (2–3 propoziții, ton empatic, concret, în română).
+- AdviceList: 4–5 recomandări scurte (~20 cuvinte), acționabile, clare, fără clișee.
+- ToxicityLevel: 0..100, coerent cu tonul general.
+
+IMPORTANT:
+- Limba: română.
+- Fără date sensibile/diagnostic clinic.
+- Răspunde DOAR cu JSON valid conform structurii de mai sus.
 ";
+
 
 
 
@@ -91,7 +120,7 @@ Scrie exclusiv JSON valid, fără text suplimentar sau explicații. Scrie totul 
 
 
 
-    public async Task<FinalReportRaw> GenerateFinalReportRawAsync(object requestBody, string apiKey)
+    private async Task<FinalReportRaw> GenerateFinalReportRawAsync(object requestBody, string apiKey)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
@@ -142,6 +171,7 @@ Scrie exclusiv JSON valid, fără text suplimentar sau explicații. Scrie totul 
 
         var attachmentStyle = StaticInfo.AttachmentStyles[rawReport.AttachmentStyleId]; //GET ATTACHEMENTSTYLEINFO
         var toxicHabits = StaticInfo.ToxicHabitsByStyle[rawReport.AttachmentStyleId]; //GET TOXICHABITS BY ID
+        var shortText = StaticInfo.ShortTexts[rawReport.AttachmentStyleId];//GET SHORT TEXT BY ATTACHEMENTSTYLEID
 
         //CONVERT
         return new FinalReport
@@ -152,7 +182,8 @@ Scrie exclusiv JSON valid, fără text suplimentar sau explicații. Scrie totul 
             Aspects = rawReport.Aspects,
             ToxicityLevel = rawReport.ToxicityLevel,
             AdviceList = rawReport.AdviceList,
-            ToxicHabitsSection = toxicHabits
+            ToxicHabitsSection = toxicHabits,
+            AttachmentStyleShortText = shortText
         };
     }
     private static string ExtractJson(string content)
