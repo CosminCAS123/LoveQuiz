@@ -2,6 +2,8 @@
 using LoveQuiz.Server.Models;
 using System.Text.Json;
 using LoveQuiz.Server.Services;
+using System.Text;
+using static System.Net.WebRequestMethods;
 
 
 
@@ -12,6 +14,8 @@ namespace LoveQuiz.Server.Controllers
     [ApiController]
     public class QuizController: ControllerBase
     {
+        private const string API_KEY_SANDBOX = "ZnicPZDvXXrekQNlzHNCW26taBBt4SncvTyhzHdoxDPj6aEOoaFVJ_JDNwk=";
+        private const string POS_SIGNATURE_SANDBOX = "33CH-UFEF-OVGF-QEXQ-TDB9";
         private readonly QuizService _quizService;
         private readonly IWebHostEnvironment _env;
         private static readonly Guid DevBypassToken = Guid.Parse("00000000-0000-0000-0000-000000000001");
@@ -139,6 +143,83 @@ namespace LoveQuiz.Server.Controllers
 
         }
 
+        [HttpPost("payment/start")]
+        public async Task<IActionResult> StartPayment([FromBody] string sessionId)
+        {
+            if (!Guid.TryParse(sessionId, out var guid))
+                return BadRequest("Invalid session ID");
+
+            // (Optional) check session exists in DB here
+
+            var payload = new
+            {
+                config = new
+                {
+                    emailTemplate = "confirm",
+                    notifyUrl = "https://<your-ngrok>.ngrok.io/api/quiz/netopia/confirm", // TODO: set when tunneling
+                    redirectUrl = "http://localhost:5173/payment/return",
+                    language = "ro"
+                },
+                payment = new
+                {
+                    options = new { installments = 1, bonus = 0 },
+                    instrument = new { type = "card" } // important: no PAN/CVV here
+                },
+                order = new
+                {
+                    posSignature = POS_SIGNATURE_SANDBOX,
+                    dateTime = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                    description = "LoveQuiz Full Report",
+                    orderID = sessionId,      // your GUID as string
+                    amount = 49.00m,
+                    currency = "RON",
+                    billing = new
+                    {
+                        email = "test@example.com", // TODO: read from your session
+                        phone = "0000000000",
+                        firstName = "Unknown",
+                        lastName = "Unknown",
+                        city = "Unknown",
+                        country = 642,
+                        state = "-",
+                        postalCode = "-",
+                        details = "-"
+                    }
+                }
+            };
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", API_KEY_SANDBOX);
+
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("https://secure.sandbox.netopia-payments.com/payment/card/start", content);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(responseBody);
+            var root = doc.RootElement;
+
+            // Prefer payment.paymentURL
+            if (root.TryGetProperty("payment", out var pay) &&
+                pay.TryGetProperty("paymentURL", out var purl) &&
+                purl.ValueKind == JsonValueKind.String)
+            {
+                return Ok(new { sessionId, redirectUrl = purl.GetString() });
+            }
+
+            // Fallback: customerAction.url
+            if (root.TryGetProperty("customerAction", out var ca) &&
+                ca.TryGetProperty("url", out var curl) &&
+                curl.ValueKind == JsonValueKind.String)
+            {
+                return Ok(new { sessionId, redirectUrl = curl.GetString() });
+            }
+
+            // Otherwise, just return raw
+            return Content(responseBody, "application/json");
+        }
 
 
     }
