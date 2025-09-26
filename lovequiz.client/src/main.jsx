@@ -6,6 +6,7 @@ import App from './App.jsx'
 import GenderBlock from './GenderPage.jsx'
 import {FemaleBlock, MaleBlock} from './GenderPage.jsx'
 import Results, {PaidResults} from './Results.jsx'
+import PaymentChecker from './PaymentComponent.jsx';
 
 createRoot(document.getElementById('root')).render(
   
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/gender/male" element={<MaleBlock />} />
         <Route path="/results" element={<Results />} />
         <Route path="/results/paid" element={<PaidResults />} />
+        <Route path="/payment/return" element={<PaymentChecker />} />
       </Routes>
     </BrowserRouter>
  //REMOVED STRICT MODE , IT WAS CALLING 2 TIMES EACH REQUEST.
