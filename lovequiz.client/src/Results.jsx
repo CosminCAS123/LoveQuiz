@@ -479,7 +479,7 @@ export function PaidResults() {
                     return;
                 }
             } catch {
-                // if status check fails, we’ll fall back to starting payment
+                // if status check fails, we’ll fall back to starting payment   
             }
 
             // 2) Not converted -> start payment
