@@ -228,52 +228,51 @@ namespace LoveQuiz.Server.Controllers
         {
             try
             {
-                Console.WriteLine("[NETOPIA IPN] " + body.GetRawText());
+                var raw = body.GetRawText();
+                Console.WriteLine("[NETOPIA IPN RAW] " + raw);
 
                 string? orderId = null;
                 int status = 0;
-
-                // code may be string, number, or absent in IPN
                 string? code = null;
 
                 if (body.TryGetProperty("order", out var order) &&
                     order.TryGetProperty("orderID", out var orderIdEl) &&
                     orderIdEl.ValueKind == JsonValueKind.String)
-                {
                     orderId = orderIdEl.GetString();
-                }
 
                 if (body.TryGetProperty("payment", out var payment) &&
                     payment.TryGetProperty("status", out var statusEl) &&
                     statusEl.ValueKind == JsonValueKind.Number)
-                {
                     status = statusEl.GetInt32();
-                }
 
                 if (body.TryGetProperty("error", out var err) &&
                     err.TryGetProperty("code", out var codeEl))
                 {
-                    if (codeEl.ValueKind == JsonValueKind.String)
-                        code = codeEl.GetString();
-                    else if (codeEl.ValueKind == JsonValueKind.Number)
-                        code = codeEl.GetInt32().ToString("00"); // normalize numeric 0 -> "00"
+                    if (codeEl.ValueKind == JsonValueKind.String) code = codeEl.GetString();
+                    else if (codeEl.ValueKind == JsonValueKind.Number) code = codeEl.GetInt32().ToString("00");
                 }
 
+                Console.WriteLine($"[NETOPIA IPN PARSED] orderId={orderId} status={status} code={code}");
+
+                bool updated = false;
                 if (Guid.TryParse(orderId, out var sessionGuid))
                 {
-                    // From docs:
-                    // - status 3 + code "00" => approved
-                    // - status 15 + code "100" => 3DS step (ignore here; not approved yet)
-                    // - status 5 only counts if code "00"; other codes => not completed
-
-                    bool isApproved =
-                        (status == 3 && (code == null || code == "00"))   // accept 3 even if code missing
-                        || (status == 5 && code == "00");
+                    // Accept approved statuses. In practice IPN may omit error.code.
+                    bool isApproved = (status == 3) || (status == 5 && (code == null || code == "00"));
 
                     if (isApproved)
                     {
-                        await _quizService.SetConvertedAsync(sessionGuid, true);
+                        updated = await _quizService.SetConvertedAsync(sessionGuid, true);
+                        Console.WriteLine($"[NETOPIA IPN UPDATE] session={sessionGuid} converted={updated}");
                     }
+                    else
+                    {
+                        Console.WriteLine($"[NETOPIA IPN NOT APPROVED] status={status} code={code}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[NETOPIA IPN BAD ORDERID] '{orderId}' is not a GUID");
                 }
 
                 return Ok(new { received = true });
@@ -284,6 +283,7 @@ namespace LoveQuiz.Server.Controllers
                 return Ok(new { received = false });
             }
         }
+
 
     }
 

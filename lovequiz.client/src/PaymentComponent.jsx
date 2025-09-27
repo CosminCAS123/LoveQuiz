@@ -46,7 +46,7 @@ export default function PaymentChecker() {
                 if (data?.converted === true && !cancelled) {
                     setPhase("done");
                     // ✅ don't call full-report here; just navigate to PaidResults
-                    navigate("/paid-results", { replace: true });
+                    navigate("/results/paid", { replace: true });
                 }
             } catch (e) {
                 if (!cancelled && e.name !== "AbortError") {

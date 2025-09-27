@@ -44,11 +44,9 @@ public class QuizSessionRepository
     {
         const string sql = @"
 UPDATE quiz_sessions
-SET converted = @Value,
-    -- keep a timestamp if you later add this column:
-    -- converted_at = CASE WHEN @Value = 1 THEN CURRENT_TIMESTAMP ELSE converted_at END
-WHERE id = @SessionId;";
-
+SET converted = @Value
+WHERE id = @SessionId;
+";
         var rows = await _db.ExecuteAsync(sql, new { SessionId = sessionId, Value = value });
         return rows > 0;
     }
