@@ -127,7 +127,9 @@ export default function Results() {
       .filter(Boolean);
 
   useEffect(() => {
-    const submissions = buildSubmissions();
+      const submissions = buildSubmissions();
+      localStorage.setItem("quiz.submissions", JSON.stringify(submissions));
+
     console.log(state);
     console.log(submissions);
     if (!submissions.length) return;
@@ -143,7 +145,7 @@ export default function Results() {
       .then((data) => {
         setReport(data);
         setTimeout(() => setShowIntro(false), 2500);
-      })
+      })    
       .catch((err) => setError(err.message));
 
     // fetch("/api/quiz/full-report", {
@@ -259,11 +261,27 @@ export default function Results() {
                 </div>
               {/* </div> */}
 
-              <button 
-                onClick={() => navigate("/results/paid", { state })}
-                className="quiz-button mt-4 mb-10">
-                Acceseaza rezultatele
-              </button>
+                      <button
+                          onClick={async () => {
+                              try {
+                                  const res = await fetch("/api/quiz/payment/start", { method: "POST" });
+                                  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                                  const data = await res.json();
+
+                                  // depending on Netopia's response shape
+                                  const redirectUrl = data.redirectUrl || data?.payment?.url;
+                                  if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
+
+                                  window.location.href = redirectUrl; // 🔗 send user to checkout
+                              } catch (err) {
+                                  console.error("Failed to start payment:", err);
+                                  alert("Nu am putut iniția plata. Încearcă din nou.");
+                              }
+                          }}
+                          className="quiz-button mt-4 mb-10"
+                      >
+                          Accesează rezultatele
+                      </button>
 
 
               <div className="results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
@@ -340,11 +358,27 @@ export default function Results() {
                 </div>
               </div>
 
-              <button 
-                onClick={() => navigate("/results/paid", { state })}
-                className="quiz-button my-8 button-margin">
-                Afla cum sa faci asta
-              </button>
+                      <button
+                          onClick={async () => {
+                              try {
+                                  const res = await fetch("/api/quiz/payment/start", { method: "POST" });
+                                  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                                  const data = await res.json();
+
+                                  // depending on Netopia's response shape
+                                  const redirectUrl = data.redirectUrl || data?.payment?.url;
+                                  if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
+
+                                  window.location.href = redirectUrl; // 🔗 send user to checkout
+                              } catch (err) {
+                                  console.error("Failed to start payment:", err);
+                                  alert("Nu am putut iniția plata. Încearcă din nou.");
+                              }
+                          }}
+                          className="quiz-button mt-4 mb-10"
+                      >
+                          Afla cum faci asta
+                      </button>
 
               <div className="results_white_wrapper bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
                 <div className="text-center space-y-3 shadow-sm bg-color-primary px-4 py-8 rounded-xl">
@@ -386,11 +420,27 @@ export default function Results() {
                 </div>
               </div>
 
-              <button 
-                onClick={() => navigate("/results/paid", { state })}
-                className="quiz-button my-8 button-margin">
-                Vezi raportul complet
-              </button>
+                      <button
+                          onClick={async () => {
+                              try {
+                                  const res = await fetch("/api/quiz/payment/start", { method: "POST" });
+                                  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                                  const data = await res.json();
+
+                                  // depending on Netopia's response shape
+                                  const redirectUrl = data.redirectUrl || data?.payment?.url;
+                                  if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
+
+                                  window.location.href = redirectUrl; // 🔗 send user to checkout
+                              } catch (err) {
+                                  console.error("Failed to start payment:", err);
+                                  alert("Nu am putut iniția plata. Încearcă din nou.");
+                              }
+                          }}
+                          className="quiz-button mt-4 mb-10"
+                      >
+                          Vezi raportul complet
+                      </button>
 
               <div className="results_white_wrapper-testimonials bg-white p-1 rounded-xl shadow-[0_30px_60px_-10px_rgba(233,184,195,0.8)]">
                 <TestimonialSlider />
@@ -418,12 +468,8 @@ export function PaidResults() {
     const [error, setError] = useState(null);
     const { state } = useLocation();
 
-    const answers =
-        (state && state.answers) ??
-        JSON.parse(localStorage.getItem("quiz.answers") || "{}");
-    const questions =
-        (state && state.questions) ??
-        JSON.parse(localStorage.getItem("quiz.questions") || "[]");
+  
+
 
     // used for image display
     function getFirstHighestAboveOrEqual(input) {
@@ -431,85 +477,39 @@ export function PaidResults() {
         return set.find((num) => num >= input) || null;
     }
 
-    const buildSubmissions = () =>
-        questions
-            .map((q) => {
-                const selectedIdx = Array.isArray(answers) ? answers[q.id] : answers[q.id];
-                if (selectedIdx == null) return null;
-                const ansObj = q.answers[selectedIdx];
-                if (!ansObj) return null;
-                return { questionId: q.id, answerId: ansObj.id };
-            })
-            .filter(Boolean);
-
+  
     useEffect(() => {
+        let cancelled = false;
+
         (async () => {
             const sessionId = localStorage.getItem("quiz.sessionId");
-            if (!sessionId) {
-                console.error("Missing sessionId. Call /log-free-session first.");
+            const saved = localStorage.getItem("quiz.submissions");
+            const submissions = saved ? JSON.parse(saved) : [];
+
+            if (!sessionId || submissions.length === 0) {
+                console.error("Missing sessionId or submissions.");
                 return;
             }
 
-            // 1) Check if already converted
-            try {
-                const st = await fetch(`/api/quiz/session/${sessionId}/status`);
-                const sdata = st.ok ? await st.json() : null;
+            const res = await fetch("/api/quiz/full-report", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sessionId, submissions }),
+            });
 
-                if (sdata?.converted === true) {
-                    // ✅ Already paid -> build submissions & fetch full report
-                    const submissions = buildSubmissions();
-                    if (!submissions?.length) {
-                        console.error("Missing submissions.");
-                        return;
-                    }
-
-                    const res = await fetch("/api/quiz/full-report", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ sessionId, submissions }),
-                    });
-
-                    if (!res.ok) {
-                        const text = await res.text();
-                        throw new Error(`HTTP ${res.status}: ${text}`);
-                    }
-
-                    const data = await res.json();
-                    setFullReport(data);
-                    return;
-                }
-            } catch {
-                // if status check fails, we’ll fall back to starting payment   
+            if (!res.ok) {
+                const text = await res.text();
+                console.error(`full-report HTTP ${res.status}: ${text}`);
+                return;
             }
 
-            // 2) Not converted -> start payment
-            try {
-                // persist inputs so we can rebuild submissions after redirect
-                try {
-                    localStorage.setItem("quiz.questions", JSON.stringify(questions));
-                    localStorage.setItem("quiz.answers", JSON.stringify(answers));
-                } catch { }
-
-                const res = await fetch("/api/quiz/payment/start", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(sessionId), // backend expects raw JSON string
-                });
-
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`HTTP ${res.status}: ${text}`);
-                }
-
-                const { redirectUrl } = await res.json();
-                if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
-                window.location.href = redirectUrl; // -> Netopia checkout
-            } catch (err) {
-                console.error("Failed to start payment:", err);
-                // optional: set some local UI error state here
-            }
+            const data = await res.json();
+            if (!cancelled) setFullReport(data);
         })();
+
+        return () => { cancelled = true; };
     }, []);
+
 
 
   if (!full_report) return (
@@ -627,11 +627,11 @@ export function PaidResults() {
       </div>
     );
   };
-  console.log(full_report);
+  //console.log(full_report);
 
 
   const gender = localStorage.getItem('gender');
-  console.log(gender);
+  //console.log(gender);
 
   return(
     <>
