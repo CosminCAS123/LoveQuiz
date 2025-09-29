@@ -5,6 +5,7 @@ using LoveQuiz.Server.Services;
 using System.Text;
 using static System.Net.WebRequestMethods;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Http.Headers;
 
 
 
@@ -33,51 +34,62 @@ namespace LoveQuiz.Server.Controllers
             _pdfGenerationService = pdfGenerationService;
             _config = config;
         }
-        [HttpPost("payment/start")]
-        public async Task<IActionResult> StartPayment()
+
+
+[HttpPost("payment/start")]
+    public async Task<IActionResult> StartPayment()
+    {
+        using var client = new HttpClient();
+
+        var payload = new
         {
-            using var client = new HttpClient();
-
-            var payload = new
+            config = new
             {
-                config = new
-                {
-                    notifyUrl = "https://yourdomain.com/api/netopia/ipn",
-                    redirectUrl = "https://yourdomain.com/payment/return",
-                    language = "ro"
-                },
-                order = new
-                {
-                    posSignature = _config["Netopia:PosSignature"],
-                    dateTime = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:sszzz"),
-                    description = "LoveQuiz Full Report",
-                    orderID = Guid.NewGuid().ToString(), // ideally use sessionId here
-                    amount = 49,
-                    currency = "RON"
-                }
-            };
-
-            var json = JsonSerializer.Serialize(payload);
-
-            var request = new HttpRequestMessage
+                notifyUrl = "https://incunabular-christy-nondigestibly.ngrok-free.dev/api/quiz/ipn",
+                redirectUrl = "https://localhost:5173/payment/return",
+                language = "ro"
+            },
+            order = new
             {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri($"{_config["Netopia:BaseUrl"]}/payment/card/start"),
-                Headers =
+                posSignature = _config["Netopia:PosSignature"],
+                dateTime = DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:sszzz"),
+                description = "LoveQuiz Full Report",
+                orderID = Guid.NewGuid().ToString(),
+                amount = 49,
+                currency = "RON"
+            }
+        };
+
+        var json = JsonSerializer.Serialize(payload);
+
+        var request = new HttpRequestMessage(HttpMethod.Post,
+            new Uri($"{_config["Netopia:BaseUrl"]}/payment/card/start"))
         {
-            { "Accept", "application/json" },
-            { "Authorization", _config["Netopia:ApiKey"] }
-        },
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
-            };
+            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+        };
 
-            using var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // forward only what frontend needs
-            return Content(body, "application/json");
+    
+        request.Headers.TryAddWithoutValidation("Authorization", _config["Netopia:ApiKey"]);
+
+        using var response = await client.SendAsync(request);
+        var body = await response.Content.ReadAsStringAsync();
+        using var doc = JsonDocument.Parse(body);
+            string? url = null;
+            if (doc.RootElement.TryGetProperty("payment", out var p) &&
+                p.TryGetProperty("paymentURL", out var u) &&
+                u.ValueKind == JsonValueKind.String)
+            {
+                url = u.GetString();
+            }
+
+            if (string.IsNullOrWhiteSpace(url))
+                return BadRequest(new { error = "Missing redirect url from provider", raw = body });
+
+            return Ok(new { redirectUrl = url });
+
         }
-
 
 
 

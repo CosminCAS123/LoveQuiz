@@ -2,7 +2,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { X } from "../node_modules/lucide-react/dist/lucide-react";
+
 
 export default function PaymentChecker() {
     const [error, setError] = useState(null);

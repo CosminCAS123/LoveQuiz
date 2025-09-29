@@ -266,10 +266,8 @@ export default function Results() {
                               try {
                                   const res = await fetch("/api/quiz/payment/start", { method: "POST" });
                                   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                                  const data = await res.json();
 
-                                  // depending on Netopia's response shape
-                                  const redirectUrl = data.redirectUrl || data?.payment?.url;
+                                  const { redirectUrl } = await res.json();
                                   if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
 
                                   window.location.href = redirectUrl; // 🔗 send user to checkout
@@ -363,10 +361,8 @@ export default function Results() {
                               try {
                                   const res = await fetch("/api/quiz/payment/start", { method: "POST" });
                                   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                                  const data = await res.json();
 
-                                  // depending on Netopia's response shape
-                                  const redirectUrl = data.redirectUrl || data?.payment?.url;
+                                  const { redirectUrl } = await res.json();
                                   if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
 
                                   window.location.href = redirectUrl; // 🔗 send user to checkout
@@ -425,10 +421,8 @@ export default function Results() {
                               try {
                                   const res = await fetch("/api/quiz/payment/start", { method: "POST" });
                                   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                                  const data = await res.json();
 
-                                  // depending on Netopia's response shape
-                                  const redirectUrl = data.redirectUrl || data?.payment?.url;
+                                  const { redirectUrl } = await res.json();
                                   if (!redirectUrl) throw new Error("Missing redirectUrl from server.");
 
                                   window.location.href = redirectUrl; // 🔗 send user to checkout
