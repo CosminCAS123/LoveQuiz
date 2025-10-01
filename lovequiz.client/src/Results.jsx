@@ -264,7 +264,12 @@ export default function Results() {
                       <button
                           onClick={async () => {
                               try {
-                                  const res = await fetch("/api/quiz/payment/start", { method: "POST" });
+                                  const sessionId = localStorage.getItem("quiz.sessionId");
+                                  const res = await fetch("/api/quiz/payment/start", {
+                                      method: "POST",
+                                      headers: { "Content-Type": "application/json" },
+                                      body: JSON.stringify({ sessionId })
+                                  });
                                   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                                   const { redirectUrl } = await res.json();
@@ -359,7 +364,12 @@ export default function Results() {
                       <button
                           onClick={async () => {
                               try {
-                                  const res = await fetch("/api/quiz/payment/start", { method: "POST" });
+                                  const sessionId = localStorage.getItem("quiz.sessionId");
+                                  const res = await fetch("/api/quiz/payment/start", {
+                                      method: "POST",
+                                      headers: { "Content-Type": "application/json" },
+                                      body: JSON.stringify({ sessionId })
+                                  });
                                   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                                   const { redirectUrl } = await res.json();
@@ -419,7 +429,12 @@ export default function Results() {
                       <button
                           onClick={async () => {
                               try {
-                                  const res = await fetch("/api/quiz/payment/start", { method: "POST" });
+                                  const sessionId = localStorage.getItem("quiz.sessionId");
+                                  const res = await fetch("/api/quiz/payment/start", {
+                                      method: "POST",
+                                      headers: { "Content-Type": "application/json" },
+                                      body: JSON.stringify({ sessionId })
+                                  });
                                   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                                   const { redirectUrl } = await res.json();

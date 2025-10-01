@@ -35,18 +35,22 @@ namespace LoveQuiz.Server.Controllers
             _config = config;
         }
 
+        public record StartPaymentRequest(string sessionId);
 
-[HttpPost("payment/start")]
-    public async Task<IActionResult> StartPayment()
+        [HttpPost("payment/start")]
+    public async Task<IActionResult> StartPayment([FromBody] StartPaymentRequest req)
     {
-        using var client = new HttpClient();
+            if (!Guid.TryParse(req.sessionId, out _))
+                return BadRequest(new { error = "sessionId must be a GUID" });
+
+            using var client = new HttpClient();
 
         var payload = new
         {
             config = new
             {
-                notifyUrl = "https://incunabular-christy-nondigestibly.ngrok-free.dev/api/quiz/ipn",
-                redirectUrl = "https://localhost:5173/payment/return",
+                notifyUrl = "https://incunabular-christy-nondigestibly.ngrok-free.dev/api/quiz/ipn",//CHANGE FOR PRODUCTION
+                redirectUrl = "https://localhost:5173/payment/return",//CHANGE FOR PRODUCTION
                 language = "ro"
             },
             order = new
@@ -54,7 +58,7 @@ namespace LoveQuiz.Server.Controllers
                 posSignature = _config["Netopia:PosSignature"],
                 dateTime = DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:sszzz"),
                 description = "LoveQuiz Full Report",
-                orderID = Guid.NewGuid().ToString(),
+                orderID = req.sessionId,
                 amount = 49,
                 currency = "RON"
             }
@@ -207,8 +211,43 @@ namespace LoveQuiz.Server.Controllers
 
 
         }
+        [HttpPost("ipn")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Ipn([FromBody] JsonElement root)
+        {
+            // scoatem orderID
+            if (!root.TryGetProperty("order", out var order) ||
+                !order.TryGetProperty("orderID", out var oid) ||
+                oid.ValueKind != JsonValueKind.String ||
+                !Guid.TryParse(oid.GetString(), out var sessionGuid))
+            {
+                return Ok(new { ok = false, error = "Invalid orderID" });
+            }
 
-      
+            // scoatem status și code din payment
+            if (!root.TryGetProperty("payment", out var payment) ||
+                !payment.TryGetProperty("status", out var st) ||
+                !payment.TryGetProperty("code", out var cd))
+            {
+                return Ok(new { ok = false, error = "Missing payment info" });
+            }
+
+            var status = st.GetInt32();
+            var code = cd.GetString();
+
+            var approved = status == 3 && code == "00";
+
+            if (approved)
+            {
+                await _quizService.SetConvertedAsync(sessionGuid, true);
+                return Ok(new { ok = true, converted = true });
+            }
+
+            // fallback: nu marcăm, doar raportăm
+            return Ok(new { ok = false, converted = false, status, code });
+        }
+
+
 
 
     }
